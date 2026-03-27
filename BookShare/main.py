@@ -1,13 +1,30 @@
 from services.auth_services import cadastrar_usuario, login_usuario
+from utils.limpar_tela import limpar_tela
+from colorama import Fore, init
+
+init(autoreset=True)
 
 # Menu principal do aplicativo (Por enquanto só funciona o cadastro)
 def menu():
-    print("----------------------------BOOKSHARE-----------------------------")
-    print("1. Cadastrar usuário")
-    print("2. Login")
-    print("3. Sobre o projeto")
-    print("0. Sair")
-    opcao = int(input("\nDigite o número da opção desejada: "))
+    limpar_tela()
+
+    print(Fore.CYAN + "="*60)
+    print(Fore.CYAN + "📚 BEM-VINDO AO BOOKSHARE".center(60))
+    print(Fore.CYAN + "="*60)
+
+    print()
+    print(Fore.LIGHTMAGENTA_EX + "[1]" + Fore.WHITE + " Cadastrar usuário")
+    print(Fore.LIGHTMAGENTA_EX + "[2]" + Fore.WHITE + " Login")
+    print(Fore.LIGHTMAGENTA_EX + "[3]" + Fore.WHITE + " Sobre o projeto")
+    print(Fore.LIGHTMAGENTA_EX + "[0]" + Fore.WHITE + " Sair")
+
+    print(Fore.CYAN + "-"*60)
+
+    try:
+        opcao = int(input(Fore.GREEN + "👉 Escolha uma opção: "))
+    except ValueError:
+        print(Fore.RED + "❌ Digite apenas números!")
+        opcao = None
 
     # Chama a função de cadastro de usuário
     if opcao == 1:
@@ -21,13 +38,13 @@ def menu():
 
     elif opcao == 0:
         print("Saindo do aplicativo...")
+        limpar_tela()
         exit()
 
     else:
-        print("Opção inválida. Tente novamente.")
+        print(Fore.RED + "❌ Opção inválida. Tente novamente.")
         menu()
 
 
 if __name__ == "__main__":
     menu()
-
