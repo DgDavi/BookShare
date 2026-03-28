@@ -30,12 +30,14 @@ def menu():
     if opcao == 1:
         cadastrar_usuario()
 
+    # Chama a função de login de usuário
     elif opcao == 2:
         login_usuario()
 
     elif opcao == 3:
         print("A fazer")
 
+    # Fecha a aplicação
     elif opcao == 0:
         print("Saindo do aplicativo...")
         limpar_tela()
