@@ -2,7 +2,7 @@ from colorama import Fore
 
 from data.db import get_db_connection
 from data.schema import create_tables
-from model.usuario import create_usuario
+from model.usuario import criar_usuario
 from utils.limpar_tela import limpar_tela
 from utils.security import hash_senha
 from utils.validador import validar_email, validar_senha
@@ -29,7 +29,7 @@ def cadastrar_usuario():
         
     # Validação do email
     while True:
-        email = input("\nDigite seu email: ")
+        email = input("Digite seu email: ")
 
         # Verifica se o email já existe no banco de dados
         cursor.execute("SELECT EXISTS(SELECT 1 FROM usuarios WHERE email = ?)", (email,))
@@ -39,6 +39,7 @@ def cadastrar_usuario():
             print(Fore.YELLOW + "👉 Tente novamente.")
             continue
 
+        # Verifica se o email tem um formato válido
         if validar_email(email):
             break
         else:
@@ -47,7 +48,7 @@ def cadastrar_usuario():
 
     # Validação da senha
     while True:
-        senha = input("\nDigite sua senha: ")
+        senha = input("Digite sua senha: ")
         if not validar_senha(senha):
             print(Fore.RED + " ❌ A senha deve conter pelo menos 8 caracteres, incluindo uma letra maiúscula, um número e um caractere especial.")
             print(Fore.YELLOW + "👉 Tente novamente.")
@@ -63,11 +64,15 @@ def cadastrar_usuario():
 
 
     # Inseri o novo usuário no banco de dados
-    create_usuario(nome, email, senha_hashed)
+    criar_usuario(nome, email, senha_hashed)
     print(Fore.GREEN + "Usuário cadastrado com sucesso!")
 
     cursor.close()
     conexao.close()
+
+    # Import local evita dependência circular com interfaces.menu
+    from interfaces.menu import menu_usuario
+    menu_usuario()
 
 
 # Função para realizar o login do usuário
@@ -106,3 +111,7 @@ def login_usuario():
 
     cursor.close()
     conexao.close()
+
+    # Import local evita dependência circular com interfaces.menu
+    from interfaces.menu import menu_usuario
+    menu_usuario()
