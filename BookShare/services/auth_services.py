@@ -103,6 +103,7 @@ def login_usuario():
         senha_armazenada = cursor.fetchone()[0]
         if senha_hashed == senha_armazenada:
             print(Fore.GREEN + "Login bem-sucedido!")
+            input(Fore.CYAN + "Pressione Enter para continuar...")
             break
         else:
             print(Fore.RED + " ❌ Senha incorreta.")
@@ -112,6 +113,5 @@ def login_usuario():
     cursor.close()
     conexao.close()
 
-    # Import local evita dependência circular com interfaces.menu
-    from interfaces.menu import menu_usuario
+    from interfaces.menu_de_usuario import menu_usuario
     menu_usuario()
