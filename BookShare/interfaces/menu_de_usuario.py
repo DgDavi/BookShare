@@ -2,6 +2,9 @@ from colorama import Fore
 
 from utils.limpar_tela import limpar_tela
 
+from interfaces.mostrar_dados import mostrar_dados
+from interfaces.deletar_conta import deletar_conta
+
 # Menu do usuário logado
 def menu_usuario():
     limpar_tela()
