@@ -1,0 +1,10 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Local environment artifacts
+*.sqlite3
+*.db
+
+# Project local database
+usuarios.db
