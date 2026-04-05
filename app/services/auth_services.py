@@ -1,7 +1,7 @@
 from colorama import Fore
 
 from data.db import get_db_connection
-from model.usuario import criar_usuario
+from model.usuario import Usuario, criar_usuario
 from utils.limpar_tela import limpar_tela
 from utils.security import hash_senha
 from utils.validador import validar_input, validar_email_cadastro, validar_input_senha, validar_email_login, validar_senha_login
@@ -36,9 +36,11 @@ def cadastrar_usuario():
 
 
     # Inseri o novo usuário no banco de dados
-    criar_usuario(nome, email, senha_hashed)
+    usuario = Usuario(nome, email, senha_hashed)
+    criar_usuario(usuario, cursor)
     print(Fore.GREEN + "Usuário cadastrado com sucesso!")
-
+    
+    conexao.commit()
     cursor.close()
     conexao.close()
 

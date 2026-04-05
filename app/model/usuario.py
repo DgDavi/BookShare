@@ -1,10 +1,20 @@
 from data.db import get_db_connection
 
-def criar_usuario(nome, email, senha_hashed):
-    conexao = get_db_connection()
-    cursor = conexao.cursor()
 
-    cursor.execute("INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)", (nome, email, senha_hashed))
-    conexao.commit()
+class Usuario:
+    def __init__(self, nome, email, senha_hashed, id=None):
+        self.id = id
+        self.nome = nome
+        self.emial = email
+        self.senha = senha_hashed
 
-     # Inseri o novo usuário no banco de dados
+def criar_usuario(usuario, cursor):
+    
+    # Inseri o novo usuário no banco de dados
+    cursor.execute("INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)", 
+                   (usuario.nome, usuario.email, usuario.senha_hashed))
+    
+    usuario.id = cursor.lastrowid
+
+    return usuario
+    
