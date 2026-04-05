@@ -29,13 +29,15 @@ def menu_inical():
 
         # Chama a função de cadastro de usuário
         if opcao == 1:
-            if cadastrar_usuario():
-                menu_usuario()
+            usuario = cadastrar_usuario()
+            if usuario:
+                menu_usuario(usuario)
 
         # Chama a função de login de usuário
         elif opcao == 2:
-            if login_usuario():
-                menu_usuario()
+            usuario = login_usuario()
+            if usuario:
+                menu_usuario(usuario)
 
         # Chama a função de informações sobre o projeto
         elif opcao == 3:

@@ -1,17 +1,39 @@
+from colorama import Fore
+
 from data.db import get_db_connection
+from model.usuario import buscar_dados_usuario
+from utils.limpar_tela import limpar_tela
 
 
-def mostrar_dados(email):
+def menu_conta(usuario):
     conexao = get_db_connection()
     cursor = conexao.cursor()
 
-    cursor.execute("SELECT * FROM usuarios WHERE email = ?", (email,))
-    usuario = cursor.fetchone()
+    limpar_tela()
 
-    if usuario:
-        print("\n--- SEUS DADOS ---")
-        print(f"Nome: {usuario[0]}")
-        print(f"Email: {usuario[1]}")
-        print(f"Senha: {usuario[2]}")
-    else:
-        print("Usuário não encontrado.")
+    print(Fore.YELLOW + "📋 Conta\n" + Fore.CYAN + "-"*30)
+
+    print()
+    buscar_dados_usuario(usuario, cursor)
+    print()
+    print(Fore.LIGHTMAGENTA_EX + "[1]" + Fore.WHITE + " Editar")
+    print(Fore.LIGHTMAGENTA_EX + "[2]" + Fore.WHITE + " Deletar")
+    print(Fore.LIGHTMAGENTA_EX + "[0]" + Fore.WHITE + " Voltar")
+    print()
+
+    cursor.close()
+    conexao.commit()
+
+    try:
+        opcao = int(input(Fore.GREEN + "👉 Escolha uma opção: "))
+    except ValueError:
+        print(Fore.RED + "❌ Digite apenas números de opções válidas!")
+        opcao = None
+
+    if opcao == 1:
+        print("A fazer")
+    elif opcao == 2:
+        print("A fazer")
+    elif opcao == 0:
+        from interfaces.menu_de_usuario import menu_usuario
+        menu_usuario(usuario)    

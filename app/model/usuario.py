@@ -1,12 +1,12 @@
-from data.db import get_db_connection
+from colorama import Fore
 
 
 class Usuario:
     def __init__(self, nome, email, senha_hashed, id=None):
         self.id = id
         self.nome = nome
-        self.emial = email
-        self.senha = senha_hashed
+        self.email = email
+        self.senha_hashed = senha_hashed
 
 def criar_usuario(usuario, cursor):
     
@@ -18,3 +18,20 @@ def criar_usuario(usuario, cursor):
 
     return usuario
     
+
+def buscar_dados_usuario(usuario, cursor):
+    print(Fore.CYAN + "=" * 60)
+    print(Fore.CYAN + "📋 DADOS DO USUÁRIO".center(60))
+    print(Fore.CYAN + "=" * 60)
+
+    cursor.execute("SELECT id, nome, email FROM usuarios WHERE email = ?", (usuario.email,))
+    dados_usuario = cursor.fetchone()
+
+    if dados_usuario:
+        print(Fore.LIGHTMAGENTA_EX + "Id: " + Fore.WHITE + f"{dados_usuario[0]}")
+        print(Fore.LIGHTMAGENTA_EX + "Nome: " + Fore.WHITE + f"{dados_usuario[1]}")
+        print(Fore.LIGHTMAGENTA_EX + "Email: " + Fore.WHITE + f"{dados_usuario[2]}")
+        return True
+
+    print(Fore.RED + "❌ Nenhum dado de usuário encontrado.")
+    return False

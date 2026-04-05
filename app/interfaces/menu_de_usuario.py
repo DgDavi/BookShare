@@ -2,11 +2,11 @@ from colorama import Fore
 
 from utils.limpar_tela import limpar_tela
 
-from interfaces.mostrar_dados import mostrar_dados
+from interfaces.mostrar_dados import menu_conta
 from interfaces.deletar_conta import deletar_conta
 
 # Menu do usuário logado
-def menu_usuario():
+def menu_usuario(usuario):
     while True:
         limpar_tela()
 
@@ -32,8 +32,7 @@ def menu_usuario():
 
 
         if opcao == 1:
-            print("A fazer")
-            break
+            menu_conta(usuario)
 
         elif opcao == 2:
             print("A fazer")

@@ -37,14 +37,18 @@ def cadastrar_usuario():
 
     # Inseri o novo usuário no banco de dados
     usuario = Usuario(nome, email, senha_hashed)
-    criar_usuario(usuario, cursor)
-    print(Fore.GREEN + "Usuário cadastrado com sucesso!")
-    
-    conexao.commit()
-    cursor.close()
-    conexao.close()
+    usuario_criado = criar_usuario(usuario, cursor)
 
-    return True
+    if usuario_criado:
+        print(Fore.GREEN + "Usuário cadastrado com sucesso!")
+    
+        conexao.commit()
+        cursor.close()
+        conexao.close()
+
+        return usuario
+    
+    return None
 
 
 # Função para realizar o login do usuário
@@ -69,7 +73,22 @@ def login_usuario():
         Fore.RED + "❌ Senha incorreta."
     )
 
+    cursor.execute("SELECT id, nome, email, senha FROM usuarios WHERE email = ?", (email,))
+    usuario_logado = cursor.fetchone()
+
+    if not usuario_logado:
+        cursor.close()
+        conexao.close()
+        return None
+
+    usuario = Usuario(
+        nome=usuario_logado[1],
+        email=usuario_logado[2],
+        senha_hashed=usuario_logado[3],
+        id=usuario_logado[0]
+    )
+
     cursor.close()
     conexao.close()
 
-    return True
+    return usuario
