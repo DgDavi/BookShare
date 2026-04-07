@@ -14,6 +14,7 @@ def cadastrar_usuario():
 
     limpar_tela()
     print(Fore.YELLOW + "📋 CADASTRO DE USUÁRIO\n" + Fore.CYAN + "-"*30)
+    print()
 
     
     nome = validar_input(
@@ -58,6 +59,7 @@ def login_usuario():
 
     limpar_tela()
     print(Fore.YELLOW + "📋 LOGIN DE USUÁRIO\n" + Fore.CYAN + "-"*30)
+    print()
 
 
     email = validar_input(

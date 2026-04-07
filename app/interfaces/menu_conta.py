@@ -31,7 +31,8 @@ def menu_conta(usuario):
     if opcao == 1:
         print("A fazer")
     elif opcao == 2:
-        print("A fazer")
+        from interfaces.deletar_conta import deletar_conta
+        deletar_conta(usuario)
     elif opcao == 0:
         from interfaces.menu_de_usuario import menu_usuario
         menu_usuario(usuario)    

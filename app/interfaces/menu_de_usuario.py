@@ -2,7 +2,7 @@ from colorama import Fore
 
 from utils.limpar_tela import limpar_tela
 
-from app.interfaces.menu_conta import menu_conta
+from interfaces.menu_conta import menu_conta
 from interfaces.deletar_conta import deletar_conta
 
 # Menu do usuário logado
@@ -37,6 +37,7 @@ def menu_usuario(usuario):
         elif opcao == 2:
             print("A fazer")
             break
+            
         
         elif opcao == 3:
             print("A fazer")

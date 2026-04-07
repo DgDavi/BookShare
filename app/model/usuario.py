@@ -38,7 +38,5 @@ def buscar_dados_usuario(usuario, cursor):
 
 
 def deletar_usuario(usuario, cursor):
-    cursor.execute("DELETE FROM usuarios WHERE email + ?", (usuario.email,))
-
-    print("Usuário deletado com sucesso.")
+    cursor.execute("DELETE FROM usuarios WHERE email = ?", (usuario.email,))
     return True
