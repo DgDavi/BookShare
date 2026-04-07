@@ -2,7 +2,7 @@ from colorama import Fore
 
 from utils.limpar_tela import limpar_tela
 
-from interfaces.mostrar_dados import menu_conta
+from app.interfaces.menu_conta import menu_conta
 from interfaces.deletar_conta import deletar_conta
 
 # Menu do usuário logado
