@@ -11,8 +11,6 @@ def menu_conta(usuario):
 
     limpar_tela()
 
-    print(Fore.YELLOW + "📋 Conta\n" + Fore.CYAN + "-"*30)
-
     print()
     buscar_dados_usuario(usuario, cursor)
     print()
