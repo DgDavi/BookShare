@@ -35,3 +35,9 @@ def buscar_dados_usuario(usuario, cursor):
 
     print(Fore.RED + "❌ Nenhum dado de usuário encontrado.")
     return False
+
+
+def deletar_usuario(usuario, cursor):
+    cursor.execute("DELETE FROM usuarios WHERE email + ?", (usuario.email,))
+
+    print("Usuário deletado com sucesso.")
