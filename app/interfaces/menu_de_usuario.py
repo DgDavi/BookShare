@@ -33,25 +33,18 @@ def menu_usuario(usuario):
 
         if opcao == 1:
             menu_conta(usuario)
-
         elif opcao == 2:
             print("A fazer")
-            break
-            
-        
+            input(Fore.YELLOW + "👉 Pressione Enter para continuar...")
         elif opcao == 3:
             print("A fazer")
-            break
-
+            input(Fore.YELLOW + "👉 Pressione Enter para continuar...")
         elif opcao == 4:
             print("A fazer")
-            break
-        
+            input(Fore.YELLOW + "👉 Pressione Enter para continuar...")
         elif opcao == 0:
-            print("Saindo do aplicativo...")
             limpar_tela()
             exit()
-        
         else:
             print(Fore.RED + "❌ Opção inválida. Tente novamente.")
             input(Fore.YELLOW + "👉 Pressione Enter para continuar...")

@@ -29,8 +29,6 @@ def deletar_conta(usuario):
     
     print(Fore.YELLOW + "\nA operação foi cancelada.")
     input(Fore.YELLOW + "👉 Pressione Enter para continuar...")
-    from interfaces.menu_conta import menu_conta
-    menu_conta(usuario)
 
     cursor.close()
     conexao.close()

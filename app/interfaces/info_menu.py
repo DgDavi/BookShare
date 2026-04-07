@@ -12,7 +12,7 @@ def info_menu():
     print(Fore.CYAN + "="*60)
 
     print()
-    print("""O BookShare é um aplicativo de compartilhamento de livros desenvolvido como parte da disciplina de Projeto Interdisciplinar para Sistemas de Informação I. O projeto foi idealizado e criado por Davi Gomes e Lucas Augusto com o objetivo de aplicar, na prática, conceitos aprendidos ao longo do curso, unindo tecnologia e impacto social.
+    print("""O BookShare é um aplicativo de compartilhamento de livros desenvolvido como parte da disciplina de Projeto Interdisciplinar para Sistemas de Informação I na Universidade Federal Rural de Pernambuco (UFRPE). O projeto foi idealizado e criado por Davi Gomes e Lucas Augusto com o objetivo de aplicar, na prática, conceitos aprendidos ao longo do curso, unindo tecnologia e impacto social.
 
 A proposta do BookShare é permitir que usuários cadastrem seus livros, procurem por títulos disponíveis e compartilhem suas leituras com outros membros da comunidade. Dessa forma, o sistema busca promover a troca de conhecimento, incentivar o hábito da leitura e facilitar o acesso a diferentes obras de maneira colaborativa.
 

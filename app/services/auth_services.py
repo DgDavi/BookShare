@@ -41,7 +41,8 @@ def cadastrar_usuario():
     usuario_criado = criar_usuario(usuario, cursor)
 
     if usuario_criado:
-        print(Fore.GREEN + "Usuário cadastrado com sucesso!")
+        print(Fore.GREEN + "\nUsuário cadastrado com sucesso!")
+        input(Fore.GREEN + "Pressione a tecla Enter para seguir... ")
     
         conexao.commit()
         cursor.close()
@@ -92,5 +93,7 @@ def login_usuario():
 
     cursor.close()
     conexao.close()
+    print(Fore.GREEN + "\nLogin realizado com sucesso!")
+    input(Fore.GREEN + "Pressione a tecla Enter para seguir... ")
 
     return usuario
