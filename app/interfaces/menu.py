@@ -51,6 +51,6 @@ def menu_inical():
             exit()
 
         else:
-            print(Fore.RED + "❌ Opção inválida. Tente novamente.")
+            print(Fore.RED + "n\❌ Opção inválida. Tente novamente.")
             input(Fore.YELLOW + "👉 Pressione Enter para continuar...")
 

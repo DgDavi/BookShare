@@ -1,9 +1,10 @@
 from colorama import Fore
 
-from model.usuario import editar_email, editar_nome
+from model.usuario import editar_email, editar_nome, editar_senha
 from data.db import get_db_connection
-from utils.validador import validar_email_cadastro, validar_input
+from utils.validador import validar_email_cadastro, validar_input, validar_input_senha
 from utils.limpar_tela import limpar_tela
+from utils.security import hash_senha
 
 def menu_editar(usuario):
     conexao = get_db_connection()
@@ -28,6 +29,14 @@ def menu_editar(usuario):
 
     if opcao == 1:
         print()
+        confirmacao_senha = input(Fore.YELLOW + "👉 Digite sua senha para confirmar: ")
+        senha_hashed = hash_senha(confirmacao_senha)
+        if senha_hashed != usuario.senha_hashed:
+            print(Fore.RED + "❌ Você digitou a senha errada. A operação foi cancelada.")
+            input(Fore.GREEN + "\nPressione a tecla Enter para seguir... ")
+            return
+
+        print()
         novo_nome = validar_input(
             "Digite o novo nome: ",
             lambda n: 3 <= len(n) <= 50,
@@ -44,25 +53,52 @@ def menu_editar(usuario):
             
         
     elif opcao == 2:
-            print()
-            novo_email = validar_input(
-                "Digite o novo email: ",
-                lambda e: validar_email_cadastro(e, cursor),
-                ""
-            )
+        print()
+        confirmacao_senha = input(Fore.YELLOW + "👉 Digite sua senha para confirmar: ")
+        senha_hashed = hash_senha(confirmacao_senha)
+        if senha_hashed != usuario.senha_hashed:
+            print(Fore.RED + "❌ Você digitou a senha errada. A operação foi cancelada.")
+            input(Fore.GREEN + "\nPressione a tecla Enter para seguir... ")
+            return
 
-            resultado = editar_email(usuario, novo_email, cursor)
-            if resultado:
-                    conexao.commit()
-                    cursor.close()
-                    conexao.close()
-                    print(Fore.GREEN + "\nEmail editado com sucesso!!")
-                    input(Fore.GREEN + "Pressione a tecla Enter para seguir... ")
+        print()
+        novo_email = validar_input(
+            "Digite o novo email: ",
+            lambda e: validar_email_cadastro(e, cursor),
+            ""
+        )
+
+        resultado = editar_email(usuario, novo_email, cursor)
+        if resultado:
+                conexao.commit()
+                cursor.close()
+                conexao.close()
+                print(Fore.GREEN + "\nEmail editado com sucesso!!")
+                input(Fore.GREEN + "Pressione a tecla Enter para seguir... ")
             
 
     elif opcao == 3:
-        print("A fazer")
+        print()
+        confirmacao_senha = input(Fore.YELLOW + "👉 Digite sua senha para confirmar: ")
+        senha_hashed = hash_senha(confirmacao_senha)
+        if senha_hashed != usuario.senha_hashed:
+            print(Fore.RED + "❌ Você digitou a senha errada. A operação foi cancelada.")
+            input(Fore.GREEN + "\nPressione a tecla Enter para seguir... ")
+            return
+
+        print()
+        nova_senha = validar_input_senha()
+        nova_senha_hashed = hash_senha(nova_senha)
+        
+        resultado = editar_senha(usuario, nova_senha_hashed, cursor)
+        if resultado:
+            conexao.commit()
+            cursor.close()
+            conexao.close()
+            print(Fore.GREEN + "\nSenha editado com sucesso!!")
+            input(Fore.GREEN + "Pressione a tecla Enter para seguir... ")
+
 
     elif opcao == 0:
-        from interfaces.menu_conta import menu_conta
-        menu_conta(usuario)
+        input(Fore.YELLOW + "👉 Pressione Enter para continuar...")
+        return

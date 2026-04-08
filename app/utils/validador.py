@@ -32,7 +32,7 @@ def validar_input(mensagem, validacao_funcao, mensagem_erro):
 
 def validar_input_senha():
     while True:
-        senha = input(Fore.YELLOW + "👉 Digite sua senha: ")
+        senha = input(Fore.YELLOW + "👉 Digite sua nova senha: ")
         if not validar_senha(senha):
             print(Fore.RED + "❌ A senha deve conter pelo menos 8 caracteres, incluindo uma letra maiúscula, um número e um caractere especial")
             continue

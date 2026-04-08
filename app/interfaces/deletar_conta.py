@@ -15,7 +15,10 @@ def deletar_conta(usuario):
         confirmacao_senha = input(Fore.RED + "Digite sua senha para confirmar: ")
         confirmacao_senha = hash_senha(confirmacao_senha)
 
-        if confirmacao_senha == usuario.senha_hashed:
+        cursor.execute("SELECT senha FROM usuarios WHERE id = ?", (usuario.id,))
+        senha_armazenada = cursor.fetchone()
+
+        if senha_armazenada and confirmacao_senha == senha_armazenada[0]:
             deletar_usuario(usuario, cursor)
             print(Fore.GREEN + "\nConta deletada com sucesso.")
             conexao.commit()

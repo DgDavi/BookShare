@@ -1,7 +1,6 @@
 from colorama import Fore
 
 
-
 class Usuario:
     def __init__(self, nome, email, senha_hashed, id=None):
         self.id = id
@@ -40,7 +39,7 @@ def buscar_dados_usuario(usuario, cursor):
 
 
 def deletar_usuario(usuario, cursor):
-    cursor.execute("DELETE FROM usuarios WHERE email = ?", (usuario.email,))
+    cursor.execute("DELETE FROM usuarios WHERE id = ?", (usuario.id,))
     return True
 
 
@@ -70,3 +69,17 @@ def editar_nome(usuario, nome, cursor):
     
     novo_nome = resultado[0]
     return novo_nome == usuario.nome
+
+
+def editar_senha(usuario, senha, cursor):
+    cursor.execute("UPDATE usuarios SET senha = ? WHERE id = ?", (senha, usuario.id))
+    usuario.senha_hashed = senha
+
+    cursor.execute("SELECT senha FROM usuarios WHERE id = ?", (usuario.id,))
+    resultado = cursor.fetchone()
+
+    if resultado is None:
+        return False
+    
+    nova_senha = resultado[0]
+    return nova_senha == usuario.senha_hashed
