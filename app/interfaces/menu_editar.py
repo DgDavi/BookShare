@@ -2,7 +2,7 @@ from colorama import Fore
 
 from model.usuario import editar_email, editar_nome, editar_senha
 from data.db import get_db_connection
-from utils.validador import validar_email_cadastro, validar_input, validar_input_senha
+from utils.validador import validar_novo_email, validar_input, validar_nova_senha
 from utils.limpar_tela import limpar_tela
 from utils.security import hash_senha
 
@@ -64,8 +64,9 @@ def menu_editar(usuario):
         print()
         novo_email = validar_input(
             "Digite o novo email: ",
-            lambda e: validar_email_cadastro(e, cursor),
-            ""
+            validar_novo_email,
+            "",
+            cursor
         )
 
         resultado = editar_email(usuario, novo_email, cursor)
@@ -87,7 +88,7 @@ def menu_editar(usuario):
             return
 
         print()
-        nova_senha = validar_input_senha()
+        nova_senha = validar_nova_senha()
         nova_senha_hashed = hash_senha(nova_senha)
         
         resultado = editar_senha(usuario, nova_senha_hashed, cursor)

@@ -4,7 +4,7 @@ from data.db import get_db_connection
 from model.usuario import Usuario, criar_usuario
 from utils.limpar_tela import limpar_tela
 from utils.security import hash_senha
-from utils.validador import validar_input, validar_email_cadastro, validar_input_senha, validar_email_login, validar_senha_login
+from utils.validador import validar_input, validar_novo_email, validar_nova_senha, validar_email_login, validar_senha_login
 
 
 # Função para cadastrar um novo usuário
@@ -26,12 +26,13 @@ def cadastrar_usuario():
 
     email = validar_input(
         Fore.YELLOW + "👉 Digite seu email: ",
-        lambda e: validar_email_cadastro(e, cursor),
-        ""
+        validar_novo_email,
+        "",
+        cursor
     )
 
 
-    senha = validar_input_senha()
+    senha = validar_nova_senha()
     senha_hashed = hash_senha(senha)
     
 
@@ -65,15 +66,18 @@ def login_usuario():
 
     email = validar_input(
         Fore.YELLOW + "👉 Digite seu email: ",
-        lambda e: validar_email_login(e, cursor),
-        ""
+        validar_email_login,
+        "",
+        cursor
     )
 
 
     senha = validar_input(
         Fore.YELLOW + "👉 Digite sua senha: ",
-        lambda s: validar_senha_login(s, email, cursor),
-        Fore.RED + "❌ Senha incorreta."
+        validar_senha_login,
+        Fore.RED + "❌ Senha incorreta.",
+        email,
+        cursor
     )
 
     cursor.execute("SELECT id, nome, email, senha FROM usuarios WHERE email = ?", (email,))

@@ -20,17 +20,17 @@ def validar_senha(senha):
     return maiuscula and numero and especial and tamanho
 
 
-def validar_input(mensagem, validacao_funcao, mensagem_erro):
+def validar_input(mensagem, validacao_funcao, mensagem_erro, *args):
     while True:
         valor = input(mensagem)
-        if validacao_funcao(valor):
+        if validacao_funcao(valor, *args):
             return valor
         else:
             if mensagem_erro and mensagem_erro.strip():
                 print(mensagem_erro)
 
 
-def validar_input_senha():
+def validar_nova_senha():
     while True:
         senha = input(Fore.YELLOW + "👉 Digite sua nova senha: ")
         if not validar_senha(senha):
@@ -47,7 +47,7 @@ def validar_input_senha():
         return senha
 
 
-def validar_email_cadastro(email, cursor):
+def validar_novo_email(email, cursor):
 
     if not validar_email(email):
         print(Fore.RED + "❌ Formatação do email incorreta.")
