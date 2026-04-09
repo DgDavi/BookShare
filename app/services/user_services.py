@@ -7,7 +7,6 @@ from utils.security import hash_senha
 from utils.validador import validar_input, validar_novo_email, validar_nova_senha, validar_email_login, validar_senha_login
 
 
-# Função para cadastrar um novo usuário
 def cadastrar_usuario():
     conexao = get_db_connection()
     cursor = conexao.cursor()
@@ -54,7 +53,6 @@ def cadastrar_usuario():
     return None
 
 
-# Função para realizar o login do usuário
 def login_usuario():
     conexao  = get_db_connection()
     cursor = conexao.cursor()
