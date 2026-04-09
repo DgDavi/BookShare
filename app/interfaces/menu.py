@@ -1,7 +1,7 @@
 from colorama import Fore
 
 from utils.limpar_tela import limpar_tela
-from services.auth_services import cadastrar_usuario, login_usuario
+from services.user_services import cadastrar_usuario, login_usuario
 from interfaces.menu_de_usuario import menu_usuario
 
 

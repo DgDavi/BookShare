@@ -1,6 +1,6 @@
 from colorama import Fore
 
-from model.usuario import editar_email, editar_nome, editar_senha
+from services.user_services import editar_email, editar_nome, editar_senha
 from data.db import get_db_connection
 from utils.validador import validar_novo_email, validar_input, validar_nova_senha
 from utils.limpar_tela import limpar_tela
