@@ -4,6 +4,7 @@ from data.db import get_db_connection
 from utils.validador import validar_input
 from model.livro import Livro
 from utils.limpar_tela import limpar_tela
+from repository.livro_repository import criar_livro
 
 def cadastrar_livro(usuario):
     conexao = get_db_connection()
@@ -38,11 +39,3 @@ def cadastrar_livro(usuario):
     conexao.close()
     return None
 
-
-def criar_livro(livro, cursor):
-    cursor.execute(
-        "INSERT INTO livros (user_id, titulo, descricao) VALUES (?, ?, ?)",
-        (livro.user_id, livro.titulo, livro.descricao)
-    )
-    livro.id = cursor.lastrowid
-    return livro
