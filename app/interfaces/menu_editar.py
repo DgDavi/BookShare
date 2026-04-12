@@ -1,6 +1,6 @@
 from colorama import Fore
 
-from services.user_services import editar_email, editar_nome, editar_senha
+from repository.usuario_repository import editar_email, editar_nome, editar_senha
 from data.db import get_db_connection
 from utils.validador import validar_novo_email, validar_input, validar_nova_senha
 from utils.limpar_tela import limpar_tela
@@ -38,7 +38,7 @@ def menu_editar(usuario):
 
         print()
         novo_nome = validar_input(
-            "Digite o novo nome: ",
+            Fore.YELLOW + "Digite o novo nome: ",
             lambda n: 3 <= len(n) <= 50,
             Fore.RED + "❌ O nome deve conter entre 3 e 50 caracteres.\n" + Fore.YELLOW + "👉 Tente novamente."
         )
@@ -63,7 +63,7 @@ def menu_editar(usuario):
 
         print()
         novo_email = validar_input(
-            "Digite o novo email: ",
+            Fore.YELLOW + "Digite o novo email: ",
             validar_novo_email,
             "",
             cursor

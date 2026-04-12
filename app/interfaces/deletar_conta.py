@@ -1,7 +1,7 @@
 from colorama import Fore
 
 from data.db import get_db_connection
-from services.user_services import deletar_usuario
+from repository.usuario_repository import deletar_usuario
 from utils.security import hash_senha
 
 def deletar_conta(usuario):

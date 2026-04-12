@@ -1,7 +1,7 @@
 from colorama import Fore
 
 from data.db import get_db_connection
-from services.user_services import buscar_dados_usuario
+from repository.usuario_repository import buscar_dados_usuario
 from utils.limpar_tela import limpar_tela
 
 
