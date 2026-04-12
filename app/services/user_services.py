@@ -1,7 +1,7 @@
 from colorama import Fore
 
 from data.db import get_db_connection
-from model.usuario import Usuario, criar_usuario
+from model.usuario import Usuario
 from utils.limpar_tela import limpar_tela
 from utils.security import hash_senha
 from utils.validador import validar_input, validar_novo_email, validar_nova_senha, validar_email_login, validar_senha_login
