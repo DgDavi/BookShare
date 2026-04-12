@@ -19,9 +19,14 @@ def validar_senha(senha):
     return maiuscula and numero and especial and tamanho
 
 
+def input_com_prompt_colorido(mensagem):
+    print(mensagem + Fore.WHITE, end="")
+    return input()
+
+
 def validar_input(mensagem, validacao_funcao, mensagem_erro, *args):
     while True:
-        valor = input(mensagem)
+        valor = input_com_prompt_colorido(mensagem)
         if validacao_funcao(valor, *args):
             return valor
         else:
@@ -31,12 +36,12 @@ def validar_input(mensagem, validacao_funcao, mensagem_erro, *args):
 
 def validar_nova_senha():
     while True:
-        senha = input(Fore.YELLOW + "👉 Digite sua nova senha: ")
+        senha = input_com_prompt_colorido(Fore.YELLOW + "👉 Digite sua nova senha: ")
         if not validar_senha(senha):
             print(Fore.RED + "❌ A senha deve conter pelo menos 8 caracteres, incluindo uma letra maiúscula, um número e um caractere especial")
             continue
 
-        confirmacao = input(Fore.YELLOW + "👉 Digite sua senha novamente: ")
+        confirmacao = input_com_prompt_colorido(Fore.YELLOW + "👉 Digite sua senha novamente: ")
 
         if senha != confirmacao:
             print(Fore.RED + "❌ As senhas não coincidem.")

@@ -3,6 +3,7 @@ from colorama import Fore
 from utils.limpar_tela import limpar_tela
 
 from interfaces.menu_conta import menu_conta
+from services.livro_services import cadastrar_livro
 
 # Menu do usuário logado
 def menu_usuario(usuario):
@@ -33,8 +34,7 @@ def menu_usuario(usuario):
         if opcao == 1:
             menu_conta(usuario)
         elif opcao == 2:
-            print("A fazer")
-            input(Fore.YELLOW + "👉 Pressione Enter para continuar...")
+            cadastrar_livro(usuario)
         elif opcao == 3:
             print("A fazer")
             input(Fore.YELLOW + "👉 Pressione Enter para continuar...")

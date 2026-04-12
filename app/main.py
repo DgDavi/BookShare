@@ -1,12 +1,11 @@
 from colorama import init
 
-from data.schema import create_tables, create_tables_livros
+from data.schema import create_tables
 from interfaces.menu import menu_inical
 
 
 def main():
     create_tables()
-    create_tables_livros()
 
     init(autoreset=True)
 
