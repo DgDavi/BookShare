@@ -16,13 +16,13 @@ def cadastrar_livro(usuario):
 
     titulo = validar_input(
         Fore.YELLOW + "👉 Digite o nome do livro: ",
-        lambda n: 3 <= len(n) <= 50,
+        lambda n: 3 <= len(n) <= 40,
         Fore.YELLOW + "👉 O nome deve conter entre 3 e 50 caracteres."
     )
 
     descricao = validar_input(
         Fore.YELLOW + "👉 Digite a descrição do livro: ",
-        lambda n:3 <= len(n) <= 50,
+        lambda n:3 <= len(n) <= 200,
         Fore.YELLOW + "👉 A descrição deve conter entre 3 e 50 caracteres."
     )
 

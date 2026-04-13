@@ -4,7 +4,7 @@ from data.db import get_db_connection
 from model.usuario import Usuario
 from utils.limpar_tela import limpar_tela
 from utils.security import hash_senha
-from app.repository.usuario_repository import criar_usuario
+from repository.usuario_repository import criar_usuario
 from utils.validador import validar_input, validar_novo_email, validar_nova_senha, validar_email_login, validar_senha_login
 
 
