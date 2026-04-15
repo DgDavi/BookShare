@@ -36,8 +36,8 @@ def menu_usuario(usuario):
         elif opcao == 2:
             cadastrar_livro(usuario)
         elif opcao == 3:
-            print("A fazer")
-            input(Fore.YELLOW + "👉 Pressione Enter para continuar...")
+            from interfaces.exibir_livros import exibir_livros
+            exibir_livros(usuario, cursor)
         elif opcao == 4:
             print("A fazer")
             input(Fore.YELLOW + "👉 Pressione Enter para continuar...")
