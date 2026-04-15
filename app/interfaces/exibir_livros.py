@@ -1,9 +1,9 @@
 from repository.livro_repository import buscar_livros
 
-def exibir_livros(usuario_logado, cursor):
+def exibir_livros(usuario, cursor):
     print("\n=== MEUS LIVROS ===")
 
-    livros = buscar_livros(usuario_logado, cursor)
+    livros = buscar_livros(usuario, cursor)
 
     if not livros:
         print("Você não tem livros cadastrados.")
