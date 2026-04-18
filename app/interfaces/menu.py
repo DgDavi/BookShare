@@ -1,6 +1,7 @@
 from colorama import Fore
 
 from utils.limpar_tela import limpar_tela
+from utils.validador import input_com_prompt_colorido
 from services.user_services import cadastrar_usuario, login_usuario
 from interfaces.menu_de_usuario import menu_usuario
 
@@ -22,7 +23,7 @@ def menu_inical():
         print(Fore.CYAN + "-"*60)
 
         try:
-            opcao = int(input(Fore.YELLOW + "👉 Escolha uma opção: "))
+            opcao = int(input_com_prompt_colorido(Fore.YELLOW + "👉 Escolha uma opção: "))
         except ValueError:
             print(Fore.RED + "❌ Digite apenas números de opções válidas!")
             opcao = None
@@ -52,5 +53,5 @@ def menu_inical():
 
         else:
             print(Fore.RED + "n\❌ Opção inválida. Tente novamente.")
-            input(Fore.YELLOW + "👉 Pressione Enter para continuar...")
+            input_com_prompt_colorido(Fore.YELLOW + "👉 Pressione Enter para continuar...")
 

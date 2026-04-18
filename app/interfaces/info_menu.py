@@ -1,6 +1,7 @@
 from colorama import Fore
 
 from utils.limpar_tela import limpar_tela
+from utils.validador import input_com_prompt_colorido
 
 
 # Menu de informações sobre o projeto
@@ -27,6 +28,6 @@ Davi Gomes: https://github.com/DgDavi
 Lucas Augusto: (colocar link)""")
 
     print()
-    input(Fore.GREEN + "Pressione a tecla Enter para voltar ao menu principal...")
+    input_com_prompt_colorido(Fore.GREEN + "Pressione a tecla Enter para voltar ao menu principal...")
     from .menu import menu_inical
     menu_inical()

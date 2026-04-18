@@ -3,6 +3,7 @@ from colorama import Fore
 from data.db import get_db_connection
 from repository.usuario_repository import buscar_dados_usuario
 from utils.limpar_tela import limpar_tela
+from utils.validador import input_com_prompt_colorido
 
 
 def menu_conta(usuario):
@@ -22,7 +23,7 @@ def menu_conta(usuario):
             print(Fore.CYAN + "-"*60)
 
             try:
-                opcao = int(input(Fore.GREEN + "👉 Escolha uma opção: "))
+                opcao = int(input_com_prompt_colorido(Fore.GREEN + "👉 Escolha uma opção: "))
             except ValueError:
                 print(Fore.RED + "❌ Digite apenas números de opções válidas!")
                 opcao = None
@@ -41,7 +42,7 @@ def menu_conta(usuario):
                 return
             else:
                 print(Fore.RED + "❌ Opção inválida. Tente novamente.")
-                input(Fore.YELLOW + "👉 Pressione Enter para continuar...")
+                input_com_prompt_colorido(Fore.YELLOW + "👉 Pressione Enter para continuar...")
     finally:
         cursor.close()
         conexao.close()

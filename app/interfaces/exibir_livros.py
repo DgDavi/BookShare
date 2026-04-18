@@ -3,6 +3,7 @@ from colorama import Fore
 from repository.livro_repository import buscar_livros
 from data.db import get_db_connection
 from utils.limpar_tela import limpar_tela
+from utils.validador import input_com_prompt_colorido
 
 def exibir_livros(usuario):
     conexao = get_db_connection()
@@ -25,6 +26,6 @@ def exibir_livros(usuario):
             print(Fore.LIGHTMAGENTA_EX + "Descrição: "  + Fore.WHITE + f"{livro['descricao']}")
             print(Fore.CYAN + "-"*60)
 
-    input(Fore.YELLOW + "👉 Pressione Enter para voltar...")
+    input_com_prompt_colorido(Fore.YELLOW + "👉 Pressione Enter para voltar...")
     return True
 

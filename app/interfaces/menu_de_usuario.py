@@ -1,6 +1,7 @@
 from colorama import Fore
 
 from utils.limpar_tela import limpar_tela
+from utils.validador import input_com_prompt_colorido
 
 from interfaces.menu_conta import menu_conta
 from services.livro_services import cadastrar_livro
@@ -25,7 +26,7 @@ def menu_usuario(usuario):
 
 
         try:
-            opcao = int(input(Fore.GREEN + "👉 Escolha uma opção: "))
+            opcao = int(input_com_prompt_colorido(Fore.GREEN + "👉 Escolha uma opção: "))
         except ValueError:
             print(Fore.RED + "❌ Digite apenas números de opções válidas!")
             opcao = None
@@ -40,10 +41,10 @@ def menu_usuario(usuario):
             exibir_livros(usuario, cursor)
         elif opcao == 4:
             print("A fazer")
-            input(Fore.YELLOW + "👉 Pressione Enter para continuar...")
+            input_com_prompt_colorido(Fore.YELLOW + "👉 Pressione Enter para continuar...")
         elif opcao == 0:
             limpar_tela()
             exit()
         else:
             print(Fore.RED + "❌ Opção inválida. Tente novamente.")
-            input(Fore.YELLOW + "👉 Pressione Enter para continuar...")
+            input_com_prompt_colorido(Fore.YELLOW + "👉 Pressione Enter para continuar...")

@@ -20,8 +20,7 @@ def validar_senha(senha):
 
 
 def input_com_prompt_colorido(mensagem):
-    print(mensagem + Fore.WHITE, end="")
-    return input()
+    return input(mensagem + Fore.WHITE)
 
 
 def validar_input(mensagem, validacao_funcao, mensagem_erro, *args):
