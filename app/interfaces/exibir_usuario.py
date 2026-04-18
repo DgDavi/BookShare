@@ -2,7 +2,6 @@ from colorama import Fore
 
 from data.db import get_db_connection
 from repository.usuario_repository import buscar_dados_usuario
-from utils.validador import input_com_prompt_colorido
 
 def exibir_usuario(usuario):
     conexao = get_db_connection()

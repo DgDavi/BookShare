@@ -1,13 +1,13 @@
 def criar_livro(livro, cursor):
     cursor.execute(
-        "INSERT INTO livros (user_id, titulo, descricao) VALUES (?, ?, ?)",
-        (livro.user_id, livro.titulo, livro.descricao)
+        "INSERT INTO livros (user_id, titulo, descricao, autor, disponivel) VALUES (?, ?, ?, ?, ?)",
+        (livro.user_id, livro.titulo, livro.descricao, livro.autor, int(livro.disponivel))
     )
     livro.id = cursor.lastrowid
     return livro
 
 
-def buscar_livros(usuario, cursor):
+def buscar_livros_usuario(usuario, cursor):
     cursor.execute(
         "SELECT id, user_id, titulo, descricao FROM livros WHERE user_id = ?",
         (usuario.id,)
@@ -63,3 +63,14 @@ def deletar_livro(livro, cursor):
         (livro.id,)
     )
     return True
+
+
+def buscar_livros(livro, cursor):
+    termo_busca = f"%{livro}%"
+    cursor.execute(
+        "SELECT id, user_id, titulo, descricao, autor, disponivel FROM livros WHERE titulo LIKE ? OR autor LIKE ?",
+        (termo_busca, termo_busca)
+    )
+    resultado = cursor.fetchall()
+
+    return resultado

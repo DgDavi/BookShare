@@ -36,8 +36,6 @@ def cadastrar_usuario():
     senha_hashed = hash_senha(senha)
     
 
-
-    # Inseri o novo usuário no banco de dados
     usuario = Usuario(nome, email, senha_hashed)
     usuario_criado = criar_usuario(usuario, cursor)
 
