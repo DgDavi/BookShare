@@ -11,21 +11,9 @@ def criar_usuario(usuario, cursor):
     
 
 def buscar_dados_usuario(usuario, cursor):
-    print(Fore.CYAN + "=" * 60)
-    print(Fore.CYAN + "📋 DADOS DO USUÁRIO".center(60))
-    print(Fore.CYAN + "=" * 60)
-
     cursor.execute("SELECT id, nome, email FROM usuarios WHERE email = ?", (usuario.email,))
     dados_usuario = cursor.fetchone()
-
-    if dados_usuario:
-        print(Fore.LIGHTMAGENTA_EX + "Id: " + Fore.WHITE + f"{dados_usuario[0]}")
-        print(Fore.LIGHTMAGENTA_EX + "Nome: " + Fore.WHITE + f"{dados_usuario[1]}")
-        print(Fore.LIGHTMAGENTA_EX + "Email: " + Fore.WHITE + f"{dados_usuario[2]}")
-        return True
-
-    print(Fore.RED + "❌ Nenhum dado de usuário encontrado.")
-    return False
+    return dados_usuario
 
 
 def deletar_usuario(usuario, cursor):
