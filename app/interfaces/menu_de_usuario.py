@@ -20,7 +20,7 @@ def menu_usuario(usuario):
         print(Fore.LIGHTMAGENTA_EX + "[2]" + Fore.WHITE + " Cadastrar Livro")
         print(Fore.LIGHTMAGENTA_EX + "[3]" + Fore.WHITE + " Procurar Livro")
         print(Fore.LIGHTMAGENTA_EX + "[4]" + Fore.WHITE + " Cartão de Crédito")
-        print(Fore.LIGHTMAGENTA_EX + "[0]" + Fore.WHITE + " Sair")
+        print(Fore.LIGHTMAGENTA_EX + "[0]" + Fore.WHITE + " Logout")
 
         print(Fore.CYAN + "-"*60)
 
@@ -44,7 +44,7 @@ def menu_usuario(usuario):
             input_com_prompt_colorido(Fore.YELLOW + "👉 Pressione Enter para continuar...")
         elif opcao == 0:
             limpar_tela()
-            exit()
+            return
         else:
             print(Fore.RED + "❌ Opção inválida. Tente novamente.")
             input_com_prompt_colorido(Fore.YELLOW + "👉 Pressione Enter para continuar...")
