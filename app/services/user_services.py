@@ -4,7 +4,7 @@ from data.db import get_db_connection
 from model.usuario import Usuario
 from utils.limpar_tela import limpar_tela
 from utils.security import hash_senha
-from repository.usuario_repository import criar_usuario
+from repository.usuario_repository import criar_usuario, buscar_dados_usuario
 from utils.validador import validar_input, validar_novo_email, validar_nova_senha, validar_email_login, validar_senha_login, input_com_prompt_colorido
 
 
@@ -98,5 +98,16 @@ def login_usuario():
     input_com_prompt_colorido(Fore.GREEN + "Pressione a tecla Enter para seguir... ")
 
     return usuario
+
+
+def obter_dados_usuario(usuario):
+    conexao = get_db_connection()
+    cursor = conexao.cursor()
+
+    try:
+        return buscar_dados_usuario(usuario, cursor)
+    finally:
+        cursor.close()
+        conexao.close()
 
 

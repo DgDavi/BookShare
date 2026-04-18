@@ -1,15 +1,9 @@
 from colorama import Fore
 
-from data.db import get_db_connection
-from repository.usuario_repository import buscar_dados_usuario
+from services.user_services import obter_dados_usuario
 
 def exibir_usuario(usuario):
-    conexao = get_db_connection()
-    cursor = conexao.cursor()
-
-    dados_usuario = buscar_dados_usuario(usuario, cursor)
-    cursor.close()
-    conexao.close()
+    dados_usuario = obter_dados_usuario(usuario)
 
     print(Fore.CYAN + "=" * 60)
     print(Fore.CYAN + "📋 DADOS DO USUÁRIO".center(60))

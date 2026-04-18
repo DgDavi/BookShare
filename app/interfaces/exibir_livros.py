@@ -1,20 +1,16 @@
 from colorama import Fore
 
-from repository.livro_repository import buscar_livros_usuario
-from data.db import get_db_connection
+from services.livro_services import listar_livros_do_usuario
 from utils.limpar_tela import limpar_tela
 from utils.validador import input_com_prompt_colorido
 
 def exibir_livros(usuario):
-    conexao = get_db_connection()
-    cursor = conexao.cursor()
-
     limpar_tela()
     print(Fore.CYAN + "=" * 60)
     print(Fore.CYAN + "📋 MEUS LIVROS".center(60))
     print(Fore.CYAN + "=" * 60)
 
-    livros = buscar_livros_usuario(usuario, cursor)
+    livros = listar_livros_do_usuario(usuario)
 
     if not livros:
         print("Você não tem livros cadastrados.")

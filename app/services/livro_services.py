@@ -4,7 +4,7 @@ from data.db import get_db_connection
 from utils.validador import validar_input
 from model.livro import Livro
 from utils.limpar_tela import limpar_tela
-from repository.livro_repository import criar_livro
+from repository.livro_repository import criar_livro, buscar_livros_usuario, buscar_livros
 
 def cadastrar_livro(usuario):
     conexao = get_db_connection()
@@ -44,4 +44,26 @@ def cadastrar_livro(usuario):
     cursor.close()
     conexao.close()
     return None
+
+
+def listar_livros_do_usuario(usuario):
+    conexao = get_db_connection()
+    cursor = conexao.cursor()
+
+    try:
+        return buscar_livros_usuario(usuario, cursor)
+    finally:
+        cursor.close()
+        conexao.close()
+
+
+def buscar_livros_por_termo(termo):
+    conexao = get_db_connection()
+    cursor = conexao.cursor()
+
+    try:
+        return buscar_livros(termo, cursor)
+    finally:
+        cursor.close()
+        conexao.close()
 
