@@ -87,5 +87,5 @@ Projeto BookShare desenvolvido para estudo e pratica de Python, persistencia com
 
 ## Autores
 
-- Davi Gomes - GitHub: https://github.com/SEU_USUARIO_AQUI
-- Lucas Augusto - GitHub: https://github.com/SEU_USUARIO_AQUI
+- Davi Gomes - GitHub: https://github.com/DgDavi
+- Lucas Augusto - GitHub: https://github.com/luquetaaasn
