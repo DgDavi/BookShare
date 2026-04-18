@@ -21,4 +21,4 @@ def create_tables():
                 disponivel BOOLEAN,
                 FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE CASCADE)""")
     conexao.commit()
-    return conexao, cursor
+    return True
