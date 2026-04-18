@@ -1,6 +1,6 @@
 from colorama import Fore
 
-from .security import hash_senha
+from .security import verificar_senha
 
 
 def validar_email(email):
@@ -20,8 +20,7 @@ def validar_senha(senha):
 
 
 def input_com_prompt_colorido(mensagem):
-    print(mensagem + Fore.WHITE, end="")
-    return input()
+    return input(mensagem + Fore.WHITE)
 
 
 def validar_input(mensagem, validacao_funcao, mensagem_erro, *args):
@@ -76,14 +75,10 @@ def validar_email_login(email, cursor):
 
 
 def validar_senha_login(senha, email, cursor):
-    senha_hashed = hash_senha(senha)
-
     cursor.execute("SELECT senha FROM usuarios WHERE email = ?", (email,))
     resultado = cursor.fetchone()
     if not resultado:
         return False
     senha_original = resultado[0]
 
-    if senha_hashed != senha_original:
-        return False
-    return True
+    return verificar_senha(senha, senha_original)

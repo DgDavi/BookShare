@@ -8,3 +8,13 @@ __pycache__/
 
 # Project local database
 usuarios.db
+
+# Ambiente virtual
+venv/
+
+# Variáveis de ambiente
+.env
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db

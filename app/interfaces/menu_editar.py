@@ -2,9 +2,9 @@ from colorama import Fore
 
 from repository.usuario_repository import editar_email, editar_nome, editar_senha
 from data.db import get_db_connection
-from utils.validador import validar_novo_email, validar_input, validar_nova_senha
+from utils.validador import validar_novo_email, validar_input, validar_nova_senha, input_com_prompt_colorido
 from utils.limpar_tela import limpar_tela
-from utils.security import hash_senha
+from utils.security import verificar_senha, hash_senha
 
 def menu_editar(usuario):
     conexao = get_db_connection()
@@ -22,18 +22,17 @@ def menu_editar(usuario):
     print(Fore.CYAN + "-"*60)
     
     try:
-        opcao = int(input(Fore.GREEN + "👉 Escolha uma opção: "))
+        opcao = int(input_com_prompt_colorido(Fore.GREEN + "👉 Escolha uma opção: "))
     except ValueError:
         print(Fore.RED + "❌ Digite apenas números de opções válidas!")
         opcao = None
 
     if opcao == 1:
         print()
-        confirmacao_senha = input(Fore.YELLOW + "👉 Digite sua senha para confirmar: ")
-        senha_hashed = hash_senha(confirmacao_senha)
-        if senha_hashed != usuario.senha_hashed:
+        confirmacao_senha = input_com_prompt_colorido(Fore.YELLOW + "👉 Digite sua senha para confirmar: ")
+        if not verificar_senha(confirmacao_senha, usuario.senha_hashed):
             print(Fore.RED + "❌ Você digitou a senha errada. A operação foi cancelada.")
-            input(Fore.GREEN + "\nPressione a tecla Enter para seguir... ")
+            input_com_prompt_colorido(Fore.GREEN + "\nPressione a tecla Enter para seguir... ")
             return
 
         print()
@@ -49,16 +48,15 @@ def menu_editar(usuario):
             cursor.close()
             conexao.close()
             print(Fore.GREEN + "\nEmail editado com sucesso!!")
-            input(Fore.GREEN + "Pressione a tecla Enter para seguir... ")
+            input_com_prompt_colorido(Fore.GREEN + "Pressione a tecla Enter para seguir... ")
             
         
     elif opcao == 2:
         print()
-        confirmacao_senha = input(Fore.YELLOW + "👉 Digite sua senha para confirmar: ")
-        senha_hashed = hash_senha(confirmacao_senha)
-        if senha_hashed != usuario.senha_hashed:
+        confirmacao_senha = input_com_prompt_colorido(Fore.YELLOW + "👉 Digite sua senha para confirmar: ")
+        if not verificar_senha(confirmacao_senha, usuario.senha_hashed):
             print(Fore.RED + "❌ Você digitou a senha errada. A operação foi cancelada.")
-            input(Fore.GREEN + "\nPressione a tecla Enter para seguir... ")
+            input_com_prompt_colorido(Fore.GREEN + "\nPressione a tecla Enter para seguir... ")
             return
 
         print()
@@ -75,16 +73,15 @@ def menu_editar(usuario):
                 cursor.close()
                 conexao.close()
                 print(Fore.GREEN + "\nEmail editado com sucesso!!")
-                input(Fore.GREEN + "Pressione a tecla Enter para seguir... ")
+                input_com_prompt_colorido(Fore.GREEN + "Pressione a tecla Enter para seguir... ")
             
 
     elif opcao == 3:
         print()
-        confirmacao_senha = input(Fore.YELLOW + "👉 Digite sua senha para confirmar: ")
-        senha_hashed = hash_senha(confirmacao_senha)
-        if senha_hashed != usuario.senha_hashed:
+        confirmacao_senha = input_com_prompt_colorido(Fore.YELLOW + "👉 Digite sua senha para confirmar: ")
+        if not verificar_senha(confirmacao_senha, usuario.senha_hashed):
             print(Fore.RED + "❌ Você digitou a senha errada. A operação foi cancelada.")
-            input(Fore.GREEN + "\nPressione a tecla Enter para seguir... ")
+            input_com_prompt_colorido(Fore.GREEN + "\nPressione a tecla Enter para seguir... ")
             return
 
         print()
@@ -97,9 +94,9 @@ def menu_editar(usuario):
             cursor.close()
             conexao.close()
             print(Fore.GREEN + "\nSenha editado com sucesso!!")
-            input(Fore.GREEN + "Pressione a tecla Enter para seguir... ")
+            input_com_prompt_colorido(Fore.GREEN + "Pressione a tecla Enter para seguir... ")
 
 
     elif opcao == 0:
-        input(Fore.YELLOW + "👉 Pressione Enter para continuar...")
+        input_com_prompt_colorido(Fore.YELLOW + "👉 Pressione Enter para continuar...")
         return
