@@ -17,6 +17,8 @@ def create_tables():
                 user_id INTEGER NOT NULL,
                 titulo TEXT NOT NULL,
                 descricao TEXT NOT NULL,
+                autor TEXT NOT NULL,
+                disponivel BOOLEAN,
                 FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE CASCADE)""")
     conexao.commit()
     return conexao, cursor

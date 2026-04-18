@@ -7,14 +7,13 @@ def criar_livro(livro, cursor):
     return livro
 
 
-
 def buscar_livros(usuario, cursor):
     cursor.execute(
         "SELECT id, user_id, titulo, descricao FROM livros WHERE user_id = ?",
         (usuario.id,)
     )
-
     return cursor.fetchall()
+
 
 def editar_titulo(livro, titulo, cursor):
     cursor.execute(
@@ -36,6 +35,7 @@ def editar_titulo(livro, titulo, cursor):
     novo_titulo = resultado[0]
     return novo_titulo == livro.titulo
 
+
 def editar_descricao(livro, descricao, cursor):
     cursor.execute(
         "UPDATE livros SET descricao = ? WHERE id = ?",
@@ -55,6 +55,7 @@ def editar_descricao(livro, descricao, cursor):
 
     nova_descricao = resultado[0]
     return nova_descricao == livro.descricao
+
 
 def deletar_livro(livro, cursor):
     cursor.execute(

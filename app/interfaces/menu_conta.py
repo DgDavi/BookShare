@@ -15,8 +15,9 @@ def menu_conta(usuario):
             buscar_dados_usuario(usuario, cursor)
             print(Fore.CYAN + "-"*60)
             print()
-            print(Fore.LIGHTMAGENTA_EX + "[1]" + Fore.WHITE + " Editar")
-            print(Fore.LIGHTMAGENTA_EX + "[2]" + Fore.WHITE + " Deletar")
+            print(Fore.LIGHTMAGENTA_EX + "[1]" + Fore.WHITE + " Meus Livros")
+            print(Fore.LIGHTMAGENTA_EX + "[2]" + Fore.WHITE + " Editar")
+            print(Fore.LIGHTMAGENTA_EX + "[3]" + Fore.WHITE + " Deletar")
             print(Fore.LIGHTMAGENTA_EX + "[0]" + Fore.WHITE + " Voltar")
             print(Fore.CYAN + "-"*60)
 
@@ -27,9 +28,12 @@ def menu_conta(usuario):
                 opcao = None
 
             if opcao == 1:
+                from interfaces.exibir_livros import exibir_livros
+                exibir_livros(usuario)
+            elif opcao == 2:
                 from interfaces.menu_editar import menu_editar
                 menu_editar(usuario)
-            elif opcao == 2:
+            elif opcao == 3:
                 from interfaces.deletar_conta import deletar_conta
                 if deletar_conta(usuario):
                     return
