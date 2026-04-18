@@ -78,18 +78,18 @@ def login_usuario():
     )
 
     cursor.execute("SELECT id, nome, email, senha FROM usuarios WHERE email = ?", (email,))
-    usuario_logado = cursor.fetchone()
+    usuario_login = cursor.fetchone()
 
-    if not usuario_logado:
+    if not usuario_login:
         cursor.close()
         conexao.close()
         return None
 
     usuario = Usuario(
-        nome=usuario_logado[1],
-        email=usuario_logado[2],
-        senha_hashed=usuario_logado[3],
-        id=usuario_logado[0]
+        nome=usuario_login[1],
+        email=usuario_login[2],
+        senha_hashed=usuario_login[3],
+        id=usuario_login[0]
     )
 
     cursor.close()
