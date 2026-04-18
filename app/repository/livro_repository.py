@@ -68,7 +68,7 @@ def deletar_livro(livro, cursor):
 def buscar_livros(livro, cursor):
     termo_busca = f"%{livro}%"
     cursor.execute(
-        "SELECT id, user_id, titulo, descricao, autor, disponivel FROM livros WHERE titulo LIKE ? OR autor LIKE ?",
+        "SELECT id, user_id, titulo, descricao, autor, disponivel FROM livros WHERE LOWER(TRIM(titulo)) LIKE ? OR LOWER(TRIM(autor)) LIKE ?",
         (termo_busca, termo_busca)
     )
     resultado = cursor.fetchall()

@@ -62,7 +62,8 @@ def buscar_livros_por_termo(termo):
     cursor = conexao.cursor()
 
     try:
-        return buscar_livros(termo, cursor)
+        termo_normalizado = termo.strip().lower()
+        return buscar_livros(termo_normalizado, cursor)
     finally:
         cursor.close()
         conexao.close()
