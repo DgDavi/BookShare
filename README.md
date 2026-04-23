@@ -29,15 +29,15 @@ BookShare/
 |   |-- main.py
 |   |-- data/
 |   |   |-- db.py
-|   |   `-- schema.py
+|   |   |-- schema.py
 |   |-- interfaces/
 |   |-- model/
 |   |-- repository/
 |   |-- services/
-|   `-- utils/
+|   |-- utils/
 |-- usuarios.db
 |-- requirements.txt
-`-- README.md
+|-- README.md
 ```
 
 ## Requisitos
