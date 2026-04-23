@@ -37,7 +37,7 @@ def menu_editar(usuario):
 
         print()
         novo_nome = validar_input(
-            Fore.YELLOW + "Digite o novo nome: ",
+            Fore.YELLOW + "👉 Digite o novo nome: ",
             lambda n: 3 <= len(n) <= 50,
             Fore.RED + "❌ O nome deve conter entre 3 e 50 caracteres.\n" + Fore.YELLOW + "👉 Tente novamente."
         )
@@ -61,7 +61,7 @@ def menu_editar(usuario):
 
         print()
         novo_email = validar_input(
-            Fore.YELLOW + "Digite o novo email: ",
+            Fore.YELLOW + "👉 Digite o novo email: ",
             validar_novo_email,
             "",
             cursor
