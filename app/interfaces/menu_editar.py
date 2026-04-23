@@ -47,7 +47,7 @@ def menu_editar(usuario):
             conexao.commit()
             cursor.close()
             conexao.close()
-            print(Fore.GREEN + "\nEmail editado com sucesso!!")
+            print(Fore.GREEN + "\nNome editado com sucesso!!")
             input_com_prompt_colorido(Fore.GREEN + "Pressione a tecla Enter para seguir... ")
             
         
@@ -93,7 +93,7 @@ def menu_editar(usuario):
             conexao.commit()
             cursor.close()
             conexao.close()
-            print(Fore.GREEN + "\nSenha editado com sucesso!!")
+            print(Fore.GREEN + "\nSenha editada com sucesso!!")
             input_com_prompt_colorido(Fore.GREEN + "Pressione a tecla Enter para seguir... ")
 
 
