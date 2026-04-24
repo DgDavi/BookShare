@@ -24,6 +24,8 @@ def create_tables():
                 FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE CASCADE,
                 FOREIGN KEY (usuario_emprestimo) REFERENCES usuarios(id) ON DELETE SET NULL
                 )""")
+    
+    conexao.commit()
 
     cursor.close()
     conexao.close()
