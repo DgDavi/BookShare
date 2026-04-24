@@ -15,8 +15,9 @@ def menu_conta(usuario):
         print(Fore.CYAN + "-"*60)
         print()
         print(Fore.LIGHTMAGENTA_EX + "[1]" + Fore.WHITE + " Meus Livros")
-        print(Fore.LIGHTMAGENTA_EX + "[2]" + Fore.WHITE + " Editar")
-        print(Fore.LIGHTMAGENTA_EX + "[3]" + Fore.WHITE + " Deletar")
+        print(Fore.LIGHTMAGENTA_EX + "[2]" + Fore.WHITE + " Devolver Livro")
+        print(Fore.LIGHTMAGENTA_EX + "[3]" + Fore.WHITE + " Editar")
+        print(Fore.LIGHTMAGENTA_EX + "[4]" + Fore.WHITE + " Deletar")
         print(Fore.LIGHTMAGENTA_EX + "[0]" + Fore.WHITE + " Voltar")
         print(Fore.CYAN + "-"*60)
 
@@ -30,9 +31,12 @@ def menu_conta(usuario):
             from .exibir_livros import exibir_livros
             exibir_livros(usuario)
         elif opcao == 2:
+            from .devolver_livros import devolver_livros
+            devolver_livros(usuario)
+        elif opcao == 3:
             from .menu_editar import menu_editar
             menu_editar(usuario)
-        elif opcao == 3:
+        elif opcao == 4:
             from .deletar_conta import deletar_conta
             if deletar_conta(usuario):
                 return

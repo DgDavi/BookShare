@@ -5,7 +5,16 @@ from data.db import get_db_connection
 from utils.validador import validar_input
 from model.livro import Livro
 from utils.limpar_tela import limpar_tela
-from repository.livro_repository import criar_livro, buscar_livros_usuario, buscar_livros
+from repository.livro_repository import (
+    criar_livro,
+    buscar_livros_usuario,
+    buscar_livros,
+    buscar_livro_por_id,
+    buscar_livros_emprestados,
+    usuario_tem_emprestimo_ativo,
+    emprestar_livro_repo,
+    devolver_livro_repo,
+)
 
 def cadastrar_livro(usuario):
     conexao = get_db_connection()
@@ -58,6 +67,17 @@ def listar_livros_do_usuario(usuario):
         conexao.close()
 
 
+def listar_livros_emprestados(usuario):
+    conexao = get_db_connection()
+    cursor = conexao.cursor()
+
+    try:
+        return buscar_livros_emprestados(usuario.id, cursor)
+    finally:
+        cursor.close()
+        conexao.close()
+
+
 def buscar_livros_por_termo(termo):
     conexao = get_db_connection()
     cursor = conexao.cursor()
@@ -73,25 +93,13 @@ def buscar_livros_por_termo(termo):
 def emprestar_livro(cursor, conexao, livro_id, usuario_id):
     data_atual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    cursor.execute("""
-        UPDATE livros
-        SET disponivel = 0,
-            usuario_emprestimo = ?,
-            data_emprestimo = ?
-        WHERE id = ?
-    """, (usuario_id, data_atual, livro_id))
+    emprestar_livro_repo(livro_id, usuario_id, data_atual, cursor)
 
     conexao.commit()
 
 
 def devolver_livro(cursor, conexao, livro_id):
-    cursor.execute("""
-        UPDATE livros
-        SET disponivel = 1,
-            usuario_emprestimo = NULL,
-            data_emprestimo = NULL
-        WHERE id = ?
-    """, (livro_id,))
+    devolver_livro_repo(livro_id, cursor)
 
     conexao.commit()
 
@@ -119,13 +127,61 @@ def atualizar_status_livros(cursor, conexao):
         data_emprestimo = livro[1]
 
         if data_emprestimo and livro_atrasado(data_emprestimo):
-            cursor.execute("""
-                UPDATE livros
-                SET disponivel = 1,
-                    usuario_emprestimo = NULL,
-                    data_emprestimo = NULL
-                WHERE id = ?
-            """, (livro_id,))
+            devolver_livro_repo(livro_id, cursor)
 
     conexao.commit()
+
+
+def tentar_emprestar_livro(usuario_id, livro_id):
+    conexao = get_db_connection()
+    cursor = conexao.cursor()
+
+    try:
+        atualizar_status_livros(cursor, conexao)
+
+        livro = buscar_livro_por_id(livro_id, cursor)
+        if not livro:
+            return False, "❌ Livro não encontrado."
+
+        if livro["user_id"] == usuario_id:
+            return False, "❌ Você não pode pegar emprestado o próprio livro."
+
+        if livro["disponivel"] == 0:
+            return False, "❌ Livro indisponível no momento."
+
+        if usuario_tem_emprestimo_ativo(usuario_id, cursor):
+            return False, "❌ Você já possui um empréstimo ativo."
+
+        data_atual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        emprestar_livro_repo(livro_id, usuario_id, data_atual, cursor)
+        conexao.commit()
+
+        return True, "✅ Empréstimo realizado por 7 dias."
+    finally:
+        cursor.close()
+        conexao.close()
+
+
+def tentar_devolver_livro(usuario_id, livro_id):
+    conexao = get_db_connection()
+    cursor = conexao.cursor()
+
+    try:
+        livro = buscar_livro_por_id(livro_id, cursor)
+        if not livro:
+            return False, "❌ Livro não encontrado."
+
+        if livro["usuario_emprestimo"] != usuario_id:
+            return False, "❌ Esse livro não está emprestado para você."
+
+        if livro["disponivel"] == 1:
+            return False, "❌ Esse livro já está disponível."
+
+        devolver_livro_repo(livro_id, cursor)
+        conexao.commit()
+
+        return True, "✅ Livro devolvido com sucesso."
+    finally:
+        cursor.close()
+        conexao.close()
 

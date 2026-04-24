@@ -6,19 +6,24 @@ def create_tables():
     cursor = conexao.cursor()
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS usuarios (
-                   id INTEGER PRIMARY KEY AUTOINCREMENT,
-                   nome TEXT NOT NULL,
-                   email TEXT UNIQUE NOT NULL,
-                   senha TEXT NOT NULL 
-                   )""")
-    
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                nome TEXT NOT NULL,
+                email TEXT UNIQUE NOT NULL,
+                senha TEXT NOT NULL
+                )""")
+
     cursor.execute("""CREATE TABLE IF NOT EXISTS livros (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER NOT NULL,
                 titulo TEXT NOT NULL,
                 descricao TEXT NOT NULL,
                 autor TEXT NOT NULL,
-                disponivel BOOLEAN,
-                FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE CASCADE)""")
-    conexao.commit()
-    return True
+                disponivel BOOLEAN NOT NULL DEFAULT 1 CHECK (disponivel IN (0, 1)),
+                usuario_emprestimo INTEGER,
+                data_emprestimo TEXT,
+                FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+                FOREIGN KEY (usuario_emprestimo) REFERENCES usuarios(id) ON DELETE SET NULL
+                )""")
+
+    cursor.close()
+    conexao.close()

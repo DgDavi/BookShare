@@ -9,7 +9,7 @@ def criar_livro(livro, cursor):
 
 def buscar_livros_usuario(usuario, cursor):
     cursor.execute(
-        "SELECT id, user_id, titulo, descricao FROM livros WHERE user_id = ?",
+        "SELECT id, user_id, titulo, descricao, autor, disponivel, usuario_emprestimo, data_emprestimo FROM livros WHERE user_id = ?",
         (usuario.id,)
     )
     return cursor.fetchall()
@@ -68,9 +68,62 @@ def deletar_livro(livro, cursor):
 def buscar_livros(termo, cursor):
     termo_busca = f"%{termo}%"
     cursor.execute(
-        "SELECT id, user_id, titulo, descricao, autor, disponivel FROM livros WHERE LOWER(TRIM(titulo)) LIKE ? OR LOWER(TRIM(autor)) LIKE ?",
+        "SELECT id, user_id, titulo, descricao, autor, disponivel, usuario_emprestimo, data_emprestimo FROM livros WHERE LOWER(TRIM(titulo)) LIKE ? OR LOWER(TRIM(autor)) LIKE ?",
         (termo_busca, termo_busca)
     )
     resultado = cursor.fetchall()
 
     return resultado
+
+
+def buscar_livro_por_id(livro_id, cursor):
+    cursor.execute(
+        "SELECT id, user_id, titulo, descricao, autor, disponivel, usuario_emprestimo, data_emprestimo FROM livros WHERE id = ?",
+        (livro_id,)
+    )
+    return cursor.fetchone()
+
+
+def buscar_livros_emprestados(usuario_id, cursor):
+    cursor.execute(
+        "SELECT id, user_id, titulo, descricao, autor, disponivel, usuario_emprestimo, data_emprestimo FROM livros WHERE usuario_emprestimo = ? AND disponivel = 0",
+        (usuario_id,)
+    )
+    return cursor.fetchall()
+
+
+def usuario_tem_emprestimo_ativo(usuario_id, cursor):
+    cursor.execute(
+        "SELECT COUNT(1) FROM livros WHERE usuario_emprestimo = ? AND disponivel = 0",
+        (usuario_id,)
+    )
+    resultado = cursor.fetchone()
+    return resultado[0] > 0
+
+
+def emprestar_livro_repo(livro_id, usuario_id, data_emprestimo, cursor):
+    cursor.execute(
+        """
+        UPDATE livros
+        SET disponivel = 0,
+            usuario_emprestimo = ?,
+            data_emprestimo = ?
+        WHERE id = ?
+        """,
+        (usuario_id, data_emprestimo, livro_id)
+    )
+
+
+def devolver_livro_repo(livro_id, cursor):
+    cursor.execute(
+        """
+        UPDATE livros
+        SET disponivel = 1,
+            usuario_emprestimo = NULL,
+            data_emprestimo = NULL
+        WHERE id = ?
+        """,
+        (livro_id,)
+    )
+
+

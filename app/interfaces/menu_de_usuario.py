@@ -38,7 +38,7 @@ def menu_usuario(usuario):
             cadastrar_livro(usuario)
         elif opcao == 3:
             from interfaces.procurar_livros import procurar_livros
-            procurar_livros()
+            procurar_livros(usuario)
         elif opcao == 4:
             print("A fazer")
             input_com_prompt_colorido(Fore.YELLOW + "👉 Pressione Enter para continuar...")
