@@ -17,6 +17,16 @@ from repository.livro_repository import (
 )
 
 def cadastrar_livro(usuario):
+    """
+    Coleta os dados de um livro no terminal e salva no banco.
+
+    Args:
+        usuario (Usuario): Usuário dono do livro que será cadastrado.
+
+    Returns:
+        Livro | None: Instância de livro criada quando o cadastro é concluído.
+        Se houver falha no processo, retorna None.
+    """
     conexao = get_db_connection()
     cursor = conexao.cursor()
 
@@ -57,6 +67,15 @@ def cadastrar_livro(usuario):
 
 
 def listar_livros_do_usuario(usuario):
+    """
+    Lista os livros cadastrados pelo usuário.
+
+    Args:
+        usuario (Usuario): Usuário dono dos livros.
+
+    Returns:
+        list[sqlite3.Row]: Lista de livros pertencentes ao usuário.
+    """
     conexao = get_db_connection()
     cursor = conexao.cursor()
 
@@ -68,6 +87,15 @@ def listar_livros_do_usuario(usuario):
 
 
 def listar_livros_emprestados(usuario):
+    """
+    Lista os livros atualmente emprestados para o usuário.
+
+    Args:
+        usuario (Usuario): Usuário que pegou livros emprestados.
+
+    Returns:
+        list[sqlite3.Row]: Lista de empréstimos ativos do usuário.
+    """
     conexao = get_db_connection()
     cursor = conexao.cursor()
 
@@ -79,6 +107,15 @@ def listar_livros_emprestados(usuario):
 
 
 def buscar_livros_por_termo(termo):
+    """
+    Busca livros por título ou autor com normalização de texto.
+
+    Args:
+        termo (str): Texto digitado para pesquisa.
+
+    Returns:
+        list[sqlite3.Row]: Lista de livros encontrados.
+    """
     conexao = get_db_connection()
     cursor = conexao.cursor()
 
@@ -91,6 +128,18 @@ def buscar_livros_por_termo(termo):
 
 
 def emprestar_livro(cursor, conexao, livro_id, usuario_id):
+    """
+    Registra o empréstimo de um livro para um usuário.
+
+    Args:
+        cursor (sqlite3.Cursor): Cursor da transação atual.
+        conexao (sqlite3.Connection): Conexão com o banco de dados.
+        livro_id (int): Identificador do livro.
+        usuario_id (int): Identificador do usuário que pega emprestado.
+
+    Returns:
+        None: Atualiza o banco e confirma a transação.
+    """
     data_atual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     emprestar_livro_repo(livro_id, usuario_id, data_atual, cursor)
@@ -99,12 +148,32 @@ def emprestar_livro(cursor, conexao, livro_id, usuario_id):
 
 
 def devolver_livro(cursor, conexao, livro_id):
+    """
+    Registra a devolução de um livro e libera sua disponibilidade.
+
+    Args:
+        cursor (sqlite3.Cursor): Cursor da transação atual.
+        conexao (sqlite3.Connection): Conexão com o banco de dados.
+        livro_id (int): Identificador do livro.
+
+    Returns:
+        None: Atualiza o banco e confirma a transação.
+    """
     devolver_livro_repo(livro_id, cursor)
 
     conexao.commit()
 
 
 def livro_atrasado(data_emprestimo):
+    """
+    Verifica se um empréstimo ultrapassou o prazo de 7 dias.
+
+    Args:
+        data_emprestimo (str | None): Data do empréstimo em formato de texto.
+
+    Returns:
+        bool: True se o prazo foi excedido, caso contrário False.
+    """
     if not data_emprestimo:
         return False
 
@@ -115,6 +184,16 @@ def livro_atrasado(data_emprestimo):
 
 
 def atualizar_status_livros(cursor, conexao):
+    """
+    Atualiza o status dos livros e devolve os que venceram o prazo.
+
+    Args:
+        cursor (sqlite3.Cursor): Cursor da transação atual.
+        conexao (sqlite3.Connection): Conexão com o banco de dados.
+
+    Returns:
+        None: Aplica atualizações de status e confirma a transação.
+    """
     cursor.execute("""
         SELECT id, data_emprestimo
         FROM livros
@@ -133,6 +212,16 @@ def atualizar_status_livros(cursor, conexao):
 
 
 def tentar_emprestar_livro(usuario_id, livro_id):
+    """
+    Valida regras de negócio e tenta efetivar o empréstimo.
+
+    Args:
+        usuario_id (int): Identificador do usuário solicitante.
+        livro_id (int): Identificador do livro solicitado.
+
+    Returns:
+        tuple[bool, str]: Resultado da operação com status e mensagem.
+    """
     conexao = get_db_connection()
     cursor = conexao.cursor()
 
@@ -163,6 +252,16 @@ def tentar_emprestar_livro(usuario_id, livro_id):
 
 
 def tentar_devolver_livro(usuario_id, livro_id):
+    """
+    Valida posse do empréstimo e tenta efetivar a devolução.
+
+    Args:
+        usuario_id (int): Identificador do usuário que devolve.
+        livro_id (int): Identificador do livro a devolver.
+
+    Returns:
+        tuple[bool, str]: Resultado da operação com status e mensagem.
+    """
     conexao = get_db_connection()
     cursor = conexao.cursor()
 

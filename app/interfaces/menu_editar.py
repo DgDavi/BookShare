@@ -7,6 +7,15 @@ from utils.limpar_tela import limpar_tela
 from utils.security import verificar_senha, hash_senha
 
 def menu_editar(usuario):
+    """
+    Exibe o menu de edição de dados cadastrais do usuário.
+
+    Args:
+        usuario (Usuario): Usuário autenticado que terá dados alterados.
+
+    Returns:
+        None: Executa o fluxo de edição e retorna ao menu anterior.
+    """
     conexao = get_db_connection()
     cursor = conexao.cursor()
 

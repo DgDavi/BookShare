@@ -1,18 +1,22 @@
 # BookShare
 
-BookShare e um sistema em Python, com interface em terminal, para cadastro de usuarios e gerenciamento de empréstimos de livros. O projeto usa SQLite para persistencia de dados, `colorama` para estilos no terminal e `bcrypt` para armazenamento seguro de senhas.
+BookShare é um sistema em Python, com interface em terminal, para cadastro de usuários e gerenciamento de empréstimos de livros. O projeto usa SQLite para persistência de dados, `colorama` para estilos no terminal e `bcrypt` para armazenamento seguro de senhas.
 
 ## Funcionalidades
 
-- Cadastro de usuario
+- Cadastro de usuário
 - Login com senha protegida por `bcrypt`
 - Exibição dos dados da conta
-- Cadastro de livros com titulo, descrição e autor
-- Listagem dos livros do usuario
-- Busca de livros por titulo ou autor
+- Cadastro de livros com título, descrição e autor
+- Busca de livros por título ou autor
+- Empréstimo de livro com validações de disponibilidade
+- Limite de 1 livro emprestado por usuário
+- Devolução de livro pela interface de conta
+- Exibição dos livros cadastrados e dos livros emprestados
+- Atualização de status para manter disponibilidade correta dos livros
 - Edição de nome, email e senha
 - Exclusão de conta
-- Deslogar e voltar ao menu inicial
+- Logout e retorno ao menu inicial
 
 ## Tecnologias
 
@@ -26,16 +30,40 @@ BookShare e um sistema em Python, com interface em terminal, para cadastro de us
 ```text
 BookShare/
 |-- app/
+|   |-- __init__.py
 |   |-- main.py
 |   |-- data/
+|   |   |-- __init__.py
 |   |   |-- db.py
 |   |   |-- schema.py
 |   |-- interfaces/
+|   |   |-- __init__.py
+|   |   |-- deletar_conta.py
+|   |   |-- devolver_livros.py
+|   |   |-- exibir_livros.py
+|   |   |-- exibir_usuario.py
+|   |   |-- info_menu.py
+|   |   |-- menu.py
+|   |   |-- menu_conta.py
+|   |   |-- menu_de_usuario.py
+|   |   |-- menu_editar.py
+|   |   |-- procurar_livros.py
 |   |-- model/
+|   |   |-- __init__.py
+|   |   |-- livro.py
+|   |   |-- usuario.py
 |   |-- repository/
+|   |   |-- livro_repository.py
+|   |   |-- usuario_repository.py
 |   |-- services/
+|   |   |-- __init__.py
+|   |   |-- livro_services.py
+|   |   |-- user_services.py
 |   |-- utils/
-|-- usuarios.db
+|   |   |-- __init__.py
+|   |   |-- limpar_tela.py
+|   |   |-- security.py
+|   |   |-- validador.py
 |-- requirements.txt
 |-- README.md
 ```
@@ -59,7 +87,7 @@ No Windows:
 .venv\Scripts\activate
 ```
 
-2. Instale as dependencias:
+2. Instale as dependências:
 
 ```bash
 pip install -r requirements.txt
@@ -73,17 +101,27 @@ Na raiz do projeto, rode:
 python app/main.py
 ```
 
-Na primeira execucao, o sistema cria as tabelas do banco SQLite automaticamente, se elas nao existirem.
+Na primeira execução, o sistema cria as tabelas do banco SQLite automaticamente, se elas não existirem.
 
-## Observacoes
+## Observações
 
-- O arquivo `usuarios.db` e o banco local do projeto.
-- As senhas sao salvas com `bcrypt`.
-- O fluxo principal do sistema e todo via terminal.
+- O arquivo `usuarios.db` é o banco local do projeto.
+- As senhas são salvas com `bcrypt`.
+- O fluxo principal do sistema é todo via terminal.
+
+## Roadmap (Planejado)
+
+As próximas evoluções planejadas para o projeto são:
+
+- Paginação na busca de livros, para não carregar todos os livros de uma vez.
+- Validação de email por código.
+- Criação de uma aba de mensagens entre usuários.
+- Fluxo de pedido de empréstimo: o dono do livro recebe uma solicitação e decide se autoriza o empréstimo.
+- Fila de empréstimo para livros com mais de um interessado.
 
 ## Autor
 
-Projeto BookShare desenvolvido para estudo e pratica de Python, persistencia com SQLite e organizacao em camadas.
+Projeto BookShare desenvolvido para estudo e prática de Python, persistência com SQLite e organização em camadas.
 
 ## Autores
 

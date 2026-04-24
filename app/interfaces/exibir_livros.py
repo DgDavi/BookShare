@@ -6,6 +6,15 @@ from utils.limpar_tela import limpar_tela
 from utils.validador import input_com_prompt_colorido
 
 def exibir_livros(usuario):
+    """
+    Exibe os livros do usuário e os livros que ele pegou emprestado.
+
+    Args:
+        usuario (Usuario): Usuário autenticado.
+
+    Returns:
+        bool: True quando a tela é exibida e finalizada com sucesso.
+    """
     limpar_tela()
     print(Fore.CYAN + "=" * 60)
     print(Fore.CYAN + "📋 MEUS LIVROS".center(60))
@@ -42,6 +51,16 @@ def exibir_livros(usuario):
 
 
 def exibir_livros_procurado(livros, usuario=None):
+    """
+    Exibe os livros encontrados e permite iniciar empréstimo.
+
+    Args:
+        livros (list[sqlite3.Row]): Lista de livros retornada pela busca.
+        usuario (Usuario | None): Usuário autenticado para solicitar empréstimo.
+
+    Returns:
+        None: Fluxo de interface com entradas e mensagens no terminal.
+    """
     print(Fore.CYAN + "=" * 60)
     print(Fore.CYAN + "📋 LIVROS ENCONTRADOS".center(60))
     print(Fore.CYAN + "=" * 60)

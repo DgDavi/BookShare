@@ -8,6 +8,15 @@ from services.livro_services import cadastrar_livro
 
 # Menu do usuário logado
 def menu_usuario(usuario):
+    """
+    Exibe o menu principal do usuário autenticado.
+
+    Args:
+        usuario (Usuario): Usuário logado no sistema.
+
+    Returns:
+        None: Loop de navegação até o logout.
+    """
     while True:
         limpar_tela()
 

@@ -7,6 +7,15 @@ from utils.validador import input_com_prompt_colorido
 
 
 def menu_conta(usuario):
+    """
+    Exibe opções de conta do usuário e ações relacionadas aos livros.
+
+    Args:
+        usuario (Usuario): Usuário autenticado no sistema.
+
+    Returns:
+        None: Loop de navegação da área de conta.
+    """
 
     while True:
         limpar_tela()

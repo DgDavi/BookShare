@@ -6,6 +6,15 @@ from utils.validador import input_com_prompt_colorido
 
 
 def devolver_livros(usuario):
+    """
+    Exibe empréstimos ativos e processa devolução por ID.
+
+    Args:
+        usuario (Usuario): Usuário autenticado que deseja devolver livros.
+
+    Returns:
+        None: Fluxo de interface com interação via terminal.
+    """
     limpar_tela()
 
     print(Fore.CYAN + "=" * 60)

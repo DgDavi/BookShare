@@ -6,6 +6,15 @@ from utils.validador import input_com_prompt_colorido
 from utils.limpar_tela import limpar_tela
 
 def procurar_livros(usuario):
+    """
+    Exibe a tela de busca e apresenta os livros encontrados.
+
+    Args:
+        usuario (Usuario): Usuário autenticado que está pesquisando livros.
+
+    Returns:
+        None: Fluxo de interface com entrada e saída pelo terminal.
+    """
     limpar_tela()
     print(Fore.CYAN + "=" * 60)
     print(Fore.CYAN + "🔎 PROCURAR LIVRO".center(60))

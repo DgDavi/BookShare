@@ -7,6 +7,12 @@ from interfaces.menu_de_usuario import menu_usuario
 
 
 def menu_inical():
+    """
+    Exibe o menu inicial e direciona o fluxo principal da aplicação.
+
+    Returns:
+        None: Fluxo contínuo de interface até o usuário sair da aplicação.
+    """
     while True:
         limpar_tela()
 

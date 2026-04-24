@@ -6,6 +6,12 @@ from utils.validador import input_com_prompt_colorido
 
 # Menu de informações sobre o projeto
 def info_menu():
+    """
+    Exibe informações institucionais e objetivo do projeto BookShare.
+
+    Returns:
+        None: Mostra conteúdo informativo e retorna ao menu inicial.
+    """
     limpar_tela()
 
     print(Fore.CYAN + "="*60)

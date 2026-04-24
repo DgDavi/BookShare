@@ -9,6 +9,13 @@ from utils.validador import validar_input, validar_novo_email, validar_nova_senh
 
 
 def cadastrar_usuario():
+    """
+    Realiza o cadastro de um novo usuário via terminal.
+
+    Returns:
+        Usuario | None: Retorna o usuário criado em caso de sucesso.
+        Caso o cadastro não seja concluído, retorna None.
+    """
     conexao = get_db_connection()
     cursor = conexao.cursor()
 
@@ -53,6 +60,13 @@ def cadastrar_usuario():
 
 
 def login_usuario():
+    """
+    Autentica um usuário com email e senha informados no terminal.
+
+    Returns:
+        Usuario | None: Retorna a instância autenticada quando o login é válido.
+        Se falhar, retorna None.
+    """
     conexao  = get_db_connection()
     cursor = conexao.cursor()
 
@@ -101,6 +115,15 @@ def login_usuario():
 
 
 def obter_dados_usuario(usuario):
+    """
+    Busca os dados do usuário para exibição na interface.
+
+    Args:
+        usuario (Usuario): Usuário autenticado no sistema.
+
+    Returns:
+        sqlite3.Row | tuple | None: Registro com os dados do usuário.
+    """
     conexao = get_db_connection()
     cursor = conexao.cursor()
 
