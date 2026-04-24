@@ -1,4 +1,5 @@
 from colorama import Fore
+from datetime import datetime, timedelta
 
 from data.db import get_db_connection
 from utils.validador import validar_input
@@ -67,4 +68,64 @@ def buscar_livros_por_termo(termo):
     finally:
         cursor.close()
         conexao.close()
+
+
+def emprestar_livro(cursor, conexao, livro_id, usuario_id):
+    data_atual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    cursor.execute("""
+        UPDATE livros
+        SET disponivel = 0,
+            usuario_emprestimo = ?,
+            data_emprestimo = ?
+        WHERE id = ?
+    """, (usuario_id, data_atual, livro_id))
+
+    conexao.commit()
+
+
+def devolver_livro(cursor, conexao, livro_id):
+    cursor.execute("""
+        UPDATE livros
+        SET disponivel = 1,
+            usuario_emprestimo = NULL,
+            data_emprestimo = NULL
+        WHERE id = ?
+    """, (livro_id,))
+
+    conexao.commit()
+
+
+def livro_atrasado(data_emprestimo):
+    if not data_emprestimo:
+        return False
+
+    data = datetime.strptime(data_emprestimo, "%Y-%m-%d %H:%M:%S")
+    limite = data + timedelta(days=7)
+
+    return datetime.now() > limite
+
+
+def atualizar_status_livros(cursor, conexao):
+    cursor.execute("""
+        SELECT id, data_emprestimo
+        FROM livros
+        WHERE disponivel = 0
+    """)
+    livros = cursor.fetchall()
+
+    for livro in livros:
+        livro_id = livro[0]
+        data_emprestimo = livro[1]
+
+        if data_emprestimo and livro_atrasado(data_emprestimo):
+            cursor.execute("""
+                UPDATE livros
+                SET disponivel = 1,
+                    usuario_emprestimo = NULL,
+                    data_emprestimo = NULL
+                WHERE id = ?
+            """, (livro_id,))
+
+    conexao.commit()
 
