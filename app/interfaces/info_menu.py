@@ -27,11 +27,11 @@ Mais do que um simples sistema, o BookShare representa a ideia de que o conhecim
 
 🔗 LinkedIn dos criadores:
 Davi Gomes: https://www.linkedin.com/in/davigomes1/
-Lucas Augusto: (colocar link)
+Lucas Augusto: https://www.linkedin.com/in/lucas-augusto-a4124a404/
 
 💻 GitHub dos criadores:
 Davi Gomes: https://github.com/DgDavi
-Lucas Augusto: (colocar link)""")
+Lucas Augusto: https://github.com/luquetaaasn""")
 
     print()
     input_com_prompt_colorido(Fore.GREEN + "Pressione a tecla Enter para voltar ao menu principal...")
