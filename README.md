@@ -87,6 +87,12 @@ No Windows:
 .venv\Scripts\activate
 ```
 
+No Linux:
+
+```bash
+.venv\bin\activate
+```
+
 2. Instale as dependências:
 
 ```bash
