@@ -109,15 +109,19 @@ Na primeira execução, o sistema cria as tabelas do banco SQLite automaticament
 - As senhas são salvas com `bcrypt`.
 - O fluxo principal do sistema é todo via terminal.
 
-## Roadmap (Planejado)
+## Release
 
 As próximas evoluções planejadas para o projeto são:
 
+  2VA:
 - Paginação na busca de livros, para não carregar todos os livros de uma vez.
 - Validação de email por código.
+- Fila de empréstimo para livros com mais de um interessado.
+
+  3VA:
 - Criação de uma aba de mensagens entre usuários.
 - Fluxo de pedido de empréstimo: o dono do livro recebe uma solicitação e decide se autoriza o empréstimo.
-- Fila de empréstimo para livros com mais de um interessado.
+
 
 ## Autor
 
