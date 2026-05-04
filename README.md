@@ -133,10 +133,6 @@ As próximas evoluções planejadas para o projeto são:
 - Fluxo de pedido de empréstimo: o dono do livro recebe uma solicitação e decide se autoriza o empréstimo.
 
 
-## Autor
-
-Projeto BookShare desenvolvido para estudo e prática de Python, persistência com SQLite e organização em camadas.
-
 ## Autores
 
 - Davi Gomes - GitHub: https://github.com/DgDavi
