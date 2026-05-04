@@ -123,6 +123,10 @@ As próximas evoluções planejadas para o projeto são:
 - Paginação na busca de livros, para não carregar todos os livros de uma vez.
 - Validação de email por código.
 - Fila de empréstimo para livros com mais de um interessado.
+- Histórico de empréstimos.
+- Aba de avisos para exibir quando o livro for emprestado.
+- Melhorar o funcionamento da data limite para o empréstimo.
+
 
   3VA:
 - Criação de uma aba de mensagens entre usuários.
