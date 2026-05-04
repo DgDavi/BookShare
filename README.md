@@ -90,7 +90,7 @@ No Windows:
 No Linux:
 
 ```bash
-.venv\bin\activate
+source .venv\bin\activate
 ```
 
 2. Instale as dependências:
