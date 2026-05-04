@@ -120,6 +120,7 @@ Na primeira execução, o sistema cria as tabelas do banco SQLite automaticament
 As próximas evoluções planejadas para o projeto são:
 
   2VA:
+- Moldar todo o código em POO.
 - Paginação na busca de livros, para não carregar todos os livros de uma vez.
 - Validação de email por código.
 - Fila de empréstimo para livros com mais de um interessado.
