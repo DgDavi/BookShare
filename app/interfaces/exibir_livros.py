@@ -10,7 +10,7 @@ class ExibirLivros:
         self.validador = validador
         self.livro_service = livro_service
 
-    def exibir_livros(self, usuario):
+    def exibir(self, usuario):
         """
         Exibe os livros do usuário e os livros que ele pegou emprestado.
 

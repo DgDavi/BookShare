@@ -14,7 +14,7 @@ class MenuUsuario:
         self.validador = validador
 
     # Menu do usuário logado
-    def menu_usuario(self, usuario):
+    def exibir(self, usuario):
         """
         Exibe o menu principal do usuário autenticado.
 
@@ -49,7 +49,7 @@ class MenuUsuario:
 
 
             if opcao == 1:
-                self.menu_conta.menu_conta(usuario)
+                self.menu_conta.exibir(usuario)
             elif opcao == 2:
                 self.livro_service.cadastrar_livro(usuario)
             elif opcao == 3:        

@@ -13,7 +13,7 @@ class MenuInicial:
         self.menu_info = menu_info
         self.validador = validador
 
-    def menu_inicial(self):
+    def exibir(self):
         """
         Exibe o menu inicial e direciona o fluxo principal da aplicação.
 
@@ -45,17 +45,17 @@ class MenuInicial:
             if opcao == 1:
                 usuario = self.user_service.cadastrar_usuario()
                 if usuario:
-                    self.menu_user.menu_usuario(usuario)
+                    self.menu_user.exibir(usuario)
 
             # Chama a função de login de usuário
             elif opcao == 2:
                 usuario = self.user_service.login_usuario()
                 if usuario:
-                    self.menu_user.menu_usuario(usuario)
+                    self.menu_user.exibir(usuario)
 
             # Chama a função de informações sobre o projeto
             elif opcao == 3:
-                self.menu_info.info_menu()
+                self.menu_info.exibir()
 
             # Fecha a aplicação
             elif opcao == 0:

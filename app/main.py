@@ -5,7 +5,7 @@ from dependencies import build_menu_inicial
 def main():
     create_tables()
     init(autoreset=True)
-    build_menu_inicial().menu_inicial()
+    build_menu_inicial().exibir()
 
 if __name__ == "__main__":
     main()

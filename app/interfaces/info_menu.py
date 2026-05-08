@@ -9,7 +9,7 @@ class InfoMenu:
         self.validador = validador
 
     # Menu de informações sobre o projeto
-    def info_menu(self):
+    def exibir(self):
         """
         Exibe informações institucionais e objetivo do projeto BookShare.
 

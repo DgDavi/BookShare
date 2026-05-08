@@ -17,7 +17,7 @@ class MenuConta:
         self.exibir_usuario = exibir_usuario
         self.validador = validador
 
-    def menu_conta(self, usuario):
+    def exibir(self, usuario):
         """
         Exibe opções de conta do usuário e ações relacionadas aos livros.
 
@@ -48,11 +48,11 @@ class MenuConta:
                 opcao = None
 
             if opcao == 1:
-                self.exibir_livros.exibir_livros(usuario)
+                self.exibir_livros.exibir(usuario)
             elif opcao == 2:           
                 self.devolver_livro.devolver_livros(usuario)
             elif opcao == 3:              
-                self.menu_editar.menu_editar(usuario)
+                self.menu_editar.exibir(usuario)
             elif opcao == 4:               
                 if self.deletar_conta.deletar_conta(usuario):
                     return

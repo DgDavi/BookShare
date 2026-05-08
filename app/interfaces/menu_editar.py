@@ -10,7 +10,7 @@ class MenuEditar:
         self.user_service = user_service
         self.validador = validador
 
-    def menu_editar(self, usuario):
+    def exibir(self, usuario):
         """
         Exibe o menu de edição de dados cadastrais do usuário.
 
@@ -98,5 +98,4 @@ class MenuEditar:
 
 
         elif opcao == 0:
-            self.validador.input_com_prompt_colorido(Fore.YELLOW + "👉 Pressione Enter para continuar...")
             return
