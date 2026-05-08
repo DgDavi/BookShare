@@ -29,6 +29,7 @@ BookShare é um sistema em Python, com interface em terminal, para cadastro de u
 
 ```text
 BookShare/
+|-- Fluxogramas/
 |-- app/
 |   |-- __init__.py
 |   |-- main.py
@@ -121,9 +122,8 @@ Na primeira execução, o sistema cria as tabelas do banco SQLite automaticament
 As próximas evoluções planejadas para o projeto são:
 
   2VA:
-- Moldar todo o código em POO.
 - Paginação na busca de livros, para não carregar todos os livros de uma vez.
-- Validação de email por código.
+- Validação de email por código e permitir que o usuário digite o email minúsculo.
 - Fila de empréstimo para livros com mais de um interessado.
 - Histórico de empréstimos.
 - Aba de avisos para exibir quando o livro for emprestado.
