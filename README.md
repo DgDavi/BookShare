@@ -127,6 +127,7 @@ As próximas evoluções planejadas para o projeto são:
 - Histórico de empréstimos.
 - Aba de avisos para exibir quando o livro for emprestado.
 - Melhorar o funcionamento da data limite para o empréstimo.
+- Criar um opção de voltar para quando o usuário estiver em um fluxo de entrada ele poder sair.
 
 
   3VA:
