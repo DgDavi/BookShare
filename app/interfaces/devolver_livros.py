@@ -1,57 +1,63 @@
 from colorama import Fore
 
-from services.livro_services import listar_livros_emprestados, tentar_devolver_livro
 from utils.limpar_tela import limpar_tela
-from utils.validador import input_com_prompt_colorido
+from utils.validador import Validador
+from services.livro_services import LivroService
 
 
-def devolver_livros(usuario):
-    """
-    Exibe empréstimos ativos e processa devolução por ID.
+class DevolverLivro:
+    def __init__(self, validador: Validador, livro_service: LivroService):
+        self.validador = validador
+        self.livro_service = livro_service
 
-    Args:
-        usuario (Usuario): Usuário autenticado que deseja devolver livros.
+    def devolver_livros(self, usuario):
+        """
+        Exibe empréstimos ativos e processa devolução por ID.
 
-    Returns:
-        None: Fluxo de interface com interação via terminal.
-    """
-    limpar_tela()
+        Args:
+            usuario (Usuario): Usuário autenticado que deseja devolver livros.
 
-    print(Fore.CYAN + "=" * 60)
-    print(Fore.CYAN + "📤 DEVOLVER LIVRO".center(60))
-    print(Fore.CYAN + "=" * 60)
+        Returns:
+            None: Fluxo de interface com interação via terminal.
+        """
+        limpar_tela()
 
-    livros_emprestados = listar_livros_emprestados(usuario)
+        print(Fore.CYAN + "=" * 60)
+        print(Fore.CYAN + "📤 DEVOLVER LIVRO".center(60))
+        print(Fore.CYAN + "=" * 60)
 
-    if not livros_emprestados:
-        print(Fore.YELLOW + "\nVocê não tem livros emprestados no momento.")
-        input_com_prompt_colorido(Fore.YELLOW + "\n👉 Pressione Enter para voltar...")
-        return
+        livros_emprestados = self.livro_service.listar_livros_emprestados(usuario)
 
-    print(Fore.YELLOW + "\nSelecione o ID do livro que deseja devolver:\n")
+        if not livros_emprestados:
+            print(Fore.YELLOW + "\nVocê não tem livros emprestados no momento.")
+            self.validador.input_com_prompt_colorido(Fore.YELLOW + "\n👉 Pressione Enter para voltar...")
+            return
 
-    for livro in livros_emprestados:
-        print(Fore.LIGHTMAGENTA_EX + "ID: " + Fore.WHITE + f"{livro['id']}")
-        print(Fore.LIGHTMAGENTA_EX + "Dono (ID): " + Fore.WHITE + f"{livro['user_id']}")
-        print(Fore.LIGHTMAGENTA_EX + "Título: " + Fore.WHITE + f"{livro['titulo']}")
-        print(Fore.LIGHTMAGENTA_EX + "Autor: " + Fore.WHITE + f"{livro['autor']}")
-        print(Fore.LIGHTMAGENTA_EX + "Data do empréstimo: " + Fore.WHITE + f"{livro['data_emprestimo']}")
-        print(Fore.CYAN + "-" * 60)
+        print(Fore.YELLOW + "\nSelecione o ID do livro que deseja devolver:\n")
 
-    livro_id_escolhido = input_com_prompt_colorido(
-        Fore.GREEN + "👉 Digite o ID do livro para devolver (0 para cancelar): "
-    )
+        for livro in livros_emprestados:
+            print(Fore.LIGHTMAGENTA_EX + "ID: " + Fore.WHITE + f"{livro['id']}")
+            print(Fore.LIGHTMAGENTA_EX + "Dono (ID): " + Fore.WHITE + f"{livro['user_id']}")
+            print(Fore.LIGHTMAGENTA_EX + "Título: " + Fore.WHITE + f"{livro['titulo']}")
+            print(Fore.LIGHTMAGENTA_EX + "Autor: " + Fore.WHITE + f"{livro['autor']}")
+            print(Fore.LIGHTMAGENTA_EX + "Data do empréstimo: " + Fore.WHITE + f"{livro['data_emprestimo']}")
+            print(Fore.CYAN + "-" * 60)
 
-    try:
-        livro_id = int(livro_id_escolhido)
-    except ValueError:
-        print(Fore.RED + "❌ ID inválido.")
-        input_com_prompt_colorido(Fore.YELLOW + "\n👉 Pressione Enter para continuar...")
-        return
+        livro_id_escolhido = self.validador.input_com_prompt_colorido(
+            Fore.GREEN + "👉 Digite o ID do livro para devolver (0 para cancelar): "
+        )
 
-    if livro_id == 0:
-        return
+        try:
+            livro_id = int(livro_id_escolhido)
+        except ValueError:
+            print(Fore.RED + "❌ ID inválido.")
+            self.validador.input_com_prompt_colorido(Fore.YELLOW + "\n👉 Pressione Enter para continuar...")
+            return
 
-    sucesso, mensagem = tentar_devolver_livro(usuario.id, livro_id)
-    print((Fore.GREEN if sucesso else Fore.RED) + mensagem)
-    input_com_prompt_colorido(Fore.YELLOW + "\n👉 Pressione Enter para continuar...")
+        if livro_id == 0:
+            return
+
+        sucesso, mensagem = self.livro_service.tentar_devolver_livro(usuario.id, livro_id)
+        print((Fore.GREEN if sucesso else Fore.RED) + mensagem)
+        self.validador.input_com_prompt_colorido(Fore.YELLOW + "\n👉 Pressione Enter para continuar...")
+        

@@ -32,6 +32,7 @@ BookShare/
 |-- app/
 |   |-- __init__.py
 |   |-- main.py
+|   |-- dependecies.py
 |   |-- data/
 |   |   |-- __init__.py
 |   |   |-- db.py
