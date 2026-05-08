@@ -2,83 +2,84 @@ from colorama import Fore
 
 from .security import verificar_senha
 
+class Validador:
 
-def validar_email(email):
-    return (
-        "@" in email and
-        "." in email and
-        email.index("@") < email.index(".")
-    )
-
-
-def validar_senha(senha):
-    maiuscula = any(c.isupper() for c in senha)
-    numero = any(c.isdigit() for c in senha)
-    especial = any(not c .isalnum() for c in senha)
-    tamanho = len(senha) >= 8
-    return maiuscula and numero and especial and tamanho
+    def validar_email(self, email):
+        return (
+            "@" in email and
+            "." in email and
+            email.index("@") < email.index(".")
+        )
 
 
-def input_com_prompt_colorido(mensagem):
-    return input(mensagem + Fore.WHITE)
+    def validar_senha(self, senha):
+        maiuscula = any(c.isupper() for c in senha)
+        numero = any(c.isdigit() for c in senha)
+        especial = any(not c .isalnum() for c in senha)
+        tamanho = len(senha) >= 8
+        return maiuscula and numero and especial and tamanho
 
 
-def validar_input(mensagem, validacao_funcao, mensagem_erro, *args):
-    while True:
-        valor = input_com_prompt_colorido(mensagem)
-        if validacao_funcao(valor, *args):
-            return valor
-        else:
-            if mensagem_erro and mensagem_erro.strip():
-                print(mensagem_erro)
+    def input_com_prompt_colorido(self, mensagem):
+        return input(mensagem + Fore.WHITE)
 
 
-def validar_nova_senha():
-    while True:
-        senha = input_com_prompt_colorido(Fore.YELLOW + "👉 Digite sua nova senha: ")
-        if not validar_senha(senha):
-            print(Fore.RED + "❌ A senha deve conter pelo menos 8 caracteres, incluindo uma letra maiúscula, um número e um caractere especial")
-            continue
-
-        confirmacao = input_com_prompt_colorido(Fore.YELLOW + "👉 Digite sua senha novamente: ")
-
-        if senha != confirmacao:
-            print(Fore.RED + "❌ As senhas não coincidem.")
-            print(Fore.YELLOW + "👉 Tente novamente.")
-            continue
-
-        return senha
+    def validar_input(self, mensagem, validacao_funcao, mensagem_erro, *args):
+        while True:
+            valor = self.input_com_prompt_colorido(mensagem)
+            if validacao_funcao(valor, *args):
+                return valor
+            else:
+                if mensagem_erro and mensagem_erro.strip():
+                    print(mensagem_erro)
 
 
-def validar_novo_email(email, cursor):
+    def validar_nova_senha(self):
+        while True:
+            senha = self.input_com_prompt_colorido(Fore.YELLOW + "👉 Digite sua nova senha: ")
+            if not self.validar_senha(senha):
+                print(Fore.RED + "❌ A senha deve conter pelo menos 8 caracteres, incluindo uma letra maiúscula, um número e um caractere especial")
+                continue
 
-    if not validar_email(email):
-        print(Fore.RED + "❌ Formatação do email incorreta.")
-        return False
+            confirmacao = self.input_com_prompt_colorido(Fore.YELLOW + "👉 Digite sua senha novamente: ")
 
-    cursor.execute("SELECT EXISTS(SELECT 1 FROM usuarios WHERE email = ?)", (email,))
+            if senha != confirmacao:
+                print(Fore.RED + "❌ As senhas não coincidem.")
+                print(Fore.YELLOW + "👉 Tente novamente.")
+                continue
 
-    if cursor.fetchone()[0] == 1:
-        print(Fore.RED + "❌ Email já cadastrado.")
-        return False
-    
-    return True
-
-
-def validar_email_login(email, cursor):
-
-    cursor.execute("SELECT EXISTS(SELECT 1 FROM usuarios WHERE email = ?)", (email,))
-    if cursor.fetchone()[0] == 0:
-        print(Fore.RED + "❌ Email não encontrado.")
-        return False
-    return True
+            return senha
 
 
-def validar_senha_login(senha, email, cursor):
-    cursor.execute("SELECT senha FROM usuarios WHERE email = ?", (email,))
-    resultado = cursor.fetchone()
-    if not resultado:
-        return False
-    senha_original = resultado[0]
+    def validar_novo_email(self, email, cursor):
 
-    return verificar_senha(senha, senha_original)
+        if not self.validar_email(email):
+            print(Fore.RED + "❌ Formatação do email incorreta.")
+            return False
+
+        cursor.execute("SELECT EXISTS(SELECT 1 FROM usuarios WHERE email = ?)", (email,))
+
+        if cursor.fetchone()[0] == 1:
+            print(Fore.RED + "❌ Email já cadastrado.")
+            return False
+        
+        return True
+
+
+    def validar_email_login(self, email, cursor):
+
+        cursor.execute("SELECT EXISTS(SELECT 1 FROM usuarios WHERE email = ?)", (email,))
+        if cursor.fetchone()[0] == 0:
+            print(Fore.RED + "❌ Email não encontrado.")
+            return False
+        return True
+
+
+    def validar_senha_login(self, senha, email, cursor):
+        cursor.execute("SELECT senha FROM usuarios WHERE email = ?", (email,))
+        resultado = cursor.fetchone()
+        if not resultado:
+            return False
+        senha_original = resultado[0]
+
+        return verificar_senha(senha, senha_original)

@@ -1,111 +1,102 @@
 from colorama import Fore
 
-from repository.usuario_repository import editar_email, editar_nome, editar_senha
-from data.db import get_db_connection
-from utils.validador import validar_novo_email, validar_input, validar_nova_senha, input_com_prompt_colorido
+from services.user_services import UserService
+from utils.validador import Validador
 from utils.limpar_tela import limpar_tela
 from utils.security import verificar_senha, hash_senha
 
-def menu_editar(usuario):
-    """
-    Exibe o menu de edição de dados cadastrais do usuário.
+class MenuEditar:
+    def __init__(self, user_service: UserService, validador: Validador):
+        self.user_service = user_service
+        self.validador = validador
 
-    Args:
-        usuario (Usuario): Usuário autenticado que terá dados alterados.
+    def menu_editar(self, usuario):
+        """
+        Exibe o menu de edição de dados cadastrais do usuário.
 
-    Returns:
-        None: Executa o fluxo de edição e retorna ao menu anterior.
-    """
-    conexao = get_db_connection()
-    cursor = conexao.cursor()
+        Args:
+            usuario (Usuario): Usuário autenticado que terá dados alterados.
 
-    limpar_tela()
-    print(Fore.CYAN + "=" * 60)
-    print(Fore.CYAN + "📋 EDITAR DADOS".center(60))
-    print(Fore.CYAN + "=" * 60)
-    print()
-    print(Fore.LIGHTMAGENTA_EX + "[1]" + Fore.WHITE + " Nome")
-    print(Fore.LIGHTMAGENTA_EX + "[2]" + Fore.WHITE + " Email")
-    print(Fore.LIGHTMAGENTA_EX + "[3]" + Fore.WHITE + " Senha")
-    print(Fore.LIGHTMAGENTA_EX + "[0]" + Fore.WHITE + " Voltar")
-    print(Fore.CYAN + "-"*60)
-    
-    try:
-        opcao = int(input_com_prompt_colorido(Fore.GREEN + "👉 Escolha uma opção: "))
-    except ValueError:
-        print(Fore.RED + "❌ Digite apenas números de opções válidas!")
-        opcao = None
-
-    if opcao == 1:
+        Returns:
+            None: Executa o fluxo de edição e retorna ao menu anterior.
+        """
+        limpar_tela()
+        print(Fore.CYAN + "=" * 60)
+        print(Fore.CYAN + "📋 EDITAR DADOS".center(60))
+        print(Fore.CYAN + "=" * 60)
         print()
-        confirmacao_senha = input_com_prompt_colorido(Fore.YELLOW + "👉 Digite sua senha para confirmar: ")
-        if not verificar_senha(confirmacao_senha, usuario.senha_hashed):
-            print(Fore.RED + "❌ Você digitou a senha errada. A operação foi cancelada.")
-            input_com_prompt_colorido(Fore.GREEN + "\nPressione a tecla Enter para seguir... ")
-            return
-
-        print()
-        novo_nome = validar_input(
-            Fore.YELLOW + "👉 Digite o novo nome: ",
-            lambda n: 3 <= len(n) <= 50,
-            Fore.RED + "❌ O nome deve conter entre 3 e 50 caracteres.\n" + Fore.YELLOW + "👉 Tente novamente."
-        )
-
-        resultado = editar_nome(usuario, novo_nome, cursor)
-        if resultado:
-            conexao.commit()
-            cursor.close()
-            conexao.close()
-            print(Fore.GREEN + "\nNome editado com sucesso!!")
-            input_com_prompt_colorido(Fore.GREEN + "Pressione a tecla Enter para seguir... ")
-            
+        print(Fore.LIGHTMAGENTA_EX + "[1]" + Fore.WHITE + " Nome")
+        print(Fore.LIGHTMAGENTA_EX + "[2]" + Fore.WHITE + " Email")
+        print(Fore.LIGHTMAGENTA_EX + "[3]" + Fore.WHITE + " Senha")
+        print(Fore.LIGHTMAGENTA_EX + "[0]" + Fore.WHITE + " Voltar")
+        print(Fore.CYAN + "-"*60)
         
-    elif opcao == 2:
-        print()
-        confirmacao_senha = input_com_prompt_colorido(Fore.YELLOW + "👉 Digite sua senha para confirmar: ")
-        if not verificar_senha(confirmacao_senha, usuario.senha_hashed):
-            print(Fore.RED + "❌ Você digitou a senha errada. A operação foi cancelada.")
-            input_com_prompt_colorido(Fore.GREEN + "\nPressione a tecla Enter para seguir... ")
-            return
+        try:
+            opcao = int(self.validador.input_com_prompt_colorido(Fore.GREEN + "👉 Escolha uma opção: "))
+        except ValueError:
+            print(Fore.RED + "❌ Digite apenas números de opções válidas!")
+            opcao = None
 
-        print()
-        novo_email = validar_input(
-            Fore.YELLOW + "👉 Digite o novo email: ",
-            validar_novo_email,
-            "",
-            cursor
-        )
+        if opcao == 1:
+            print()
+            confirmacao_senha = self.validador.input_com_prompt_colorido(Fore.YELLOW + "👉 Digite sua senha para confirmar: ")
+            if not verificar_senha(confirmacao_senha, usuario.senha_hashed):
+                print(Fore.RED + "❌ Você digitou a senha errada. A operação foi cancelada.")
+                self.validador.input_com_prompt_colorido(Fore.GREEN + "\nPressione a tecla Enter para seguir... ")
+                return
 
-        resultado = editar_email(usuario, novo_email, cursor)
-        if resultado:
-                conexao.commit()
-                cursor.close()
-                conexao.close()
-                print(Fore.GREEN + "\nEmail editado com sucesso!!")
-                input_com_prompt_colorido(Fore.GREEN + "Pressione a tecla Enter para seguir... ")
+            print()
+            novo_nome = self.validador.validar_input(
+                Fore.YELLOW + "👉 Digite o novo nome: ",
+                lambda n: 3 <= len(n) <= 50,
+                Fore.RED + "❌ O nome deve conter entre 3 e 50 caracteres.\n" + Fore.YELLOW + "👉 Tente novamente."
+            )
+
+            resultado = self.user_service.editar_nome_usuario(usuario, novo_nome)
+            if resultado:
+                print(Fore.GREEN + "\nNome editado com sucesso!!")
+                self.validador.input_com_prompt_colorido(Fore.GREEN + "Pressione a tecla Enter para seguir... ")
+                
             
+        elif opcao == 2:
+            print()
+            confirmacao_senha = self.validador.input_com_prompt_colorido(Fore.YELLOW + "👉 Digite sua senha para confirmar: ")
+            if not verificar_senha(confirmacao_senha, usuario.senha_hashed):
+                print(Fore.RED + "❌ Você digitou a senha errada. A operação foi cancelada.")
+                self.validador.input_com_prompt_colorido(Fore.GREEN + "\nPressione a tecla Enter para seguir... ")
+                return
 
-    elif opcao == 3:
-        print()
-        confirmacao_senha = input_com_prompt_colorido(Fore.YELLOW + "👉 Digite sua senha para confirmar: ")
-        if not verificar_senha(confirmacao_senha, usuario.senha_hashed):
-            print(Fore.RED + "❌ Você digitou a senha errada. A operação foi cancelada.")
-            input_com_prompt_colorido(Fore.GREEN + "\nPressione a tecla Enter para seguir... ")
+            print()
+            novo_email = self.validador.validar_input(
+                Fore.YELLOW + "👉 Digite o novo email: ",
+                self.user_service.validar_novo_email_unico,
+                "",
+            )
+
+            resultado = self.user_service.editar_email_usuario(usuario, novo_email)
+            if resultado:
+                    print(Fore.GREEN + "\nEmail editado com sucesso!!")
+                    self.validador.input_com_prompt_colorido(Fore.GREEN + "Pressione a tecla Enter para seguir... ")
+                
+
+        elif opcao == 3:
+            print()
+            confirmacao_senha = self.validador.input_com_prompt_colorido(Fore.YELLOW + "👉 Digite sua senha para confirmar: ")
+            if not verificar_senha(confirmacao_senha, usuario.senha_hashed):
+                print(Fore.RED + "❌ Você digitou a senha errada. A operação foi cancelada.")
+                self.validador.input_com_prompt_colorido(Fore.GREEN + "\nPressione a tecla Enter para seguir... ")
+                return
+
+            print()
+            nova_senha = self.validador.validar_nova_senha()
+            nova_senha_hashed = hash_senha(nova_senha)
+            
+            resultado = self.user_service.editar_senha_usuario(usuario, nova_senha_hashed)
+            if resultado:
+                print(Fore.GREEN + "\nSenha editada com sucesso!!")
+                self.validador.input_com_prompt_colorido(Fore.GREEN + "Pressione a tecla Enter para seguir... ")
+
+
+        elif opcao == 0:
+            self.validador.input_com_prompt_colorido(Fore.YELLOW + "👉 Pressione Enter para continuar...")
             return
-
-        print()
-        nova_senha = validar_nova_senha()
-        nova_senha_hashed = hash_senha(nova_senha)
-        
-        resultado = editar_senha(usuario, nova_senha_hashed, cursor)
-        if resultado:
-            conexao.commit()
-            cursor.close()
-            conexao.close()
-            print(Fore.GREEN + "\nSenha editada com sucesso!!")
-            input_com_prompt_colorido(Fore.GREEN + "Pressione a tecla Enter para seguir... ")
-
-
-    elif opcao == 0:
-        input_com_prompt_colorido(Fore.YELLOW + "👉 Pressione Enter para continuar...")
-        return
