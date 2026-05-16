@@ -9,13 +9,13 @@ from .menu_editar import MenuEditar
 from .deletar_conta import MenuDeletar
 
 class MenuConta:
-    def __init__(self, exibir_livros: ExibirLivros, devolver_livro: DevolverLivro, menu_editar: MenuEditar, deletar_contar: MenuDeletar, exibir_usuario: ExibirUsuario, validador: Validador):
-        self.exibir_livros = exibir_livros
-        self.devolver_livro = devolver_livro
-        self.menu_editar = menu_editar
-        self.deletar_conta = deletar_contar
-        self.exibir_usuario = exibir_usuario
-        self.validador = validador
+    def __init__(self):
+        self.exibir_livros = ExibirLivros()
+        self.devolver_livro = DevolverLivro()
+        self.menu_editar = MenuEditar()
+        self.deletar_conta = MenuDeletar()
+        self.exibir_usuario = ExibirUsuario()
+        self.validador = Validador()
 
     def exibir(self, usuario):
         """

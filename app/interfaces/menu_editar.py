@@ -6,9 +6,9 @@ from utils.limpar_tela import limpar_tela
 from utils.security import verificar_senha, hash_senha
 
 class MenuEditar:
-    def __init__(self, user_service: UserService, validador: Validador):
-        self.user_service = user_service
-        self.validador = validador
+    def __init__(self):
+        self.user_service = UserService()
+        self.validador = Validador()
 
     def exibir(self, usuario):
         """

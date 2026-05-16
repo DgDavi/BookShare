@@ -8,12 +8,12 @@ from interfaces.menu_de_usuario import MenuUsuario
 from .info_menu import InfoMenu
 
 class MenuInicial:
-    def __init__(self, menu_register: Register, menu_user: MenuUsuario, menu_info: InfoMenu, validador: Validador, menu_login: Login):
-        self.menu_register = menu_register
-        self.menu_user = menu_user
-        self.menu_info = menu_info
-        self.validador = validador
-        self.menu_login = menu_login
+    def __init__(self):
+        self.menu_register = Register()
+        self.menu_user = MenuUsuario()
+        self.menu_info = InfoMenu()
+        self.validador = Validador()
+        self.menu_login = Login()
 
     def exibir(self):
         """
@@ -29,7 +29,7 @@ class MenuInicial:
             print(Fore.CYAN + "📚 BEM-VINDO AO BOOKSHARE".center(60))
             print(Fore.CYAN + "="*60)
 
-            print(Fore.LIGHTMAGENTA_EX + "\n[1]" + Fore.WHITE + " Cadastrar usuário")
+            print(Fore.LIGHTMAGENTA_EX + "\n[1]" + Fore.WHITE + "Cadastrar usuário")
             print(Fore.LIGHTMAGENTA_EX + "[2]" + Fore.WHITE + " Login")
             print(Fore.LIGHTMAGENTA_EX + "[3]" + Fore.WHITE + " Sobre o projeto")
             print(Fore.LIGHTMAGENTA_EX + "[0]" + Fore.WHITE + " Sair")
