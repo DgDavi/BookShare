@@ -1,9 +1,8 @@
 from colorama import Fore
 
-from data.db import get_db_connection
+from utils.security import hash_senha, verificar_senha
 from model.usuario import Usuario
 from utils.limpar_tela import limpar_tela
-from utils.security import hash_senha
 from repository.usuario_repository import UserRepository
 from utils.validador import Validador
 
@@ -13,108 +12,48 @@ class UserService:
         self.user_repo = user_repo
         self.validador = validador
 
-    def cadastrar_usuario(self):
-        """
-        Realiza o cadastro de um novo usuário via terminal.
+    def cadastrar_usuario(self, nome, email, senha):
+        # valida formato
+        if not self.validador.validar_email(email):
+            return None
 
-        Returns:
-            Usuario | None: Retorna o usuário criado em caso de sucesso.
-            Caso o cadastro não seja concluído, retorna None.
-        """
-        conexao = get_db_connection()
-        cursor = conexao.cursor()
+        # valida unicidade pelo repository
+        if self.user_repo.email_existe(email):
+            print(Fore.RED + "❌ Email já cadastrado.")
+            return None
 
-        limpar_tela()
-        print(Fore.YELLOW + "📋 CADASTRO DE USUÁRIO\n" + Fore.CYAN + "-"*30)
-        print()
-
-        
-        nome = self.validador.validar_input(
-            Fore.YELLOW + "👉 Digite seu nome: ",
-            lambda n: 3 <= len(n) <= 50,
-            Fore.RED + "❌ O nome deve conter entre 3 e 50 caracteres.\n" + Fore.YELLOW + "👉 Tente novamente."
-        )
-            
-
-        email = self.validador.validar_input(
-            Fore.YELLOW + "👉 Digite seu email: ",
-            self.validador.validar_novo_email,
-            "",
-            cursor
-        )
-
-
-        senha = self.validador.validar_nova_senha()
         senha_hashed = hash_senha(senha)
-        
-
         usuario = Usuario(nome, email, senha_hashed)
-        usuario_criado = self.user_repo.criar_usuario(usuario, cursor)
+        uid = self.user_repo.criar_usuario(usuario)
 
-        if usuario_criado:
-            print(Fore.GREEN + "\nUsuário cadastrado com sucesso!")
-            self.validador.input_com_prompt_colorido(Fore.GREEN + "Pressione a tecla Enter para seguir... ")
-        
-            conexao.commit()
-            cursor.close()
-            conexao.close()
-
+        if uid:
+            usuario.id = uid
             return usuario
-        
         return None
 
-
-    def login_usuario(self):
-        """
-        Autentica um usuário com email e senha informados no terminal.
-
-        Returns:
-            Usuario | None: Retorna a instância autenticada quando o login é válido.
-            Se falhar, retorna None.
-        """
-        conexao  = get_db_connection()
-        cursor = conexao.cursor()
-
-        limpar_tela()
-        print(Fore.YELLOW + "📋 LOGIN DE USUÁRIO\n" + Fore.CYAN + "-"*30)
-        print()
+    # alias para compatibilidade com interfaces que chamam criar_usuario
+    def criar_usuario(self, nome, email, senha):
+        return self.cadastrar_usuario(nome, email, senha)
+        
+    
 
 
-        email = self.validador.validar_input(
-            Fore.YELLOW + "👉 Digite seu email: ",
-            self.validador.validar_email_login,
-            "",
-            cursor
-        )
+    def login_usuario(self, email, senha):
+        # busca usuário pelo repository (repo gerencia conexões)
+        usuario_row = self.user_repo.buscar_por_email(email)
+        if not usuario_row:
+            return None
 
-
-        senha = self.validador.validar_input(
-            Fore.YELLOW + "👉 Digite sua senha: ",
-            self.validador.validar_senha_login,
-            Fore.RED + "❌ Senha incorreta.",
-            email,
-            cursor
-        )
-
-        cursor.execute("SELECT id, nome, email, senha FROM usuarios WHERE email = ?", (email,))
-        usuario_login = cursor.fetchone()
-
-        if not usuario_login:
-            cursor.close()
-            conexao.close()
+        # usuario_row: (id, nome, email, senha_hashed)
+        if not verificar_senha(senha, usuario_row[3]):
             return None
 
         usuario = Usuario(
-            nome=usuario_login[1],
-            email=usuario_login[2],
-            senha_hashed=usuario_login[3],
-            id=usuario_login[0]
+            nome=usuario_row[1],
+            email=usuario_row[2],
+            senha_hashed=usuario_row[3],
+            id=usuario_row[0]
         )
-
-        cursor.close()
-        conexao.close()
-        print(Fore.GREEN + "\nLogin realizado com sucesso!")
-        self.validador.input_com_prompt_colorido(Fore.GREEN + "Pressione a tecla Enter para seguir... ")
 
         return usuario
 
@@ -129,14 +68,7 @@ class UserService:
         Returns:
             sqlite3.Row | tuple | None: Registro com os dados do usuário.
         """
-        conexao = get_db_connection()
-        cursor = conexao.cursor()
-
-        try:
-            return self.user_repo.buscar_dados_usuario(usuario, cursor)
-        finally:
-            cursor.close()
-            conexao.close()
+        return self.user_repo.buscar_dados_usuario(usuario)
 
 
     def editar_nome_usuario(self, usuario, novo_nome):
@@ -150,16 +82,9 @@ class UserService:
         Returns:
             bool: True se editado com sucesso, False caso contrário.
         """
-        conexao = get_db_connection()
-        cursor = conexao.cursor()
 
-        try:
-            resultado = self.user_repo.editar_nome(usuario, novo_nome, cursor)
-            conexao.commit()
-            return resultado
-        finally:
-            cursor.close()
-            conexao.close()
+        
+        return self.user_repo.editar_nome(usuario, novo_nome)
 
 
     def editar_email_usuario(self, usuario, novo_email):
@@ -173,16 +98,8 @@ class UserService:
         Returns:
             bool: True se editado com sucesso, False caso contrário.
         """
-        conexao = get_db_connection()
-        cursor = conexao.cursor()
 
-        try:
-            resultado = self.user_repo.editar_email(usuario, novo_email, cursor)
-            conexao.commit()
-            return resultado
-        finally:
-            cursor.close()
-            conexao.close()
+        return self.user_repo.editar_email(usuario, novo_email)
 
 
     def editar_senha_usuario(self, usuario, nova_senha_hashed):
@@ -196,16 +113,7 @@ class UserService:
         Returns:
             bool: True se editada com sucesso, False caso contrário.
         """
-        conexao = get_db_connection()
-        cursor = conexao.cursor()
-
-        try:
-            resultado = self.user_repo.editar_senha(usuario, nova_senha_hashed, cursor)
-            conexao.commit()
-            return resultado
-        finally:
-            cursor.close()
-            conexao.close()
+        return self.user_repo.editar_senha(usuario, nova_senha_hashed)
 
 
     def deletar_usuario_com_confirmacao(self, usuario):
@@ -218,16 +126,7 @@ class UserService:
         Returns:
             bool: True se deletado com sucesso, False caso contrário.
         """
-        conexao = get_db_connection()
-        cursor = conexao.cursor()
-
-        try:
-            self.user_repo.deletar_usuario(usuario, cursor)
-            conexao.commit()
-            return True
-        finally:
-            cursor.close()
-            conexao.close()
+        return self.user_repo.deletar_usuario(usuario)
 
 
     def validar_novo_email_unico(self, email):
@@ -244,15 +143,8 @@ class UserService:
             print(Fore.RED + "❌ Formatação do email incorreta.")
             return False
 
-        conexao = get_db_connection()
-        cursor = conexao.cursor()
+        if self.user_repo.email_existe(email):
+            print(Fore.RED + "❌ Email já cadastrado.")
+            return False
 
-        try:
-            cursor.execute("SELECT EXISTS(SELECT 1 FROM usuarios WHERE email = ?)", (email,))
-            if cursor.fetchone()[0] == 1:
-                print(Fore.RED + "❌ Email já cadastrado.")
-                return False
-            return True
-        finally:
-            cursor.close()
-            conexao.close()
+        return True

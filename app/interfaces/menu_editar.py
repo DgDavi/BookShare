@@ -24,18 +24,14 @@ class MenuEditar:
         print(Fore.CYAN + "=" * 60)
         print(Fore.CYAN + "📋 EDITAR DADOS".center(60))
         print(Fore.CYAN + "=" * 60)
-        print()
-        print(Fore.LIGHTMAGENTA_EX + "[1]" + Fore.WHITE + " Nome")
+        
+        print(Fore.LIGHTMAGENTA_EX + "\n[1]" + Fore.WHITE + " Nome")
         print(Fore.LIGHTMAGENTA_EX + "[2]" + Fore.WHITE + " Email")
         print(Fore.LIGHTMAGENTA_EX + "[3]" + Fore.WHITE + " Senha")
         print(Fore.LIGHTMAGENTA_EX + "[0]" + Fore.WHITE + " Voltar")
         print(Fore.CYAN + "-"*60)
         
-        try:
-            opcao = int(self.validador.input_com_prompt_colorido(Fore.GREEN + "👉 Escolha uma opção: "))
-        except ValueError:
-            print(Fore.RED + "❌ Digite apenas números de opções válidas!")
-            opcao = None
+        opcao = self.validador.validar_opcao(Fore.GREEN + "👉 Escolha uma opção: ", 0, 3)
 
         if opcao == 1:
             print()

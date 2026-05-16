@@ -1,0 +1,40 @@
+from colorama import Fore
+
+from utils.limpar_tela import limpar_tela
+from utils.validador import Validador
+from services.livro_services import LivroService
+
+class CadastroLivro:
+    def __init__(self, livro_service: LivroService, validador: Validador):
+        self.livro_service = livro_service
+        self.validador = validador
+
+    def exibir(self, usuario):
+        limpar_tela()
+        print(Fore.YELLOW + "📋 CADASTRO DE LIVROS\n" + Fore.CYAN + "-\n"*30)
+
+        titulo = self.validador.validar_input(
+            Fore.YELLOW + "👉 Digite o nome do livro: ",
+            lambda n: 3 <= len(n) <= 40,
+            Fore.YELLOW + "👉 O nome deve conter entre 3 e 40 caracteres."
+        )
+
+        descricao = self.validador.validar_input(
+            Fore.YELLOW + "👉 Digite a descrição do livro: ",
+            lambda n:3 <= len(n) <= 200,
+            Fore.YELLOW + "👉 A descrição deve conter entre 3 e 200 caracteres."
+        )
+
+        autor = self.validador.validar_input(
+            Fore.YELLOW + "👉 Digite o autor do livro: ",
+            lambda n: 3 <= len(n) <= 40,
+            Fore.YELLOW + "👉 O nome do autor deve conter entre 3 e 40 caracteres."
+        )
+
+        livro = self.livro_service.cadastrar_livro(titulo, descricao, autor, usuario)
+
+        if livro:
+            self.validador.input_com_prompt_colorido(Fore.YELLOW + "👉 Pressione Enter para continuar...")
+            return livro
+        
+        return None
