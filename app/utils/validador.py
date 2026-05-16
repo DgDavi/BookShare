@@ -81,3 +81,15 @@ class Validador:
         senha_original = resultado[0]
 
         return verificar_senha(senha, senha_original)
+    
+
+    def validar_opcao(self, mensagem, minimo, maximo):
+        print(mensagem)
+        try:
+            opcao = int(input("Digite a sua opção: "))
+        except ValueError:
+            return None
+        if opcao > maximo or opcao < minimo:
+            return None
+        
+        return opcao 
