@@ -45,7 +45,8 @@ class MenuUsuario:
 
 
             if opcao == 1:
-                self.menu_conta.exibir(usuario)
+                if self.menu_conta.exibir(usuario):
+                    return True
             elif opcao == 2:
                 self.cadastro_livro.exibir(usuario)
             elif opcao == 3:        

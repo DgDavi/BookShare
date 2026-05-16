@@ -51,9 +51,9 @@ class MenuConta:
                 self.menu_editar.exibir(usuario)
             elif opcao == 4:               
                 if self.deletar_conta.deletar_conta(usuario):
-                    return
+                    return True
             elif opcao == 0:
-                return
+                return False
             else:
                 print(Fore.RED + "❌ Opção inválida. Tente novamente.")
                 self.validador.input_com_prompt_colorido(Fore.YELLOW + "👉 Pressione Enter para continuar...")

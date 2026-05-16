@@ -42,13 +42,17 @@ class MenuInicial:
             if opcao == 1:
                 usuario = self.menu_register.exibir()
                 if usuario:
-                    self.menu_user.exibir(usuario)
+                    if self.menu_user.exibir(usuario):
+                        # Conta deletada — volta ao menu inicial
+                        continue
 
             # Chama a função de login de usuário
             elif opcao == 2:
                 usuario = self.menu_login.exibir()
                 if usuario:
-                    self.menu_user.exibir(usuario)
+                    if self.menu_user.exibir(usuario):
+                        # Conta deletada — volta ao menu inicial
+                        continue
 
             # Chama a função de informações sobre o projeto
             elif opcao == 3:
