@@ -31,7 +31,7 @@ class MenuEditar:
         print(Fore.LIGHTMAGENTA_EX + "[0]" + Fore.WHITE + " Voltar")
         print(Fore.CYAN + "-"*60)
         
-        opcao = self.validador.validar_opcao(Fore.GREEN + "👉 Escolha uma opção: ", 0, 3)
+        opcao = self.validador.validar_opcao(0, 3)
 
         if opcao == 1:
             print()

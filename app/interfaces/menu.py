@@ -29,14 +29,14 @@ class MenuInicial:
             print(Fore.CYAN + "📚 BEM-VINDO AO BOOKSHARE".center(60))
             print(Fore.CYAN + "="*60)
 
-            print(Fore.LIGHTMAGENTA_EX + "\n[1]" + Fore.WHITE + "Cadastrar usuário")
+            print(Fore.LIGHTMAGENTA_EX + "\n[1]" + Fore.WHITE + " Cadastrar usuário")
             print(Fore.LIGHTMAGENTA_EX + "[2]" + Fore.WHITE + " Login")
             print(Fore.LIGHTMAGENTA_EX + "[3]" + Fore.WHITE + " Sobre o projeto")
             print(Fore.LIGHTMAGENTA_EX + "[0]" + Fore.WHITE + " Sair")
 
             print(Fore.CYAN + "-"*60)
 
-            opcao = self.validador.validar_opcao(Fore.GREEN + "👉 Escolha uma opção: ", 0, 3)
+            opcao = self.validador.validar_opcao(0, 3)
 
             # Chama a função de cadastro de usuário
             if opcao == 1:

@@ -83,10 +83,10 @@ class Validador:
         return verificar_senha(senha, senha_original)
     
 
-    def validar_opcao(self, mensagem, minimo, maximo):
-        print(mensagem)
+    def validar_opcao(self, minimo, maximo):
+        #print(mensagem)
         try:
-            opcao = int(input("Digite a sua opção: "))
+            opcao = int(input(Fore.GREEN + "👉 Escolha uma opção: " + Fore.WHITE))
         except ValueError:
             return None
         if opcao > maximo or opcao < minimo:

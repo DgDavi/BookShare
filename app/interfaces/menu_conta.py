@@ -41,7 +41,7 @@ class MenuConta:
             print(Fore.LIGHTMAGENTA_EX + "[0]" + Fore.WHITE + " Voltar")
             print(Fore.CYAN + "-"*60)
 
-            opcao = self.validador.validar_opcao(Fore.GREEN + "👉 Escolha uma opção: ", 0, 4)
+            opcao = self.validador.validar_opcao(0, 4)
 
             if opcao == 1:
                 self.exibir_livros.exibir(usuario)
