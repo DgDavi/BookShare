@@ -51,18 +51,16 @@ class Validador:
             return senha
 
 
-    def validar_novo_email(self, email, cursor):
+    def validar_novo_email(self, email):
+        """Valida apenas o formato do email.
 
+        Observação: verificação de unicidade no banco deve ser feita pelo Service
+        (ou pelo Repository). Este método não acessa o DB para manter o
+        Validador responsável apenas por regras de formato/entrada.
+        """
         if not self.validar_email(email):
             print(Fore.RED + "❌ Formatação do email incorreta.")
             return False
-
-        cursor.execute("SELECT EXISTS(SELECT 1 FROM usuarios WHERE email = ?)", (email,))
-
-        if cursor.fetchone()[0] == 1:
-            print(Fore.RED + "❌ Email já cadastrado.")
-            return False
-        
         return True
 
 

@@ -2,16 +2,18 @@ from colorama import Fore
 
 from utils.limpar_tela import limpar_tela
 from utils.validador import Validador
-from services.user_services import UserService
+from interfaces.menu_register import Register
+from interfaces.menu_login import Login
 from interfaces.menu_de_usuario import MenuUsuario
 from .info_menu import InfoMenu
 
 class MenuInicial:
-    def __init__(self, user_serivice: UserService, menu_user: MenuUsuario, menu_info: InfoMenu, validador: Validador):
-        self.user_service = user_serivice
+    def __init__(self, menu_register: Register, menu_user: MenuUsuario, menu_info: InfoMenu, validador: Validador, menu_login: Login):
+        self.menu_register = menu_register
         self.menu_user = menu_user
         self.menu_info = menu_info
         self.validador = validador
+        self.menu_login = menu_login
 
     def exibir(self):
         """
@@ -43,13 +45,13 @@ class MenuInicial:
 
             # Chama a função de cadastro de usuário
             if opcao == 1:
-                usuario = self.user_service.cadastrar_usuario()
+                usuario = self.menu_register.exibir()
                 if usuario:
                     self.menu_user.exibir(usuario)
 
             # Chama a função de login de usuário
             elif opcao == 2:
-                usuario = self.user_service.login_usuario()
+                usuario = self.menu_login.exibir()
                 if usuario:
                     self.menu_user.exibir(usuario)
 

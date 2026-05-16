@@ -10,6 +10,9 @@ from interfaces.deletar_conta import MenuDeletar
 from interfaces.exibir_usuario import ExibirUsuario
 from interfaces.menu_conta import MenuConta
 from interfaces.procurar_livros import ProcurarLivro
+from interfaces.menu_livro_cadastro import CadastroLivro
+from interfaces.menu_register import Register
+from interfaces.menu_login import Login
 from interfaces.menu_de_usuario import MenuUsuario
 from interfaces.info_menu import InfoMenu
 from interfaces.menu import MenuInicial
@@ -36,7 +39,10 @@ def build_menu_inicial() -> MenuInicial:
     )
 
     procurar_livro = ProcurarLivro(validador, livro_service, exibir_livros)
-    menu_usuario   = MenuUsuario(livro_service, menu_conta, procurar_livro, validador)
+    cadastro_livro = CadastroLivro(livro_service, validador)
+    menu_usuario   = MenuUsuario(livro_service, menu_conta, procurar_livro, validador, cadastro_livro)
     info_menu      = InfoMenu(validador)
+    menu_register  = Register(user_service, validador)
+    menu_login     = Login(user_service, validador)
 
-    return MenuInicial(user_service, menu_usuario, info_menu, validador)
+    return MenuInicial(menu_register, menu_usuario, info_menu, validador, menu_login)

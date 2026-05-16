@@ -1,7 +1,6 @@
 from colorama import Fore
 from datetime import datetime, timedelta
 
-from data.db import get_db_connection
 from utils.validador import Validador
 from model.livro import Livro
 from utils.limpar_tela import limpar_tela
@@ -12,7 +11,7 @@ class LivroService:
         self.livro_repo = livro_repo
         self.validador = validador
 
-    def cadastrar_livro(self, usuario):
+    def cadastrar_livro(self,nome, descricao, autor, usuario):
         """
         Coleta os dados de um livro no terminal e salva no banco.
 
@@ -23,42 +22,11 @@ class LivroService:
             Livro | None: Instância de livro criada quando o cadastro é concluído.
             Se houver falha no processo, retorna None.
         """
-        conexao = get_db_connection()
-        cursor = conexao.cursor()
-
-        limpar_tela()
-        print(Fore.YELLOW + "📋 CADASTRO DE LIVROS\n" + Fore.CYAN + "-"*30)
-        print()
-
-        titulo = self.validador.validar_input(
-            Fore.YELLOW + "👉 Digite o nome do livro: ",
-            lambda n: 3 <= len(n) <= 40,
-            Fore.YELLOW + "👉 O nome deve conter entre 3 e 40 caracteres."
-        )
-
-        descricao = self.validador.validar_input(
-            Fore.YELLOW + "👉 Digite a descrição do livro: ",
-            lambda n:3 <= len(n) <= 200,
-            Fore.YELLOW + "👉 A descrição deve conter entre 3 e 200 caracteres."
-        )
-
-        autor = self.validador.validar_input(
-            Fore.YELLOW + "👉 Digite o autor do livro: ",
-            lambda n: 3 <= len(n) <= 40,
-            Fore.YELLOW + "👉 O nome do autor deve conter entre 3 e 40 caracteres."
-        )
-
-        livro = Livro(titulo=titulo, descricao=descricao, autor=autor, user_id=usuario.id)
-        livro_criado = self.livro_repo.criar_livro(livro, cursor)
+        livro = Livro(titulo=nome, descricao=descricao, autor=autor, user_id=usuario.id)
+        livro_criado = self.livro_repo.criar_livro(livro)
 
         if livro_criado:
-            conexao.commit()
-            cursor.close()
-            conexao.close()
             return livro_criado
-
-        cursor.close()
-        conexao.close()
         return None
 
 
@@ -72,14 +40,8 @@ class LivroService:
         Returns:
             list[sqlite3.Row]: Lista de livros pertencentes ao usuário.
         """
-        conexao = get_db_connection()
-        cursor = conexao.cursor()
 
-        try:
-            return self.livro_repo.buscar_livros_usuario(usuario, cursor)
-        finally:
-            cursor.close()
-            conexao.close()
+        return self.livro_repo.buscar_livros_usuario(usuario)
 
 
     def listar_livros_emprestados(self, usuario):
@@ -92,14 +54,8 @@ class LivroService:
         Returns:
             list[sqlite3.Row]: Lista de empréstimos ativos do usuário.
         """
-        conexao = get_db_connection()
-        cursor = conexao.cursor()
-
-        try:
-            return self.livro_repo.buscar_livros_emprestados(usuario.id, cursor)
-        finally:
-            cursor.close()
-            conexao.close()
+        
+        return self.livro_repo.buscar_livros_emprestados(usuario.id)
 
 
     def buscar_livros_por_termo(self, termo):
@@ -112,52 +68,37 @@ class LivroService:
         Returns:
             list[sqlite3.Row]: Lista de livros encontrados.
         """
-        conexao = get_db_connection()
-        cursor = conexao.cursor()
-
-        try:
-            termo_normalizado = termo.strip().lower()
-            return self.livro_repo.buscar_livros(termo_normalizado, cursor)
-        finally:
-            cursor.close()
-            conexao.close()
+        termo_normalizado = termo.strip().lower()
+        return self.livro_repo.buscar_livros(termo_normalizado)
 
 
-    def emprestar_livro(self, cursor, conexao, livro_id, usuario_id):
+    def emprestar_livro(self, livro_id, usuario_id):
         """
         Registra o empréstimo de um livro para um usuário.
 
         Args:
-            cursor (sqlite3.Cursor): Cursor da transação atual.
-            conexao (sqlite3.Connection): Conexão com o banco de dados.
             livro_id (int): Identificador do livro.
             usuario_id (int): Identificador do usuário que pega emprestado.
 
         Returns:
-            None: Atualiza o banco e confirma a transação.
+            None: Atualiza o banco.
         """
         data_atual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        self.livro_repo.emprestar_livro_repo(livro_id, usuario_id, data_atual, cursor)
-
-        conexao.commit()
+        self.livro_repo.emprestar_livro_repo(livro_id, usuario_id, data_atual)
 
 
-    def devolver_livro(self, cursor, conexao, livro_id):
+    def devolver_livro(self, livro_id):
         """
         Registra a devolução de um livro e libera sua disponibilidade.
 
         Args:
-            cursor (sqlite3.Cursor): Cursor da transação atual.
-            conexao (sqlite3.Connection): Conexão com o banco de dados.
             livro_id (int): Identificador do livro.
 
         Returns:
-            None: Atualiza o banco e confirma a transação.
+            None: Atualiza o banco.
         """
-        self.livro_repo.devolver_livro_repo(livro_id, cursor)
-
-        conexao.commit()
+        self.livro_repo.devolver_livro_repo(livro_id)
 
 
     @staticmethod
@@ -180,32 +121,14 @@ class LivroService:
         return datetime.now() > limite
 
 
-    def atualizar_status_livros(self, cursor, conexao):
+    def atualizar_status_livros(self):
         """
         Atualiza o status dos livros e devolve os que venceram o prazo.
 
-        Args:
-            cursor (sqlite3.Cursor): Cursor da transação atual.
-            conexao (sqlite3.Connection): Conexão com o banco de dados.
-
         Returns:
-            None: Aplica atualizações de status e confirma a transação.
+            int: Quantidade de livros atualizados.
         """
-        cursor.execute("""
-            SELECT id, data_emprestimo
-            FROM livros
-            WHERE disponivel = 0
-        """)
-        livros = cursor.fetchall()
-
-        for livro in livros:
-            livro_id = livro[0]
-            data_emprestimo = livro[1]
-
-            if data_emprestimo and self.livro_atrasado(data_emprestimo):
-                self.livro_repo.devolver_livro_repo(livro_id, cursor)
-
-        conexao.commit()
+        return self.livro_repo.atualizar_status_livro()
 
 
     def tentar_emprestar_livro(self, usuario_id, livro_id):
@@ -219,33 +142,25 @@ class LivroService:
         Returns:
             tuple[bool, str]: Resultado da operação com status e mensagem.
         """
-        conexao = get_db_connection()
-        cursor = conexao.cursor()
+        self.atualizar_status_livros()
 
-        try:
-            self.atualizar_status_livros(cursor, conexao)
+        livro = self.livro_repo.buscar_livro_por_id(livro_id)
+        if not livro:
+            return False, "❌ Livro não encontrado."
 
-            livro = self.livro_repo.buscar_livro_por_id(livro_id, cursor)
-            if not livro:
-                return False, "❌ Livro não encontrado."
+        if livro["user_id"] == usuario_id:
+            return False, "❌ Você não pode pegar emprestado o próprio livro."
 
-            if livro["user_id"] == usuario_id:
-                return False, "❌ Você não pode pegar emprestado o próprio livro."
+        if livro["disponivel"] == 0:
+            return False, "❌ Livro indisponível no momento."
 
-            if livro["disponivel"] == 0:
-                return False, "❌ Livro indisponível no momento."
+        if self.livro_repo.usuario_tem_emprestimo_ativo(usuario_id):
+            return False, "❌ Você já possui um empréstimo ativo."
 
-            if self.livro_repo.usuario_tem_emprestimo_ativo(usuario_id, cursor):
-                return False, "❌ Você já possui um empréstimo ativo."
+        data_atual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.livro_repo.emprestar_livro_repo(livro_id, usuario_id, data_atual)
 
-            data_atual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            self.livro_repo.emprestar_livro_repo(livro_id, usuario_id, data_atual, cursor)
-            conexao.commit()
-
-            return True, "✅ Empréstimo realizado por 7 dias."
-        finally:
-            cursor.close()
-            conexao.close()
+        return True, "✅ Empréstimo realizado por 7 dias."
 
 
     def tentar_devolver_livro(self, usuario_id, livro_id):
@@ -259,24 +174,18 @@ class LivroService:
         Returns:
             tuple[bool, str]: Resultado da operação com status e mensagem.
         """
-        conexao = get_db_connection()
-        cursor = conexao.cursor()
 
-        try:
-            livro = self.livro_repo.buscar_livro_por_id(livro_id, cursor)
-            if not livro:
-                return False, "❌ Livro não encontrado."
 
-            if livro["usuario_emprestimo"] != usuario_id:
-                return False, "❌ Esse livro não está emprestado para você."
+        livro = self.livro_repo.buscar_livro_por_id(livro_id)
+        if not livro:
+            return False, "❌ Livro não encontrado."
 
-            if livro["disponivel"] == 1:
-                return False, "❌ Esse livro já está disponível."
+        if livro["usuario_emprestimo"] != usuario_id:
+            return False, "❌ Esse livro não está emprestado para você."
 
-            self.livro_repo.devolver_livro_repo(livro_id, cursor)
-            conexao.commit()
+        if livro["disponivel"] == 1:
+            return False, "❌ Esse livro já está disponível."
 
-            return True, "✅ Livro devolvido com sucesso."
-        finally:
-            cursor.close()
-            conexao.close()
+        self.livro_repo.devolver_livro_repo(livro_id)
+
+        return True, "✅ Livro devolvido com sucesso."
