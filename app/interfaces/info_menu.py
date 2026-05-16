@@ -5,8 +5,8 @@ from utils.validador import Validador
 
 
 class InfoMenu:
-    def __init__(self, validador: Validador):
-        self.validador = validador
+    def __init__(self):
+        self.validador = Validador()
 
     # Menu de informações sobre o projeto
     def exibir(self):

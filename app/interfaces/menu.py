@@ -8,12 +8,12 @@ from interfaces.menu_de_usuario import MenuUsuario
 from .info_menu import InfoMenu
 
 class MenuInicial:
-    def __init__(self, menu_register: Register, menu_user: MenuUsuario, menu_info: InfoMenu, validador: Validador, menu_login: Login):
-        self.menu_register = menu_register
-        self.menu_user = menu_user
-        self.menu_info = menu_info
-        self.validador = validador
-        self.menu_login = menu_login
+    def __init__(self):
+        self.menu_register = Register()
+        self.menu_user = MenuUsuario()
+        self.menu_info = InfoMenu()
+        self.validador = Validador()
+        self.menu_login = Login()
 
     def exibir(self):
         """
@@ -36,19 +36,23 @@ class MenuInicial:
 
             print(Fore.CYAN + "-"*60)
 
-            opcao = self.validador.validar_opcao(Fore.GREEN + "👉 Escolha uma opção: ", 0, 3)
+            opcao = self.validador.validar_opcao(0, 3)
 
             # Chama a função de cadastro de usuário
             if opcao == 1:
                 usuario = self.menu_register.exibir()
                 if usuario:
-                    self.menu_user.exibir(usuario)
+                    if self.menu_user.exibir(usuario):
+                        # Conta deletada — volta ao menu inicial
+                        continue
 
             # Chama a função de login de usuário
             elif opcao == 2:
                 usuario = self.menu_login.exibir()
                 if usuario:
-                    self.menu_user.exibir(usuario)
+                    if self.menu_user.exibir(usuario):
+                        # Conta deletada — volta ao menu inicial
+                        continue
 
             # Chama a função de informações sobre o projeto
             elif opcao == 3:

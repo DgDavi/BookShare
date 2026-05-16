@@ -6,9 +6,9 @@ from utils.limpar_tela import limpar_tela
 from utils.security import verificar_senha, hash_senha
 
 class MenuEditar:
-    def __init__(self, user_service: UserService, validador: Validador):
-        self.user_service = user_service
-        self.validador = validador
+    def __init__(self):
+        self.user_service = UserService()
+        self.validador = Validador()
 
     def exibir(self, usuario):
         """
@@ -31,7 +31,7 @@ class MenuEditar:
         print(Fore.LIGHTMAGENTA_EX + "[0]" + Fore.WHITE + " Voltar")
         print(Fore.CYAN + "-"*60)
         
-        opcao = self.validador.validar_opcao(Fore.GREEN + "👉 Escolha uma opção: ", 0, 3)
+        opcao = self.validador.validar_opcao(0, 3)
 
         if opcao == 1:
             print()

@@ -6,10 +6,10 @@ from utils.validador import Validador
 from utils.limpar_tela import limpar_tela
 
 class ProcurarLivro:
-    def __init__(self, validador: Validador, livro_service: LivroService, exibir_livros: ExibirLivros):
-        self.validador = validador
-        self.livro_service = livro_service
-        self.exibir_livros = exibir_livros
+    def __init__(self):
+        self.validador = Validador()
+        self.livro_service = LivroService()
+        self.exibir_livros = ExibirLivros()
 
     def procurar_livros(self, usuario):
         """
