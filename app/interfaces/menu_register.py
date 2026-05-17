@@ -38,11 +38,13 @@ class Register:
         
         codigo = gerar_codigo()
         self.validador.enviar_codigo(email, codigo)
-        codigo_recebido = input("Foi enviado um código para o seu email. Digite o código recebido: ")
+        codigo_recebido = self.validador.input_com_prompt_colorido(
+            Fore.YELLOW + "👉 Foi enviado um código para o seu email. Digite o código recebido: "
+        )
         if self.user_service.verificar_codigo_email(codigo, codigo_recebido):
-            print("Código correto.")
+            print(Fore.GREEN + "✅ Código correto.")
         else:
-            print("Código errado. Operação cancelada.")
+            print(Fore.RED + "❌ Código errado. Operação cancelada.")
             return False
         
 

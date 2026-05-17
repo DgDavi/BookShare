@@ -116,3 +116,4 @@ class Validador:
         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
             server.login(remetente, senha)
             server.sendmail(remetente, email_destino, msg.as_string())
+            print(Fore.GREEN + "✅ Código de verificação enviado com sucesso.")
