@@ -3,7 +3,7 @@ from colorama import Fore
 from services.user_services import UserService
 from utils.validador import Validador
 from utils.limpar_tela import limpar_tela
-from utils.security import verificar_senha, hash_senha
+from utils.security import verificar_senha, hash_senha, gerar_codigo
 
 class MenuEditar:
     def __init__(self):
@@ -76,12 +76,18 @@ class MenuEditar:
                 
 
         elif opcao == 3:
-            print()
-            confirmacao_senha = self.validador.input_com_prompt_colorido(Fore.YELLOW + "👉 Digite sua senha para confirmar: ")
-            if not verificar_senha(confirmacao_senha, usuario.senha_hashed):
-                print(Fore.RED + "❌ Você digitou a senha errada. A operação foi cancelada.")
-                self.validador.input_com_prompt_colorido(Fore.GREEN + "\nPressione a tecla Enter para seguir... ")
-                return
+        
+            codigo = gerar_codigo()
+            self.validador.enviar_codigo(usuario.email, codigo)
+            codigo_recebido = self.validador.input_com_prompt_colorido(
+                Fore.YELLOW + "\n👉 Foi enviado um código para o seu email. Digite o código recebido: "
+            )
+            if self.user_service.verificar_codigo_email(codigo, codigo_recebido):
+                print(Fore.GREEN + "✅ Código correto.")
+            else:
+                print(Fore.RED + "❌ Código errado. Operação cancelada.")
+                return False
+                
 
             print()
             nova_senha = self.validador.validar_nova_senha()
