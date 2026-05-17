@@ -5,9 +5,9 @@ from utils.validador import Validador
 from services.livro_services import LivroService
 
 class CadastroLivro:
-    def __init__(self, livro_service: LivroService, validador: Validador):
-        self.livro_service = livro_service
-        self.validador = validador
+    def __init__(self):
+        self.livro_service = LivroService()
+        self.validador = Validador()
 
     def exibir(self, usuario):
         limpar_tela()

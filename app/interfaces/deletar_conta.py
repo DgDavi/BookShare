@@ -5,9 +5,9 @@ from utils.security import verificar_senha
 from utils.validador import Validador
 
 class MenuDeletar:
-    def __init__(self, validador: Validador, user_service: UserService):
-        self.validador = validador
-        self.user_service = user_service
+    def __init__(self):
+        self.validador = Validador()
+        self.user_service = UserService()
 
         
     def deletar_conta(self, usuario):

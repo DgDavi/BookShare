@@ -6,9 +6,9 @@ from utils.validador import Validador
 from colorama import Fore
 
 class Register:
-    def __init__(self, user_service: UserService, validador: Validador):
-        self.user_service = user_service
-        self.validador = validador
+    def __init__(self):
+        self.user_service = UserService()
+        self.validador = Validador()
 
     def exibir(self):
         """

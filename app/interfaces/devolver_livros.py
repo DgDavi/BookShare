@@ -6,9 +6,9 @@ from services.livro_services import LivroService
 
 
 class DevolverLivro:
-    def __init__(self, validador: Validador, livro_service: LivroService):
-        self.validador = validador
-        self.livro_service = livro_service
+    def __init__(self):
+        self.validador = Validador()
+        self.livro_service = LivroService()
 
     def devolver_livros(self, usuario):
         """

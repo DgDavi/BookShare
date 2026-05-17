@@ -8,9 +8,9 @@ from utils.validador import Validador
 
 
 class UserService:
-    def __init__(self, user_repo: UserRepository, validador: Validador):
-        self.user_repo = user_repo
-        self.validador = validador
+    def __init__(self):
+        self.user_repo = UserRepository()
+        self.validador = Validador()
 
     def cadastrar_usuario(self, nome, email, senha):
         # valida formato

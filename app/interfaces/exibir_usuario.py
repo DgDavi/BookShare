@@ -3,8 +3,8 @@ from colorama import Fore
 from services.user_services import UserService
 
 class ExibirUsuario:
-    def __init__(self, user_service: UserService):
-        self.user_service = user_service
+    def __init__(self):
+        self.user_service = UserService()
 
     def exibir_usuario(self, usuario):
         dados_usuario = self.user_service.obter_dados_usuario(usuario)

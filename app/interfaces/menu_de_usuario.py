@@ -2,18 +2,18 @@ from colorama import Fore
 
 from utils.limpar_tela import limpar_tela
 from utils.validador import Validador
-from interfaces.procurar_livros import ProcurarLivro
-from interfaces.menu_conta import MenuConta
+from .procurar_livros import ProcurarLivro
+from .menu_conta import MenuConta
 from services.livro_services import LivroService
-from interfaces.menu_livro_cadastro import CadastroLivro
+from .menu_livro_cadastro import CadastroLivro
 
 class MenuUsuario:
-    def __init__(self, livro_service: LivroService, menu_conta: MenuConta, procurar_livro: ProcurarLivro, validador: Validador, cadastro_livro: CadastroLivro):
-        self.livro_service = livro_service
-        self.menu_conta = menu_conta
-        self.procurar_livro = procurar_livro
-        self.validador = validador
-        self.cadastro_livro = cadastro_livro
+    def __init__(self):
+        self.livro_service = LivroService()
+        self.menu_conta = MenuConta()
+        self.procurar_livro = ProcurarLivro()
+        self.validador = Validador()
+        self.cadastro_livro = CadastroLivro()
 
     # Menu do usuário logado
     def exibir(self, usuario):
@@ -41,11 +41,12 @@ class MenuUsuario:
             print(Fore.CYAN + "-"*60)
 
 
-            opcao = self.validador.validar_opcao(Fore.GREEN + "👉 Escolha uma opção: ", 0, 3)
+            opcao = self.validador.validar_opcao( 0, 3)
 
 
             if opcao == 1:
-                self.menu_conta.exibir(usuario)
+                if self.menu_conta.exibir(usuario):
+                    return True
             elif opcao == 2:
                 self.cadastro_livro.exibir(usuario)
             elif opcao == 3:        

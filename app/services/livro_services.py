@@ -7,9 +7,9 @@ from utils.limpar_tela import limpar_tela
 from repository.livro_repository import LivroRepository
 
 class LivroService:
-    def __init__(self, livro_repo: LivroRepository, validador: Validador):
-        self.livro_repo = livro_repo
-        self.validador = validador
+    def __init__(self):
+        self.livro_repo = LivroRepository()
+        self.validador = Validador()
 
     def cadastrar_livro(self,nome, descricao, autor, usuario):
         """
