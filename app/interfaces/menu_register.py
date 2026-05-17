@@ -37,12 +37,11 @@ class Register:
 
         senha = self.validador.validar_nova_senha()
         
-        usuario_criado = self.user_service.criar_usuario(nome, email, senha)
+        usuario_criado = self.user_service.cadastrar_usuario(nome, email, senha)
 
         if usuario_criado:
             print(Fore.GREEN + "\nUsuário cadastrado com sucesso!")
             self.validador.input_com_prompt_colorido(Fore.GREEN + "Pressione a tecla Enter para seguir... ")
-        
 
             return usuario_criado
         

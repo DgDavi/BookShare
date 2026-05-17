@@ -1,15 +1,16 @@
 from colorama import Fore
+from email_validator import validate_email, EmailNotValidError
 
-from .security import verificar_senha
+from utils.security import verificar_senha
 
 class Validador:
 
     def validar_email(self, email):
-        return (
-            "@" in email and
-            "." in email and
-            email.index("@") < email.index(".")
-        )
+        try:
+            info_email = validate_email(email, check_deliverability=True)
+            return True, info_email.normalized
+        except EmailNotValidError:
+            return False, None
 
 
     def validar_senha(self, senha):
@@ -27,11 +28,16 @@ class Validador:
     def validar_input(self, mensagem, validacao_funcao, mensagem_erro, *args):
         while True:
             valor = self.input_com_prompt_colorido(mensagem)
-            if validacao_funcao(valor, *args):
+            resultado = validacao_funcao(valor, *args)
+            if isinstance(resultado, tuple):
+                valido, valor_validado = resultado
+                if valido:
+                    return valor_validado
+            elif resultado:
                 return valor
-            else:
-                if mensagem_erro and mensagem_erro.strip():
-                    print(mensagem_erro)
+
+            if mensagem_erro and mensagem_erro.strip():
+                print(mensagem_erro)
 
 
     def validar_nova_senha(self):
@@ -52,13 +58,9 @@ class Validador:
 
 
     def validar_novo_email(self, email):
-        """Valida apenas o formato do email.
+        valido, _ = self.validar_email(email)
 
-        Observação: verificação de unicidade no banco deve ser feita pelo Service
-        (ou pelo Repository). Este método não acessa o DB para manter o
-        Validador responsável apenas por regras de formato/entrada.
-        """
-        if not self.validar_email(email):
+        if not valido:
             print(Fore.RED + "❌ Formatação do email incorreta.")
             return False
         return True

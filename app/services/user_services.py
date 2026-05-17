@@ -14,29 +14,24 @@ class UserService:
 
     def cadastrar_usuario(self, nome, email, senha):
         # valida formato
-        if not self.validador.validar_email(email):
+        valido, email_normalizado = self.validador.validar_email(email)
+        if not valido:
             return None
 
         # valida unicidade pelo repository
-        if self.user_repo.email_existe(email):
+        if self.user_repo.email_existe(email_normalizado):
             print(Fore.RED + "❌ Email já cadastrado.")
             return None
 
         senha_hashed = hash_senha(senha)
-        usuario = Usuario(nome, email, senha_hashed)
+        usuario = Usuario(nome, email_normalizado, senha_hashed)
         uid = self.user_repo.criar_usuario(usuario)
 
         if uid:
             usuario.id = uid
             return usuario
         return None
-
-    # alias para compatibilidade com interfaces que chamam criar_usuario
-    def criar_usuario(self, nome, email, senha):
-        return self.cadastrar_usuario(nome, email, senha)
-        
-    
-
+            
 
     def login_usuario(self, email, senha):
         # busca usuário pelo repository (repo gerencia conexões)
@@ -139,11 +134,12 @@ class UserService:
         Returns:
             bool: True se email é válido e único, False caso contrário.
         """
-        if not self.validador.validar_email(email):
+        valido, email_normalizado = self.validador.validar_email(email)
+        if not valido:
             print(Fore.RED + "❌ Formatação do email incorreta.")
             return False
 
-        if self.user_repo.email_existe(email):
+        if self.user_repo.email_existe(email_normalizado):
             print(Fore.RED + "❌ Email já cadastrado.")
             return False
 
