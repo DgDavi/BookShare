@@ -1,5 +1,10 @@
 from colorama import Fore
 from email_validator import validate_email, EmailNotValidError
+import smtplib
+import os
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from dotenv import load_dotenv
 
 from utils.security import verificar_senha
 
@@ -95,3 +100,19 @@ class Validador:
             return None
         
         return opcao 
+
+
+    def enviar_codigo(self, email_destino, codigo):
+        remetente = os.getenv("EMAIL_REMETENTE")
+        senha = os.getenv("EMAIL_SENHA")
+        
+        msg = MIMEMultipart()
+        msg['From'] = remetente
+        msg['To'] = email_destino
+        msg['Subject'] = codigo        
+
+        msg.attach(MIMEText(f"Seu código de verificação é: {codigo}", 'plain'))
+
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+            server.login(remetente, senha)
+            server.sendmail(remetente, email_destino, msg.as_string())

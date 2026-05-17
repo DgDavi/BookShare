@@ -144,3 +144,7 @@ class UserService:
             return False
 
         return True
+    
+
+    def verificar_codigo_email(self, codigo_enviado, codigo_recebido):
+        return codigo_enviado == codigo_recebido

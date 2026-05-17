@@ -1,5 +1,6 @@
 from services.user_services import UserService
 from utils.limpar_tela import limpar_tela
+from utils.security import gerar_codigo
 from utils.validador import Validador
 
 from colorama import Fore
@@ -34,6 +35,16 @@ class Register:
             self.user_service.validar_novo_email_unico,
             ""
         )
+        
+        codigo = gerar_codigo()
+        self.validador.enviar_codigo(email, codigo)
+        codigo_recebido = input("Foi enviado um código para o seu email. Digite o código recebido: ")
+        if self.user_service.verificar_codigo_email(codigo, codigo_recebido):
+            print("Código correto.")
+        else:
+            print("Código errado. Operação cancelada.")
+            return False
+        
 
         senha = self.validador.validar_nova_senha()
         
