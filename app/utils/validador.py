@@ -8,6 +8,8 @@ from dotenv import load_dotenv
 
 from utils.security import verificar_senha
 
+load_dotenv()
+
 class Validador:
 
     def validar_email(self, email):
