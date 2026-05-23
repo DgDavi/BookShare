@@ -134,6 +134,8 @@ As próximas evoluções planejadas para o projeto são:
   3VA:
 - Criação de uma aba de mensagens entre usuários.
 - Fluxo de pedido de empréstimo: o dono do livro recebe uma solicitação e decide se autoriza o empréstimo.
+- Melhorar o design do sistema com a biblioteca rich
+- Permitir doações (Troca de dono)
 
 
 ## Autores
