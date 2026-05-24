@@ -131,11 +131,12 @@ As próximas evoluções planejadas para o projeto são:
 - Criar um opção de voltar para quando o usuário estiver em um fluxo de entrada ele poder sair.
 
 
-  3VA:
+3VA:
 - Criação de uma aba de mensagens entre usuários.
 - Fluxo de pedido de empréstimo: o dono do livro recebe uma solicitação e decide se autoriza o empréstimo.
 - Melhorar o design do sistema com a biblioteca rich
 - Permitir doações (Troca de dono)
+- Permitir envio de fotos do livro que está sendo cadastrado (via JSON)
 
 
 ## Autores
