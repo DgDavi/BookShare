@@ -108,7 +108,7 @@ class Validador:
 
         if not remetente or not senha:
             print(Fore.RED + "❌ Configurações de email não encontradas.")
-            return
+            return False
         
         msg = MIMEMultipart()
         msg['From'] = remetente
