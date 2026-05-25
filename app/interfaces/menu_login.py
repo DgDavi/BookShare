@@ -19,7 +19,7 @@ class Login:
         email = self.validador.validar_input(
             Fore.YELLOW + "👉 Digite seu email: ",
             self.validador.validar_email,
-            ""
+            Fore.RED + "❌ Formatação do email incorreta.\n" + Fore.YELLOW + "👉 Tente novamente."
         )
 
 
