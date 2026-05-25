@@ -2,6 +2,7 @@ from colorama import Fore
 from email_validator import validate_email, EmailNotValidError
 import smtplib
 import os
+import re
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from dotenv import load_dotenv
@@ -12,12 +13,16 @@ load_dotenv()
 
 class Validador:
 
+    # def validar_email(self, email):
+    #     try:
+    #         info_email = validate_email(email, check_deliverability=True)
+    #         return True, info_email.normalized
+    #     except EmailNotValidError:
+    #         return False, None
+
     def validar_email(self, email):
-        try:
-            info_email = validate_email(email, check_deliverability=True)
-            return True, info_email.normalized
-        except EmailNotValidError:
-            return False, None
+        padrao = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        return bool(re.match(padrao, email))
 
 
     def validar_senha(self, senha):
@@ -35,12 +40,7 @@ class Validador:
     def validar_input(self, mensagem, validacao_funcao, mensagem_erro, *args):
         while True:
             valor = self.input_com_prompt_colorido(mensagem)
-            resultado = validacao_funcao(valor, *args)
-            if isinstance(resultado, tuple):
-                valido, valor_validado = resultado
-                if valido:
-                    return valor_validado
-            elif resultado:
+            if validacao_funcao(valor, *args):
                 return valor
 
             if mensagem_erro and mensagem_erro.strip():
@@ -65,9 +65,7 @@ class Validador:
 
 
     def validar_novo_email(self, email):
-        valido, _ = self.validar_email(email)
-
-        if not valido:
+        if not self.validar_email(email):
             print(Fore.RED + "❌ Formatação do email incorreta.")
             return False
         return True
@@ -107,6 +105,10 @@ class Validador:
     def enviar_codigo(self, email_destino, codigo):
         remetente = os.getenv("EMAIL_REMETENTE")
         senha = os.getenv("EMAIL_SENHA")
+
+        if not remetente or not senha:
+            print(Fore.RED + "❌ Configurações de email não encontradas.")
+            return
         
         msg = MIMEMultipart()
         msg['From'] = remetente

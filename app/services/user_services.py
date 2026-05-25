@@ -14,8 +14,8 @@ class UserService:
 
     def cadastrar_usuario(self, nome, email, senha):
         # valida formato
-        valido, email_normalizado = self.validador.validar_email(email)
-        if not valido:
+        email_normalizado = email.strip().lower()
+        if not self.validador.validar_email(email_normalizado):
             return None
 
         # valida unicidade pelo repository
@@ -134,8 +134,8 @@ class UserService:
         Returns:
             bool: True se email é válido e único, False caso contrário.
         """
-        valido, email_normalizado = self.validador.validar_email(email)
-        if not valido:
+        email_normalizado = email.strip().lower()
+        if not self.validador.validar_email(email_normalizado):
             print(Fore.RED + "❌ Formatação do email incorreta.")
             return False
 
