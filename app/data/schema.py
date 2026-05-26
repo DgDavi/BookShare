@@ -24,6 +24,14 @@ def create_tables():
                 FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE CASCADE,
                 FOREIGN KEY (usuario_emprestimo) REFERENCES usuarios(id) ON DELETE SET NULL
                 )""")
+   
+    cursor.execute("""CREATE TABLE IF NOT EXISTS mensagens (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                mensagem TEXT NOT NULL,
+                data_criacao TEXT NOT NULL,
+                FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE CASCADE
+                )""")
     
     conexao.commit()
 
