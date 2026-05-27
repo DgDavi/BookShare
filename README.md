@@ -128,7 +128,7 @@ As próximas evoluções planejadas para o projeto são:
 - Histórico de empréstimos.
 - Aba de avisos para exibir quando o livro for emprestado.
 - Melhorar o funcionamento da data limite para o empréstimo.
-- Criar um opção de voltar para quando o usuário estiver em um fluxo de entrada ele poder sair.
+- Permitir envio de fotos do livro que está sendo cadastrado (via JSON)
 - Punição para caso a devolução não seja efetuada
 
 
@@ -136,7 +136,6 @@ As próximas evoluções planejadas para o projeto são:
 - Fluxo de pedido de empréstimo: o dono do livro recebe uma solicitação e decide se autoriza o empréstimo
 - Melhorar o design do sistema com a biblioteca rich
 - Permitir doações (Troca de dono)
-- Permitir envio de fotos do livro que está sendo cadastrado (via JSON)
 - Sistema de avaliação
 - Perfil publico de usuário
 
