@@ -158,7 +158,12 @@ class LivroService:
             return False, "❌ Você não pode pegar emprestado o próprio livro."
 
         if livro["disponivel"] == 0:
-            return False, "❌ Livro indisponível no momento."
+            if self.livro_repo.usuario_ja_esta_na_fila(livro_id, usuario_id):
+                posicao = self.livro_repo.posicao_na_fila(livro_id, usuario_id)
+                return False, f"⏳ Livro indisponível no momento. Você já está na fila na posição {posicao}."
+
+            posicao = self.livro_repo.adicionar_usuario_na_fila(livro_id, usuario_id)
+            return False, f"⏳ Livro indisponível no momento. Você entrou na fila de empréstimo na posição {posicao}."
 
         if self.livro_repo.usuario_tem_emprestimo_ativo(usuario_id):
             return False, "❌ Você já possui um empréstimo ativo."

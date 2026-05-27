@@ -151,6 +151,106 @@ class LivroRepository:
             conexao.close()
 
 
+    def usuario_ja_esta_na_fila(self, livro_id, usuario_id):
+        conexao = get_db_connection()
+        cursor = conexao.cursor()
+
+        try:
+            cursor.execute(
+                "SELECT 1 FROM fila_emprestimos WHERE livro_id = ? AND user_id = ?",
+                (livro_id, usuario_id)
+            )
+            return cursor.fetchone() is not None
+        finally:
+            cursor.close()
+            conexao.close()
+
+
+    def posicao_na_fila(self, livro_id, usuario_id):
+        conexao = get_db_connection()
+        cursor = conexao.cursor()
+
+        try:
+            cursor.execute(
+                "SELECT user_id FROM fila_emprestimos WHERE livro_id = ? ORDER BY data_solicitacao ASC, id ASC",
+                (livro_id,)
+            )
+            for posicao, fila in enumerate(cursor.fetchall(), start=1):
+                if fila[0] == usuario_id:
+                    return posicao
+            return None
+        finally:
+            cursor.close()
+            conexao.close()
+
+
+    def adicionar_usuario_na_fila(self, livro_id, usuario_id):
+        conexao = get_db_connection()
+        cursor = conexao.cursor()
+
+        try:
+            data_atual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            cursor.execute(
+                "INSERT OR IGNORE INTO fila_emprestimos (livro_id, user_id, data_solicitacao) VALUES (?, ?, ?)",
+                (livro_id, usuario_id, data_atual)
+            )
+            conexao.commit()
+            return self.posicao_na_fila(livro_id, usuario_id)
+        finally:
+            cursor.close()
+            conexao.close()
+
+
+    def _promover_proximo_da_fila(self, livro_id, cursor, conexao):
+        cursor.execute(
+            "SELECT titulo FROM livros WHERE id = ?",
+            (livro_id,)
+        )
+        livro = cursor.fetchone()
+        if not livro:
+            return False
+
+        cursor.execute(
+            """
+            SELECT id, user_id
+            FROM fila_emprestimos
+            WHERE livro_id = ?
+            ORDER BY data_solicitacao ASC, id ASC
+            LIMIT 1
+            """,
+            (livro_id,)
+        )
+        proximo = cursor.fetchone()
+        if not proximo:
+            return False
+
+        fila_id, usuario_id = proximo[0], proximo[1]
+        data_atual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        cursor.execute(
+            """
+            UPDATE livros
+            SET disponivel = 0,
+                usuario_emprestimo = ?,
+                data_emprestimo = ?
+            WHERE id = ?
+            """,
+            (usuario_id, data_atual, livro_id)
+        )
+        cursor.execute(
+            "DELETE FROM fila_emprestimos WHERE id = ?",
+            (fila_id,)
+        )
+
+        msg_repo = MensagemRepository()
+        msg_repo.criar_mensagem(
+            usuario_id,
+            f"📚 O livro '{livro[0]}' ficou disponível e foi reservado para você pela fila de empréstimo.",
+            conexao
+        )
+        return True
+
+
     def emprestar_livro_repo(self, id, usuario_emprestimo, data_emprestimo):
         conexao = get_db_connection()
         cursor = conexao.cursor()
@@ -215,6 +315,7 @@ class LivroRepository:
                 """,
                 (livro_id,)
             )
+            self._promover_proximo_da_fila(livro_id, cursor, conexao)
             conexao.commit()
         finally:
             cursor.close()
@@ -256,6 +357,7 @@ class LivroRepository:
                         """,
                         (livro_id,)
                     )
+                    self._promover_proximo_da_fila(livro_id, cursor, conexao)
                     
                     
                     #Mensagens de aviso para o Dono(user_id) e para o Locatário(usuario_emprestimo)

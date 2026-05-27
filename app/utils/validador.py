@@ -12,6 +12,9 @@ from utils.security import verificar_senha
 
 class Validador:
 
+    def __init__(self):
+        load_dotenv()
+
     # def validar_email(self, email):
     #     try:
     #         info_email = validate_email(email, check_deliverability=True)
@@ -102,20 +105,28 @@ class Validador:
 
 
     def enviar_codigo(self, email_destino, codigo):
-        remetente = os.getenv("EMAIL_REMETENTE")
-        senha = os.getenv("EMAIL_SENHA")
+        remetente = os.getenv("EMAIL_REMETENTE", "").strip()
+        senha = os.getenv("EMAIL_SENHA", "").replace(" ", "").strip()
         if not remetente or not senha:
             print(Fore.RED + "❌ Variáveis de ambiente EMAIL_REMETENTE ou EMAIL_SENHA não definidas.")
             return False
-        
+
         msg = MIMEMultipart()
         msg['From'] = remetente
         msg['To'] = email_destino
-        msg['Subject'] = codigo        
+        msg['Subject'] = "Código de verificação"
 
         msg.attach(MIMEText(f"Seu código de verificação é: {codigo}", 'plain'))
 
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
-            server.login(remetente, senha)
-            server.sendmail(remetente, email_destino, msg.as_string())
+        try:
+            with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+                server.login(remetente, senha)
+                server.sendmail(remetente, email_destino, msg.as_string())
             print(Fore.GREEN + "✅ Código de verificação enviado com sucesso.")
+            return True
+        except smtplib.SMTPAuthenticationError:
+            print(Fore.RED + "❌ Falha na autenticação SMTP. Verifique EMAIL_REMETENTE e EMAIL_SENHA (use senha de app do Gmail).")
+            return False
+        except Exception as erro:
+            print(Fore.RED + f"❌ Falha ao enviar o email: {erro}")
+            return False

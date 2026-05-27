@@ -32,6 +32,16 @@ def create_tables():
                 data_criacao TEXT NOT NULL,
                 FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE CASCADE
                 )""")
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS fila_emprestimos (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                livro_id INTEGER NOT NULL,
+                user_id INTEGER NOT NULL,
+                data_solicitacao TEXT NOT NULL,
+                UNIQUE(livro_id, user_id),
+                FOREIGN KEY (livro_id) REFERENCES livros(id) ON DELETE CASCADE,
+                FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE CASCADE
+                )""")
     
     conexao.commit()
 
