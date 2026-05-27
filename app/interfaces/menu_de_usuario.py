@@ -6,6 +6,8 @@ from .procurar_livros import ProcurarLivro
 from .menu_conta import MenuConta
 from services.livro_services import LivroService
 from .menu_livro_cadastro import CadastroLivro
+from .caixa_entrada import CaixaEntrada
+from .historico_emprestimos import HistoricoEmprestimos
 
 class MenuUsuario:
     def __init__(self):
@@ -14,6 +16,8 @@ class MenuUsuario:
         self.procurar_livro = ProcurarLivro()
         self.validador = Validador()
         self.cadastro_livro = CadastroLivro()
+        self.caixa_entrada = CaixaEntrada()
+        self.historico = HistoricoEmprestimos()
 
     # Menu do usuário logado
     def exibir(self, usuario):
@@ -36,12 +40,14 @@ class MenuUsuario:
             print(Fore.LIGHTMAGENTA_EX + "\n[1]" + Fore.WHITE + " Conta")
             print(Fore.LIGHTMAGENTA_EX + "[2]" + Fore.WHITE + " Cadastrar Livro")
             print(Fore.LIGHTMAGENTA_EX + "[3]" + Fore.WHITE + " Procurar Livro")
+            print(Fore.LIGHTMAGENTA_EX + "[4]" + Fore.WHITE + " Caixa de Entrada")
+            print(Fore.LIGHTMAGENTA_EX + "[5]" + Fore.WHITE + " Histórico de Empréstimos")
             print(Fore.LIGHTMAGENTA_EX + "[0]" + Fore.WHITE + " Logout")
 
             print(Fore.CYAN + "-"*60)
 
 
-            opcao = self.validador.validar_opcao( 0, 3)
+            opcao = self.validador.validar_opcao(0, 5)
 
 
             if opcao == 1:
@@ -51,6 +57,10 @@ class MenuUsuario:
                 self.cadastro_livro.exibir(usuario)
             elif opcao == 3:        
                 self.procurar_livro.procurar_livros(usuario)
+            elif opcao == 4:
+                self.caixa_entrada.exibir(usuario)
+            elif opcao == 5:
+                self.historico.exibir(usuario)
             elif opcao == 0:
                 limpar_tela()
                 return
