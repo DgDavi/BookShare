@@ -8,7 +8,6 @@ from dotenv import load_dotenv
 
 from utils.security import verificar_senha
 
-load_dotenv()
 
 class Validador:
 
@@ -107,6 +106,9 @@ class Validador:
     def enviar_codigo(self, email_destino, codigo):
         remetente = os.getenv("EMAIL_REMETENTE")
         senha = os.getenv("EMAIL_SENHA")
+        if not remetente or not senha:
+            print(Fore.RED + "❌ Variáveis de ambiente EMAIL_REMETENTE ou EMAIL_SENHA não definidas.")
+            return False
         
         msg = MIMEMultipart()
         msg['From'] = remetente

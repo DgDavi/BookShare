@@ -1,10 +1,9 @@
-from colorama import Fore
 from datetime import datetime, timedelta
 
 from utils.validador import Validador
 from model.livro import Livro
-from utils.limpar_tela import limpar_tela
 from repository.livro_repository import LivroRepository
+import math
 
 class LivroService:
     def __init__(self):
@@ -58,18 +57,25 @@ class LivroService:
         return self.livro_repo.buscar_livros_emprestados(usuario.id)
 
 
-    def buscar_livros_por_termo(self, termo):
-        """
-        Busca livros por título ou autor com normalização de texto.
+    def buscar_livros_por_termo(self, termo, pagina=1):
 
-        Args:
-            termo (str): Texto digitado para pesquisa.
-
-        Returns:
-            list[sqlite3.Row]: Lista de livros encontrados.
-        """
+        itens_por_pagina = 5
+        pagina = max(1, pagina)
+        offset = (pagina - 1) * itens_por_pagina
+    
         termo_normalizado = termo.strip().lower()
-        return self.livro_repo.buscar_livros(termo_normalizado)
+        livros = self.livro_repo.buscar_livros(termo_normalizado, itens_por_pagina, offset)
+
+        total = self.livro_repo.contar_livros(termo_normalizado)
+
+        total_paginas = math.ceil(total / itens_por_pagina)
+
+        return {
+            "livros": livros,
+            "pagina": pagina,
+            "total_paginas": total_paginas, 
+            "total_livros": total
+        }
 
 
     def emprestar_livro(self, livro_id, usuario_id):

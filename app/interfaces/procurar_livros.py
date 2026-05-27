@@ -25,15 +25,47 @@ class ProcurarLivro:
         print(Fore.CYAN + "=" * 60)
         print(Fore.CYAN + "🔎 PROCURAR LIVRO".center(60))
         print(Fore.CYAN + "=" * 60)
-        print()
 
         livro_procurado = self.validador.input_com_prompt_colorido(Fore.YELLOW + "👉 Digite o nome ou autor do livro que está procurando: ")
+        pagina_atual = 1
 
-        livros = self.livro_service.buscar_livros_por_termo(livro_procurado)
+        while True:
+            resultado = self.livro_service.buscar_livros_por_termo(livro_procurado, pagina_atual)
 
-        limpar_tela()
+            limpar_tela()
 
-        self.exibir_livros.exibir_livros_procurado(livros, usuario)
+            self.exibir_livros.exibir_livros_procurado(resultado["livros"], usuario)
 
-        self.validador.input_com_prompt_colorido(Fore.YELLOW + "\n👉 Pressione Enter para continuar...")
-        return
+            print(Fore.CYAN + f"\n📄 Página {resultado['pagina']} de {resultado['total_paginas']}")
+
+            if resultado["total_paginas"] <= 1:
+                self.validador.input_com_prompt_colorido(Fore.YELLOW + "👉 Pressione Enter para continuar...")
+                return
+
+            print(Fore.LIGHTMAGENTA_EX + "\n[N]" + Fore.WHITE + " Próxima página")
+            print(Fore.LIGHTMAGENTA_EX + "[P]" + Fore.WHITE + " Página anterior")
+            print(Fore.LIGHTMAGENTA_EX + "[0]" + Fore.WHITE + " Voltar")
+
+            opcao = self.validador.input_com_prompt_colorido(
+                Fore.GREEN + "👉 Escolha uma opção ou digite o ID do livro desejado: "
+            ).strip().lower()
+
+            if opcao == "0" or opcao == "":
+                return
+
+            if opcao == "n" and pagina_atual < resultado["total_paginas"]:
+                pagina_atual += 1
+            elif opcao == "p" and pagina_atual > 1:
+                pagina_atual -= 1
+            else:
+                try:
+                    livro_id = int(opcao)
+                except ValueError:
+                    print(Fore.RED + "❌ Opção inválida.")
+                    self.validador.input_com_prompt_colorido(Fore.YELLOW + "👉 Pressione Enter para continuar...")
+                    continue
+
+                sucesso, mensagem = self.livro_service.tentar_emprestar_livro(usuario.id, livro_id)
+                print((Fore.GREEN if sucesso else Fore.RED) + mensagem)
+                self.validador.input_com_prompt_colorido(Fore.YELLOW + "👉 Pressione Enter para continuar...")
+                return

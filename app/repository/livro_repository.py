@@ -66,7 +66,7 @@ class LivroRepository:
         return True
     
 
-    def buscar_livros(self, termo):
+    def buscar_livros(self, termo, limite, offset):
         conexao = get_db_connection()
         cursor = conexao.cursor()
 
@@ -74,10 +74,30 @@ class LivroRepository:
             termo_busca = f"%{termo}%"
             cursor.execute(
                 "SELECT id, user_id, titulo, descricao, autor, disponivel, usuario_emprestimo, data_emprestimo "
-                "FROM livros WHERE LOWER(TRIM(titulo)) LIKE ? OR LOWER(TRIM(autor)) LIKE ?",
-                (termo_busca, termo_busca)
+                "FROM livros WHERE LOWER(TRIM(titulo)) LIKE ? OR LOWER(TRIM(autor)) LIKE ? "
+                "LIMIT ? OFFSET ?",
+                (termo_busca, termo_busca, limite, offset)
             )
             return cursor.fetchall()
+        finally:
+            cursor.close()
+            conexao.close()
+
+
+    def contar_livros(self, termo):
+        conexao = get_db_connection()
+        cursor = conexao.cursor()
+
+        try:
+            termo_busca = f"%{termo}%"
+
+            cursor.execute("""
+                SELECT COUNT(*)
+                FROM livros 
+                WHERE LOWER(TRIM(titulo)) LIKE ? OR LOWER(TRIM(autor)) LIKE ?""",
+                (termo_busca, termo_busca))
+            
+            return cursor.fetchone()[0]
         finally:
             cursor.close()
             conexao.close()
@@ -255,7 +275,6 @@ class LivroRepository:
             conexao.close()
 
     def buscar_historico_emprestimos(self, user_id):
-    
         conexao = get_db_connection()
         cursor = conexao.cursor()
 

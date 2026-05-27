@@ -11,7 +11,7 @@ class CadastroLivro:
 
     def exibir(self, usuario):
         limpar_tela()
-        print(Fore.YELLOW + "📋 CADASTRO DE LIVROS\n" + Fore.CYAN + "-\n"*30)
+        print(Fore.YELLOW + "📋 CADASTRO DE LIVROS\n" + Fore.CYAN + "-"*30 + "\n")
 
         titulo = self.validador.validar_input(
             Fore.YELLOW + "👉 Digite o nome do livro: ",

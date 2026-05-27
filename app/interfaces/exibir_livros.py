@@ -85,22 +85,6 @@ class ExibirLivros:
             print(Fore.LIGHTMAGENTA_EX + "Status: " + Fore.WHITE + disponibilidade)
             print(Fore.CYAN + "-" * 60)
 
-        if usuario is None:
-            return
+        return
 
-        livro_id_escolhido = self.validador.input_com_prompt_colorido(
-            Fore.GREEN + "👉 Digite o ID do livro para emprestar (0 para cancelar): "
-        )
 
-        try:
-            livro_id = int(livro_id_escolhido)
-        except ValueError:
-            print(Fore.RED + "❌ ID inválido.")
-            return
-
-        if livro_id == 0:
-            return
-
-        sucesso, mensagem = self.livro_service.tentar_emprestar_livro(usuario.id, livro_id)
-        print((Fore.GREEN if sucesso else Fore.RED) + mensagem)
-            
