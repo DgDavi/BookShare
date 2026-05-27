@@ -172,7 +172,7 @@ class LivroRepository:
                 )
                 
                 # Manda a mensagem para o dono
-                msg_repo.criar_mensagem(user_id, msg_aviso)
+                msg_repo.criar_mensagem(user_id, msg_aviso, conexao)
             
             conexao.commit()
         finally:
@@ -243,8 +243,8 @@ class LivroRepository:
                     msg_dono = f"📢 O prazo de empréstimo do livro '{titulo}' acabou. Ele já está disponível para empréstimos novamente!"
                     msg_locatario = f"⚠️ O prazo de 7 dias para o livro '{titulo}' expirou. Ele foi devolvido automaticamente ao dono."
                     
-                    msg_repo.criar_mensagem(user_id, msg_dono)        
-                    msg_repo.criar_mensagem(usuario_emprestimo, msg_locatario)
+                    msg_repo.criar_mensagem(user_id, msg_dono, conexao)
+                    msg_repo.criar_mensagem(usuario_emprestimo, msg_locatario, conexao)
 
                     livros_atualizados += 1
 

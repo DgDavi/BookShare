@@ -47,7 +47,7 @@ class MenuUsuario:
             print(Fore.CYAN + "-"*60)
 
 
-            opcao = self.validador.validar_opcao( 0, 4)
+            opcao = self.validador.validar_opcao(0, 5)
 
 
             if opcao == 1:
