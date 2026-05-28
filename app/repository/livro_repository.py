@@ -195,7 +195,24 @@ class LivroRepository:
                 (livro_id, usuario_id, data_atual)
             )
             conexao.commit()
-            return self.posicao_na_fila(livro_id, usuario_id)
+            posicao = self.posicao_na_fila(livro_id, usuario_id)
+
+            # Notificar o dono que alguém entrou na fila
+            cursor.execute(
+                "SELECT titulo, user_id FROM livros WHERE id = ?",
+                (livro_id,)
+            )
+            livro = cursor.fetchone()
+            if livro:
+                titulo = livro[0]
+                dono_id = livro[1]
+                # Não notifica se o dono entrou na própria fila
+                if dono_id != usuario_id:
+                    msg_repo = MensagemRepository()
+                    mensagem = f"📥 Um usuário entrou na fila de empréstimo do seu livro '{titulo}'. Posição na fila: {posicao}."
+                    msg_repo.criar_mensagem(dono_id, mensagem, conexao)
+
+            return posicao
         finally:
             cursor.close()
             conexao.close()
@@ -305,6 +322,13 @@ class LivroRepository:
         cursor = conexao.cursor()
 
         try:
+            # Obter informações antes de atualizar para notificar o dono
+            cursor.execute(
+                "SELECT titulo, user_id, usuario_emprestimo FROM livros WHERE id = ?",
+                (livro_id,)
+            )
+            livro_info = cursor.fetchone()
+
             cursor.execute(
                 """
                 UPDATE livros
@@ -315,6 +339,26 @@ class LivroRepository:
                 """,
                 (livro_id,)
             )
+
+            # Notificar o dono sobre a devolução
+            if livro_info:
+                titulo = livro_info[0]
+                dono_id = livro_info[1]
+                usuario_devolveu = livro_info[2]
+
+                nome_devolvedor = None
+                if usuario_devolveu:
+                    cursor.execute("SELECT nome FROM usuarios WHERE id = ?", (usuario_devolveu,))
+                    linha = cursor.fetchone()
+                    if linha:
+                        nome_devolvedor = linha[0]
+
+                remetente_texto = f" pelo usuário {nome_devolvedor} (id {usuario_devolveu})" if nome_devolvedor else (f" pelo usuário id {usuario_devolveu}" if usuario_devolveu else "")
+                mensagem = f"✅ O livro '{titulo}' foi devolvido{remetente_texto}."
+                msg_repo = MensagemRepository()
+                msg_repo.criar_mensagem(dono_id, mensagem, conexao)
+
+            # Promove próximo da fila se houver
             self._promover_proximo_da_fila(livro_id, cursor, conexao)
             conexao.commit()
         finally:
