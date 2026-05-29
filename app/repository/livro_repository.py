@@ -6,6 +6,7 @@ from repository.mensagem_repository import MensagemRepository
 
 class LivroRepository:
     def criar_livro(self, livro):
+        """Insere um novo livro no banco."""
         conexao = get_db_connection()
         cursor = conexao.cursor()
 
@@ -23,6 +24,7 @@ class LivroRepository:
 
 
     def buscar_livros_usuario(self, usuario):
+        """Lista os livros cadastrados por um usuário."""
         conexao = get_db_connection()
         cursor = conexao.cursor()
         try:
@@ -38,6 +40,7 @@ class LivroRepository:
     
 
     def editar_titulo(self, livro, titulo, cursor):
+        """Atualiza o título de um livro."""
         cursor.execute(
             "UPDATE livros SET titulo = ? WHERE id = ?",
             (titulo, livro.id)
@@ -50,6 +53,7 @@ class LivroRepository:
     
 
     def editar_descricao(self, livro, descricao, cursor):
+        """Atualiza a descrição de um livro."""
         cursor.execute(
             "UPDATE livros SET descricao = ? WHERE id = ?",
             (descricao, livro.id)
@@ -62,11 +66,13 @@ class LivroRepository:
     
 
     def deletar_livro(self, livro, cursor):
+        """Remove um livro do banco."""
         cursor.execute("DELETE FROM livros WHERE id = ?", (livro.id,))
         return True
     
 
     def buscar_livros(self, termo, limite, offset):
+        """Busca livros por título ou autor com limite e offset."""
         conexao = get_db_connection()
         cursor = conexao.cursor()
 
@@ -85,6 +91,7 @@ class LivroRepository:
 
 
     def contar_livros(self, termo):
+        """Conta os livros que batem com o termo informado."""
         conexao = get_db_connection()
         cursor = conexao.cursor()
 
@@ -104,6 +111,7 @@ class LivroRepository:
 
 
     def buscar_livro_por_id(self, livro_id):
+        """Busca um livro pelo identificador."""
         conexao = get_db_connection()
         cursor = conexao.cursor()
 
@@ -120,6 +128,7 @@ class LivroRepository:
 
 
     def buscar_livros_emprestados(self, usuario_id):
+        """Lista os livros emprestados para um usuário."""
         conexao = get_db_connection()
         cursor = conexao.cursor()
 
@@ -136,6 +145,7 @@ class LivroRepository:
 
 
     def usuario_tem_emprestimo_ativo(self, usuario_id):
+        """Verifica se o usuário já possui um empréstimo ativo."""
         conexao = get_db_connection()
         cursor = conexao.cursor()
 
@@ -152,6 +162,7 @@ class LivroRepository:
 
 
     def usuario_ja_esta_na_fila(self, livro_id, usuario_id):
+        """Verifica se um usuário já entrou na fila de um livro."""
         conexao = get_db_connection()
         cursor = conexao.cursor()
 
@@ -167,6 +178,7 @@ class LivroRepository:
 
 
     def posicao_na_fila(self, livro_id, usuario_id):
+        """Retorna a posição do usuário na fila de um livro."""
         conexao = get_db_connection()
         cursor = conexao.cursor()
 
@@ -185,6 +197,7 @@ class LivroRepository:
 
 
     def adicionar_usuario_na_fila(self, livro_id, usuario_id):
+        """Inclui um usuário na fila de empréstimo de um livro."""
         conexao = get_db_connection()
         cursor = conexao.cursor()
 
@@ -197,7 +210,6 @@ class LivroRepository:
             conexao.commit()
             posicao = self.posicao_na_fila(livro_id, usuario_id)
 
-            # Notificar o dono que alguém entrou na fila
             cursor.execute(
                 "SELECT titulo, user_id FROM livros WHERE id = ?",
                 (livro_id,)
@@ -206,7 +218,6 @@ class LivroRepository:
             if livro:
                 titulo = livro[0]
                 dono_id = livro[1]
-                # Não notifica se o dono entrou na própria fila
                 if dono_id != usuario_id:
                     msg_repo = MensagemRepository()
                     mensagem = f"📥 Um usuário entrou na fila de empréstimo do seu livro '{titulo}'. Posição na fila: {posicao}."
@@ -219,6 +230,7 @@ class LivroRepository:
 
 
     def _promover_proximo_da_fila(self, livro_id, cursor, conexao):
+        """Reserva o livro para a próxima pessoa da fila."""
         cursor.execute(
             "SELECT titulo FROM livros WHERE id = ?",
             (livro_id,)
@@ -269,15 +281,14 @@ class LivroRepository:
 
 
     def emprestar_livro_repo(self, id, usuario_emprestimo, data_emprestimo):
+        """Atualiza o livro para marcar o empréstimo."""
         conexao = get_db_connection()
         cursor = conexao.cursor()
 
         try:
-            #Buscar nome livro e dono do livro
             cursor.execute("SELECT titulo, user_id FROM livros WHERE id = ?", (id,))
             livro_dados = cursor.fetchone()
             
-            #Uptade no banco para guardar o usuário que pegou emprestado e a data da operação
             cursor.execute(
                 """
                 UPDATE livros
@@ -294,7 +305,6 @@ class LivroRepository:
                 titulo = livro_dados[0]   
                 user_id = livro_dados[1]  
                 
-                #Cálculo da data
                 data_inicio = datetime.strptime(data_emprestimo, "%Y-%m-%d %H:%M:%S")
                 data_fim = data_inicio + timedelta(days=7)
                 
@@ -308,7 +318,6 @@ class LivroRepository:
                     f"O prazo limite é de 7 dias e ele será devolvido no máximo até o dia {data_fim_pt}."
                 )
                 
-                # Manda a mensagem para o dono
                 msg_repo.criar_mensagem(user_id, msg_aviso, conexao)
             
             conexao.commit()
@@ -318,11 +327,11 @@ class LivroRepository:
 
 
     def devolver_livro_repo(self, livro_id):
+        """Atualiza o livro para marcar a devolução."""
         conexao = get_db_connection()
         cursor = conexao.cursor()
 
         try:
-            # Obter informações antes de atualizar para notificar o dono
             cursor.execute(
                 "SELECT titulo, user_id, usuario_emprestimo FROM livros WHERE id = ?",
                 (livro_id,)
@@ -340,7 +349,6 @@ class LivroRepository:
                 (livro_id,)
             )
 
-            # Notificar o dono sobre a devolução
             if livro_info:
                 titulo = livro_info[0]
                 dono_id = livro_info[1]
@@ -358,7 +366,6 @@ class LivroRepository:
                 msg_repo = MensagemRepository()
                 msg_repo.criar_mensagem(dono_id, mensagem, conexao)
 
-            # Promove próximo da fila se houver
             self._promover_proximo_da_fila(livro_id, cursor, conexao)
             conexao.commit()
         finally:
@@ -367,6 +374,7 @@ class LivroRepository:
             
     
     def atualizar_status_livro(self):
+        """Atualiza atrasos, suspensões e devoluções automáticas."""
         conexao = get_db_connection()
         cursor = conexao.cursor()
 
@@ -389,17 +397,14 @@ class LivroRepository:
                 now = datetime.now()
                 overdue_days = (now - data).days
 
-                # Sem atraso
                 if overdue_days <= 0:
                     continue
 
-                # 1-3 dias: apenas aviso na caixa de entrada
                 if 1 <= overdue_days <= 3:
                     aviso = f"⚠️ Seu empréstimo do livro '{titulo}' está com {overdue_days} dia(s) de atraso. Por favor devolva-o para evitar punições." 
                     msg_repo.criar_mensagem(usuario_emprestimo, aviso, conexao)
                     continue
 
-                # 4-7 dias: bloqueio de novos empréstimos até devolver
                 if 4 <= overdue_days <= 7:
                     aviso = (
                         f"🚫 Você está bloqueado de novos empréstimos até devolver o livro '{titulo}'."
@@ -408,9 +413,7 @@ class LivroRepository:
                     msg_repo.criar_mensagem(usuario_emprestimo, aviso, conexao)
                     continue
 
-                # Mais de 7 dias: devolve automaticamente e suspende a conta temporariamente
                 if overdue_days > 7:
-                    # Devolve o livro no banco
                     cursor.execute(
                         """
                         UPDATE livros
@@ -423,13 +426,11 @@ class LivroRepository:
                     )
                     self._promover_proximo_da_fila(livro_id, cursor, conexao)
 
-                    # Mensagens de aviso para o Dono(user_id) e para o Locatário(usuario_emprestimo)
                     msg_dono = f"📢 O prazo de empréstimo do livro '{titulo}' acabou. Ele já está disponível para empréstimos novamente!"
                     msg_locatario = f"⚠️ O prazo de 7 dias para o livro '{titulo}' expirou. Ele foi devolvido automaticamente ao dono."
                     msg_repo.criar_mensagem(user_id, msg_dono, conexao)
                     msg_repo.criar_mensagem(usuario_emprestimo, msg_locatario, conexao)
 
-                    # Notifica sobre a suspensão (registro não persistido no DB sem colunas)
                     aviso_suspensao = (
                         f"⛔ Sua conta está sendo suspensa temporariamente devido ao atraso na devolução do livro '{titulo}'."
                         " Você não poderá buscar nem pegar livros até regularizar a situação."
@@ -445,17 +446,17 @@ class LivroRepository:
             conexao.close()
 
     def buscar_historico_emprestimos(self, user_id):
+        """Busca o histórico de empréstimos de um usuário."""
         conexao = get_db_connection()
         cursor = conexao.cursor()
 
         try:
-            # Busca os livros, onde o usuario_emprestimo(usuário "atual") é o usuário logado
             cursor.execute(
                 """
                 SELECT titulo, data_emprestimo 
                 FROM livros 
                 WHERE usuario_emprestimo = ?
-                """, 
+                """,
                 (user_id,)
             )
             return cursor.fetchall()

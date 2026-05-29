@@ -1,11 +1,10 @@
+import math
 from datetime import datetime, timedelta
 
-from utils.validador import Validador
 from model.livro import Livro
 from repository.livro_repository import LivroRepository
-import math
 from repository.usuario_repository import UserRepository
-from datetime import datetime
+from utils.validador import Validador
 
 class LivroService:
     def __init__(self):
@@ -14,16 +13,7 @@ class LivroService:
         self.user_repo = UserRepository()
 
     def cadastrar_livro(self,nome, descricao, autor, usuario):
-        """
-        Coleta os dados de um livro no terminal e salva no banco.
-
-        Args:
-            usuario (Usuario): Usuário dono do livro que será cadastrado.
-
-        Returns:
-            Livro | None: Instância de livro criada quando o cadastro é concluído.
-            Se houver falha no processo, retorna None.
-        """
+        """Cria e salva um novo livro do usuário."""
         livro = Livro(titulo=nome, descricao=descricao, autor=autor, user_id=usuario.id)
         livro_criado = self.livro_repo.criar_livro(livro)
 
@@ -33,35 +23,17 @@ class LivroService:
 
 
     def listar_livros_do_usuario(self, usuario):
-        """
-        Lista os livros cadastrados pelo usuário.
-
-        Args:
-            usuario (Usuario): Usuário dono dos livros.
-
-        Returns:
-            list[sqlite3.Row]: Lista de livros pertencentes ao usuário.
-        """
-
+        """Lista os livros cadastrados por um usuário."""
         return self.livro_repo.buscar_livros_usuario(usuario)
 
 
     def listar_livros_emprestados(self, usuario):
-        """
-        Lista os livros atualmente emprestados para o usuário.
-
-        Args:
-            usuario (Usuario): Usuário que pegou livros emprestados.
-
-        Returns:
-            list[sqlite3.Row]: Lista de empréstimos ativos do usuário.
-        """
-        
+        """Lista os livros emprestados para um usuário."""
         return self.livro_repo.buscar_livros_emprestados(usuario.id)
 
 
     def buscar_livros_por_termo(self, termo, pagina=1):
-
+        """Busca livros por termo com paginação."""
         itens_por_pagina = 5
         pagina = max(1, pagina)
         offset = (pagina - 1) * itens_por_pagina
@@ -82,45 +54,19 @@ class LivroService:
 
 
     def emprestar_livro(self, livro_id, usuario_id):
-        """
-        Registra o empréstimo de um livro para um usuário.
-
-        Args:
-            livro_id (int): Identificador do livro.
-            usuario_id (int): Identificador do usuário que pega emprestado.
-
-        Returns:
-            None: Atualiza o banco.
-        """
+        """Registra o empréstimo de um livro."""
         data_atual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         self.livro_repo.emprestar_livro_repo(livro_id, usuario_id, data_atual)
 
 
     def devolver_livro(self, livro_id):
-        """
-        Registra a devolução de um livro e libera sua disponibilidade.
-
-        Args:
-            livro_id (int): Identificador do livro.
-
-        Returns:
-            None: Atualiza o banco.
-        """
+        """Registra a devolução de um livro."""
         self.livro_repo.devolver_livro_repo(livro_id)
 
 
-    @staticmethod
     def livro_atrasado(data_emprestimo):
-        """
-        Verifica se um empréstimo ultrapassou o prazo de 7 dias.
-
-        Args:
-            data_emprestimo (str | None): Data do empréstimo em formato de texto.
-
-        Returns:
-            bool: True se o prazo foi excedido, caso contrário False.
-        """
+        """Verifica se o empréstimo já passou do prazo de 7 dias."""
         if not data_emprestimo:
             return False
 
@@ -131,29 +77,14 @@ class LivroService:
 
 
     def atualizar_status_livros(self):
-        """
-        Atualiza o status dos livros e devolve os que venceram o prazo.
-
-        Returns:
-            int: Quantidade de livros atualizados.
-        """
+        """Atualiza o status dos empréstimos vencidos."""
         return self.livro_repo.atualizar_status_livro()
 
 
     def tentar_emprestar_livro(self, usuario_id, livro_id):
-        """
-        Valida regras de negócio e tenta efetivar o empréstimo.
-
-        Args:
-            usuario_id (int): Identificador do usuário solicitante.
-            livro_id (int): Identificador do livro solicitado.
-
-        Returns:
-            tuple[bool, str]: Resultado da operação com status e mensagem.
-        """
+        """Aplica as regras de negócio e tenta realizar o empréstimo."""
         self.atualizar_status_livros()
 
-        # Verificar status do usuário (bloqueio/suspensão)
         status = self.user_repo.obter_status_por_id(usuario_id)
         if status and status.get("bloqueado_atraso"):
             return False, "❌ Você está bloqueado de novos empréstimos até devolver os livros atrasados."
@@ -192,17 +123,7 @@ class LivroService:
 
 
     def tentar_devolver_livro(self, usuario_id, livro_id):
-        """
-        Valida posse do empréstimo e tenta efetivar a devolução.
-
-        Args:
-            usuario_id (int): Identificador do usuário que devolve.
-            livro_id (int): Identificador do livro a devolver.
-
-        Returns:
-            tuple[bool, str]: Resultado da operação com status e mensagem.
-        """
-
+        """Valida o empréstimo e tenta devolver o livro."""
 
         livro = self.livro_repo.buscar_livro_por_id(livro_id)
         if not livro:

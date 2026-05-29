@@ -1,5 +1,4 @@
 from colorama import Fore
-from email_validator import validate_email, EmailNotValidError
 import smtplib
 import os
 import re
@@ -13,21 +12,17 @@ from utils.security import verificar_senha
 class Validador:
 
     def __init__(self):
+        """Carrega as variáveis de ambiente usadas nas validações."""
         load_dotenv()
 
-    # def validar_email(self, email):
-    #     try:
-    #         info_email = validate_email(email, check_deliverability=True)
-    #         return True, info_email.normalized
-    #     except EmailNotValidError:
-    #         return False, None
-
     def validar_email(self, email):
+        """Valida o formato do email."""
         padrao = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
         return bool(re.match(padrao, email))
 
 
     def validar_senha(self, senha):
+        """Valida complexidade mínima da senha."""
         maiuscula = any(c.isupper() for c in senha)
         numero = any(c.isdigit() for c in senha)
         especial = any(not c .isalnum() for c in senha)
@@ -36,13 +31,14 @@ class Validador:
 
 
     def input_com_prompt_colorido(self, mensagem):
+        """Lê uma entrada usando o padrão visual do terminal."""
         return input(mensagem + Fore.WHITE)
 
 
     def validar_input(self, mensagem, validacao_funcao, mensagem_erro, *args):
+        """Repete a entrada até receber um valor válido ou zero."""
         while True:
             valor = self.input_com_prompt_colorido(mensagem)
-            # permitir voltar para o menu com '0'
             if isinstance(valor, str) and valor.strip() == '0':
                 return None
 
@@ -54,6 +50,7 @@ class Validador:
 
 
     def validar_nova_senha(self):
+        """Solicita e confirma uma nova senha."""
         while True:
             senha = self.input_com_prompt_colorido(Fore.YELLOW + "👉 Digite sua nova senha (0 para voltar): ")
             if isinstance(senha, str) and senha.strip() == '0':
@@ -75,6 +72,7 @@ class Validador:
 
 
     def validar_novo_email(self, email):
+        """Valida o formato de um novo email."""
         if not self.validar_email(email):
             print(Fore.RED + "❌ Formatação do email incorreta.")
             return False
@@ -82,6 +80,7 @@ class Validador:
 
 
     def validar_email_login(self, email, cursor):
+        """Verifica se o email existe antes do login."""
 
         cursor.execute("SELECT EXISTS(SELECT 1 FROM usuarios WHERE email = ?)", (email,))
         if cursor.fetchone()[0] == 0:
@@ -91,6 +90,7 @@ class Validador:
 
 
     def validar_senha_login(self, senha, email, cursor):
+        """Compara a senha informada com a senha cadastrada."""
         cursor.execute("SELECT senha FROM usuarios WHERE email = ?", (email,))
         resultado = cursor.fetchone()
         if not resultado:
@@ -101,7 +101,7 @@ class Validador:
     
 
     def validar_opcao(self, minimo, maximo):
-        #print(mensagem)
+        """Valida uma opção numérica dentro de um intervalo."""
         try:
             opcao = int(input(Fore.GREEN + "👉 Escolha uma opção: " + Fore.WHITE))
         except ValueError:
@@ -113,6 +113,7 @@ class Validador:
 
 
     def enviar_codigo(self, email_destino, codigo):
+        """Envia um código de verificação por email."""
         remetente = os.getenv("EMAIL_REMETENTE", "").strip()
         senha = os.getenv("EMAIL_SENHA", "").replace(" ", "").strip()
         if not remetente or not senha:

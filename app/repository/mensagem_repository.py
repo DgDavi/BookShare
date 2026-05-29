@@ -4,10 +4,7 @@ from data.db import get_db_connection
 class MensagemRepository:
 
     def criar_mensagem(self, user_id, texto_mensagem, conexao=None):
-        """
-        Salva uma nova menagem para um usuário no banco de dados.
-        
-        """
+        """Salva uma nova mensagem para um usuário."""
         conexao_propria = conexao is None
         if conexao_propria:
             conexao = get_db_connection()
@@ -28,10 +25,7 @@ class MensagemRepository:
                 conexao.close()
 
     def buscar_mensagens_usuario(self, user_id):
-        """
-        Retorna todas as mensagens destinadas a um usuário específico.
-        
-        """
+        """Lista as mensagens de um usuário."""
         conexao = get_db_connection()
         cursor = conexao.cursor()
 
