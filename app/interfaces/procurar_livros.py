@@ -14,16 +14,7 @@ class ProcurarLivro:
         self.user_repo = UserRepository()
 
     def procurar_livros(self, usuario):
-        """
-        Exibe a tela de busca e apresenta os livros encontrados.
-
-        Args:
-            usuario (Usuario): Usuário autenticado que está pesquisando livros.
-
-        Returns:
-            None: Fluxo de interface com entrada e saída pelo terminal.
-        """
-        # Verifica se a conta está suspensa antes de permitir buscar
+        """Exibe a busca de livros e processa empréstimo por ID."""
         status = self.user_repo.obter_status_por_id(usuario.id)
         suspenso_ate = status.get("suspenso_ate") if status else None
         if suspenso_ate:
@@ -48,19 +39,22 @@ class ProcurarLivro:
 
         while True:
             resultado = self.livro_service.buscar_livros_por_termo(livro_procurado, pagina_atual)
+            livros_encontrados = resultado["livros"]
 
             limpar_tela()
 
-            self.exibir_livros.exibir_livros_procurado(resultado["livros"], usuario)
+            self.exibir_livros.exibir_livros_procurado(livros_encontrados, usuario)
 
             print(Fore.CYAN + f"\n📄 Página {resultado['pagina']} de {resultado['total_paginas']}")
 
-            if resultado["total_paginas"] <= 1:
+            if not livros_encontrados:
                 self.validador.input_com_prompt_colorido(Fore.YELLOW + "👉 Pressione Enter para continuar...")
                 return
 
-            print(Fore.LIGHTMAGENTA_EX + "\n[N]" + Fore.WHITE + " Próxima página")
-            print(Fore.LIGHTMAGENTA_EX + "[P]" + Fore.WHITE + " Página anterior")
+            print(Fore.LIGHTMAGENTA_EX + "\n[ID]" + Fore.WHITE + " Digitar o ID do livro para emprestar")
+            if resultado["total_paginas"] > 1:
+                print(Fore.LIGHTMAGENTA_EX + "[N]" + Fore.WHITE + " Próxima página")
+                print(Fore.LIGHTMAGENTA_EX + "[P]" + Fore.WHITE + " Página anterior")
             print(Fore.LIGHTMAGENTA_EX + "[0]" + Fore.WHITE + " Voltar")
 
             opcao = self.validador.input_com_prompt_colorido(

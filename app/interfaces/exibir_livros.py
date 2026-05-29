@@ -11,15 +11,7 @@ class ExibirLivros:
         self.livro_service = LivroService()
 
     def exibir(self, usuario):
-        """
-        Exibe os livros do usuário e os livros que ele pegou emprestado.
-
-        Args:
-            usuario (Usuario): Usuário autenticado.
-
-        Returns:
-            bool: True quando a tela é exibida e finalizada com sucesso.
-        """
+        """Exibe livros cadastrados e livros emprestados do usuário."""
         limpar_tela()
         print(Fore.CYAN + "=" * 60)
         print(Fore.CYAN + "📋 MEUS LIVROS".center(60))
@@ -56,16 +48,7 @@ class ExibirLivros:
 
 
     def exibir_livros_procurado(self, livros, usuario=None):
-        """
-        Exibe os livros encontrados e permite iniciar empréstimo.
-
-        Args:
-            livros (list[sqlite3.Row]): Lista de livros retornada pela busca.
-            usuario (Usuario | None): Usuário autenticado para solicitar empréstimo.
-
-        Returns:
-            None: Fluxo de interface com entradas e mensagens no terminal.
-        """
+        """Exibe os livros retornados na busca."""
         print(Fore.CYAN + "=" * 60)
         print(Fore.CYAN + "📋 LIVROS ENCONTRADOS".center(60))
         print(Fore.CYAN + "=" * 60)

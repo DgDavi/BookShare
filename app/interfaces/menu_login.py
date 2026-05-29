@@ -10,6 +10,7 @@ class Login:
         self.validador = Validador()
 
     def exibir(self):
+        """Executa o fluxo de login do usuário."""
 
         limpar_tela()
         print(Fore.YELLOW + "📋 LOGIN DE USUÁRIO\n" + Fore.CYAN + "-"*30)
@@ -23,7 +24,6 @@ class Login:
         )
 
         if email is None:
-            # usuário escolheu voltar
             return None
 
 

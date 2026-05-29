@@ -10,6 +10,7 @@ class HistoricoEmprestimos:
         self.livro_repo = LivroRepository()
 
     def exibir(self, usuario):
+        """Exibe os empréstimos atuais e suas datas limite."""
         while True:
             limpar_tela()
             print(Fore.CYAN + "="*60)
@@ -29,7 +30,6 @@ class HistoricoEmprestimos:
                     titulo = livro[0]
                     data_banco = livro[1]
                     
-                    # Cálculos com as datas, para informar ao usuário quando será a data que o livro volta
                     try:
                         data_inicio = datetime.strptime(data_banco, "%Y-%m-%d %H:%M:%S")
                         data_fim = data_inicio + timedelta(days=7)

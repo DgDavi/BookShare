@@ -11,15 +11,7 @@ class MenuEditar:
         self.validador = Validador()
 
     def exibir(self, usuario):
-        """
-        Exibe o menu de edição de dados cadastrais do usuário.
-
-        Args:
-            usuario (Usuario): Usuário autenticado que terá dados alterados.
-
-        Returns:
-            None: Executa o fluxo de edição e retorna ao menu anterior.
-        """
+        """Exibe o menu para editar dados do usuário."""
         limpar_tela()
         print(Fore.CYAN + "=" * 60)
         print(Fore.CYAN + "📋 EDITAR DADOS".center(60))

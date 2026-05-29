@@ -21,7 +21,6 @@ class CaixaEntrada:
             
             user_id = usuario.id 
             
-            # Busca as mensagens e guarda em "mensagens"
             mensagens = self.msg_repo.buscar_mensagens_usuario(user_id)
             
             if not mensagens:

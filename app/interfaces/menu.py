@@ -16,12 +16,7 @@ class MenuInicial:
         self.menu_login = Login()
 
     def exibir(self):
-        """
-        Exibe o menu inicial e direciona o fluxo principal da aplicação.
-
-        Returns:
-            None: Fluxo contínuo de interface até o usuário sair da aplicação.
-        """
+        """Exibe o menu inicial e direciona o fluxo principal."""
         while True:
             limpar_tela()
 
@@ -38,27 +33,21 @@ class MenuInicial:
 
             opcao = self.validador.validar_opcao(0, 3)
 
-            # Chama a função de cadastro de usuário
             if opcao == 1:
                 usuario = self.menu_register.exibir()
                 if usuario:
                     if self.menu_user.exibir(usuario):
-                        # Conta deletada — volta ao menu inicial
                         continue
 
-            # Chama a função de login de usuário
             elif opcao == 2:
                 usuario = self.menu_login.exibir()
                 if usuario:
                     if self.menu_user.exibir(usuario):
-                        # Conta deletada — volta ao menu inicial
                         continue
 
-            # Chama a função de informações sobre o projeto
             elif opcao == 3:
                 self.menu_info.exibir()
 
-            # Fecha a aplicação
             elif opcao == 0:
                 print("Saindo do aplicativo...")
                 limpar_tela()

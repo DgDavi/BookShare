@@ -19,17 +19,8 @@ class MenuUsuario:
         self.caixa_entrada = CaixaEntrada()
         self.historico = HistoricoEmprestimos()
 
-    # Menu do usuário logado
     def exibir(self, usuario):
-        """
-        Exibe o menu principal do usuário autenticado.
-
-        Args:
-            usuario (Usuario): Usuário logado no sistema.
-
-        Returns:
-            None: Loop de navegação até o logout.
-        """
+        """Exibe o menu principal do usuário autenticado."""
         while True:
             limpar_tela()
 

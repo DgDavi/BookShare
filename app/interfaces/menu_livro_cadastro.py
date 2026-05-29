@@ -10,6 +10,7 @@ class CadastroLivro:
         self.validador = Validador()
 
     def exibir(self, usuario):
+        """Executa o fluxo de cadastro de livro."""
         limpar_tela()
         print(Fore.YELLOW + "📋 CADASTRO DE LIVROS\n" + Fore.CYAN + "-"*30 + "\n")
 

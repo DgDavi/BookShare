@@ -1,4 +1,4 @@
-# BookShare
+x'# BookShare
 
 BookShare é um sistema em Python, com interface em terminal, para cadastro de usuários e gerenciamento de empréstimos de livros. O projeto usa SQLite para persistência de dados, `colorama` para estilos no terminal, `bcrypt` para armazenamento seguro de senhas e `python-dotenv` para configuração por variáveis de ambiente.
 
@@ -139,16 +139,26 @@ Na primeira execução, o sistema cria as tabelas do banco SQLite automaticament
 
 ## Prints do projeto rodando
 
-Use esta seção para adicionar capturas de tela das principais telas da aplicação. Uma sugestão de ordem é:
+- Estrutura do projeto
+<img width="1239" height="721" alt="Image" src="https://github.com/user-attachments/assets/f9a54dbf-b3b5-4970-b644-f5888f1ca00b" />
 
-- Menu inicial
-- Tela de cadastro e login
-- Menu do usuário logado
-- Tela de busca de livros
-- Fluxo de empréstimo e fila
-- Caixa de entrada com mensagens
+- Menu Inicial
+<img width="572" height="270" alt="Image" src="https://github.com/user-attachments/assets/f1f7ed1d-49b1-4d87-a04e-1f73d35cfc92" />
 
-Quando quiser, substitua esta lista por imagens reais do projeto.
+- Menu de Cadastro
+<img width="664" height="217" alt="Image" src="https://github.com/user-attachments/assets/ae5df0dc-abea-46c5-8b14-06bbe06bd134" />
+
+- Menu de Usuário Logado
+<img width="617" height="302" alt="Image" src="https://github.com/user-attachments/assets/75b9bf10-0944-48d3-bd2a-0a1c67ab42a1" />
+
+- Menu Conta
+<img width="627" height="375" alt="Image" src="https://github.com/user-attachments/assets/b771307f-92b9-4d5f-83ec-dd1a44860e86" />
+
+- Menu de Procurar Livros
+<img width="577" height="413" alt="Image" src="https://github.com/user-attachments/assets/635da66b-d059-4b50-8459-07f9688bc536" />
+
+- Caixa de Entrada
+<img width="1329" height="321" alt="Image" src="https://github.com/user-attachments/assets/29cf61d9-b7e5-4ed0-8518-990c2eaf6ee6" />
 
 ## Observações
 

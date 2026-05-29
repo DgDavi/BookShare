@@ -11,6 +11,7 @@ class MenuDeletar:
 
         
     def deletar_conta(self, usuario):
+        """Solicita confirmação e remove a conta do usuário."""
         confirmacao = self.validador.input_com_prompt_colorido(Fore.RED + "\nTem certeza que deseja deletar sua conta? (s): ")
 
         if confirmacao.lower() == "s":

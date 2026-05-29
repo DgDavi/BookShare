@@ -11,13 +11,7 @@ class Register:
         self.validador = Validador()
 
     def exibir(self):
-        """
-        Realiza o cadastro de um novo usuário via terminal.
-
-        Returns:
-            Usuario | None: Retorna o usuário criado em caso de sucesso.
-            Caso o cadastro não seja concluído, retorna None.
-        """
+        """Executa o fluxo de cadastro de usuário."""
 
         limpar_tela()
         print(Fore.YELLOW + "📋 CADASTRO DE USUÁRIO\n" + Fore.CYAN + "-"*30)

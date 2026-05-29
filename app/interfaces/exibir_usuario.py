@@ -7,6 +7,7 @@ class ExibirUsuario:
         self.user_service = UserService()
 
     def exibir_usuario(self, usuario):
+        """Exibe os dados básicos do usuário autenticado."""
         dados_usuario = self.user_service.obter_dados_usuario(usuario)
 
         print(Fore.CYAN + "=" * 60)
