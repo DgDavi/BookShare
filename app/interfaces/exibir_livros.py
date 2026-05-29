@@ -11,15 +11,7 @@ class ExibirLivros:
         self.livro_service = LivroService()
 
     def exibir(self, usuario):
-        """
-        Exibe os livros do usuário e os livros que ele pegou emprestado.
-
-        Args:
-            usuario (Usuario): Usuário autenticado.
-
-        Returns:
-            bool: True quando a tela é exibida e finalizada com sucesso.
-        """
+        """Exibe livros cadastrados e livros emprestados do usuário."""
         limpar_tela()
         print(Fore.CYAN + "=" * 60)
         print(Fore.CYAN + "📋 MEUS LIVROS".center(60))
@@ -56,16 +48,7 @@ class ExibirLivros:
 
 
     def exibir_livros_procurado(self, livros, usuario=None):
-        """
-        Exibe os livros encontrados e permite iniciar empréstimo.
-
-        Args:
-            livros (list[sqlite3.Row]): Lista de livros retornada pela busca.
-            usuario (Usuario | None): Usuário autenticado para solicitar empréstimo.
-
-        Returns:
-            None: Fluxo de interface com entradas e mensagens no terminal.
-        """
+        """Exibe os livros retornados na busca."""
         print(Fore.CYAN + "=" * 60)
         print(Fore.CYAN + "📋 LIVROS ENCONTRADOS".center(60))
         print(Fore.CYAN + "=" * 60)
@@ -85,22 +68,6 @@ class ExibirLivros:
             print(Fore.LIGHTMAGENTA_EX + "Status: " + Fore.WHITE + disponibilidade)
             print(Fore.CYAN + "-" * 60)
 
-        if usuario is None:
-            return
+        return
 
-        livro_id_escolhido = self.validador.input_com_prompt_colorido(
-            Fore.GREEN + "👉 Digite o ID do livro para emprestar (0 para cancelar): "
-        )
 
-        try:
-            livro_id = int(livro_id_escolhido)
-        except ValueError:
-            print(Fore.RED + "❌ ID inválido.")
-            return
-
-        if livro_id == 0:
-            return
-
-        sucesso, mensagem = self.livro_service.tentar_emprestar_livro(usuario.id, livro_id)
-        print((Fore.GREEN if sucesso else Fore.RED) + mensagem)
-            

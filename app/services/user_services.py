@@ -13,12 +13,11 @@ class UserService:
         self.validador = Validador()
 
     def cadastrar_usuario(self, nome, email, senha):
-        # valida formato
-        valido, email_normalizado = self.validador.validar_email(email)
-        if not valido:
+        """Valida e cria um novo usuário."""
+        email_normalizado = email.strip().lower()
+        if not self.validador.validar_email(email_normalizado):
             return None
 
-        # valida unicidade pelo repository
         if self.user_repo.email_existe(email_normalizado):
             print(Fore.RED + "❌ Email já cadastrado.")
             return None
@@ -34,12 +33,11 @@ class UserService:
             
 
     def login_usuario(self, email, senha):
-        # busca usuário pelo repository (repo gerencia conexões)
+        """Autentica um usuário pelo email e senha."""
         usuario_row = self.user_repo.buscar_por_email(email)
         if not usuario_row:
             return None
 
-        # usuario_row: (id, nome, email, senha_hashed)
         if not verificar_senha(senha, usuario_row[3]):
             return None
 
@@ -54,88 +52,34 @@ class UserService:
 
 
     def obter_dados_usuario(self, usuario):
-        """
-        Busca os dados do usuário para exibição na interface.
-
-        Args:
-            usuario (Usuario): Usuário autenticado no sistema.
-
-        Returns:
-            sqlite3.Row | tuple | None: Registro com os dados do usuário.
-        """
+        """Busca os dados do usuário para exibição."""
         return self.user_repo.buscar_dados_usuario(usuario)
 
 
     def editar_nome_usuario(self, usuario, novo_nome):
-        """
-        Edita o nome do usuário autenticado.
-
-        Args:
-            usuario (Usuario): Usuário autenticado.
-            novo_nome (str): Novo nome a ser atribuído.
-
-        Returns:
-            bool: True se editado com sucesso, False caso contrário.
-        """
-
-        
+        """Atualiza o nome do usuário autenticado."""
         return self.user_repo.editar_nome(usuario, novo_nome)
 
 
     def editar_email_usuario(self, usuario, novo_email):
-        """
-        Edita o email do usuário autenticado.
-
-        Args:
-            usuario (Usuario): Usuário autenticado.
-            novo_email (str): Novo email a ser atribuído.
-
-        Returns:
-            bool: True se editado com sucesso, False caso contrário.
-        """
-
+        """Atualiza o email do usuário autenticado."""
         return self.user_repo.editar_email(usuario, novo_email)
 
 
     def editar_senha_usuario(self, usuario, nova_senha_hashed):
-        """
-        Edita a senha do usuário autenticado.
-
-        Args:
-            usuario (Usuario): Usuário autenticado.
-            nova_senha_hashed (str): Nova senha já com hash aplicado.
-
-        Returns:
-            bool: True se editada com sucesso, False caso contrário.
-        """
+        """Atualiza a senha do usuário autenticado."""
         return self.user_repo.editar_senha(usuario, nova_senha_hashed)
 
 
     def deletar_usuario_com_confirmacao(self, usuario):
-        """
-        Deleta a conta do usuário autenticado.
-
-        Args:
-            usuario (Usuario): Usuário autenticado.
-
-        Returns:
-            bool: True se deletado com sucesso, False caso contrário.
-        """
+        """Remove a conta do usuário autenticado."""
         return self.user_repo.deletar_usuario(usuario)
 
 
     def validar_novo_email_unico(self, email):
-        """
-        Valida se um novo email é único no sistema (não cadastrado).
-
-        Args:
-            email (str): Email a ser validado.
-
-        Returns:
-            bool: True se email é válido e único, False caso contrário.
-        """
-        valido, email_normalizado = self.validador.validar_email(email)
-        if not valido:
+        """Valida o formato do email e impede duplicidade."""
+        email_normalizado = email.strip().lower()
+        if not self.validador.validar_email(email_normalizado):
             print(Fore.RED + "❌ Formatação do email incorreta.")
             return False
 
@@ -147,4 +91,5 @@ class UserService:
     
 
     def verificar_codigo_email(self, codigo_enviado, codigo_recebido):
+        """Compara o código enviado com o código informado."""
         return codigo_enviado == codigo_recebido

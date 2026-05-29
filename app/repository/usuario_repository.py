@@ -1,8 +1,10 @@
 from data.db import get_db_connection
+from datetime import datetime, timedelta
 
 class UserRepository:
 
     def criar_usuario(self, usuario):
+        """Insere um novo usuário no banco."""
         conexao = get_db_connection()
         cursor = conexao.cursor()
 
@@ -18,6 +20,7 @@ class UserRepository:
         
 
     def buscar_dados_usuario(self, usuario):
+        """Busca os dados básicos de um usuário pelo email."""
         conexao = get_db_connection()
         cursor = conexao.cursor()
 
@@ -31,7 +34,7 @@ class UserRepository:
 
 
     def obter_senha(self, usuario):
-        """Retorna a senha hashed do usuário a partir do id."""
+        """Retorna a senha hash de um usuário."""
         conexao = get_db_connection()
         cursor = conexao.cursor()
 
@@ -45,6 +48,7 @@ class UserRepository:
 
 
     def deletar_usuario(self, usuario):
+        """Remove um usuário do banco."""
         conexao = get_db_connection()
         cursor = conexao.cursor()
 
@@ -56,6 +60,7 @@ class UserRepository:
 
 
     def editar_email(self, usuario, email):
+        """Atualiza o email de um usuário."""
         conexao = get_db_connection()
         cursor = conexao.cursor()
 
@@ -78,6 +83,7 @@ class UserRepository:
 
 
     def editar_nome(self, usuario, nome):
+        """Atualiza o nome de um usuário."""
         conexao = get_db_connection()
         cursor = conexao.cursor()
         cursor.execute("UPDATE usuarios SET nome = ? WHERE id = ?", (nome, usuario.id))
@@ -99,6 +105,7 @@ class UserRepository:
 
 
     def editar_senha(self, usuario, senha):
+        """Atualiza a senha de um usuário."""
         conexao = get_db_connection()
         cursor = conexao.cursor()
 
@@ -121,6 +128,7 @@ class UserRepository:
     
     
     def logar_usuario(self, email):
+        """Busca um usuário para autenticação pelo email."""
         conexao = get_db_connection()
         cursor = conexao.cursor()
 
@@ -132,6 +140,7 @@ class UserRepository:
         return None
 
     def email_existe(self, email):
+        """Verifica se um email já está cadastrado."""
         conexao = get_db_connection()
         cursor = conexao.cursor()
 
@@ -143,5 +152,41 @@ class UserRepository:
             conexao.close()
 
     def buscar_por_email(self, email):
+        """Retorna o usuário cadastrado para um email."""
         return self.logar_usuario(email)
+
+    def obter_status_por_id(self, usuario_id):
+        """Calcula bloqueio e suspensão do usuário pelos empréstimos ativos."""
+        conexao = get_db_connection()
+        cursor = conexao.cursor()
+
+        try:
+            cursor.execute(
+                "SELECT data_emprestimo FROM livros WHERE usuario_emprestimo = ? AND disponivel = 0",
+                (usuario_id,)
+            )
+            rows = cursor.fetchall()
+
+            bloqueado = 0
+            suspenso_ate = None
+            now = datetime.now()
+
+            for (data_emprestimo,) in rows:
+                if not data_emprestimo:
+                    continue
+                try:
+                    d = datetime.strptime(data_emprestimo, "%Y-%m-%d %H:%M:%S")
+                except Exception:
+                    continue
+                overdue_days = (now - d).days
+                if overdue_days > 7:
+                    suspenso_ate = (now + timedelta(days=7)).strftime("%Y-%m-%d %H:%M:%S")
+                    break
+                if 4 <= overdue_days <= 7:
+                    bloqueado = 1
+
+            return {"bloqueado_atraso": bloqueado, "suspenso_ate": suspenso_ate}
+        finally:
+            cursor.close()
+            conexao.close()
     

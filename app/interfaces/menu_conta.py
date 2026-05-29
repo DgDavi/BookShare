@@ -18,15 +18,7 @@ class MenuConta:
         self.validador = Validador()
 
     def exibir(self, usuario):
-        """
-        Exibe opções de conta do usuário e ações relacionadas aos livros.
-
-        Args:
-            usuario (Usuario): Usuário autenticado no sistema.
-
-        Returns:
-            None: Loop de navegação da área de conta.
-        """
+        """Exibe as opções da conta do usuário."""
 
         while True:
             limpar_tela()

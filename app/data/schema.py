@@ -12,6 +12,7 @@ def create_tables():
                 senha TEXT NOT NULL
                 )""")
 
+
     cursor.execute("""CREATE TABLE IF NOT EXISTS livros (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER NOT NULL,
@@ -23,6 +24,24 @@ def create_tables():
                 data_emprestimo TEXT,
                 FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE CASCADE,
                 FOREIGN KEY (usuario_emprestimo) REFERENCES usuarios(id) ON DELETE SET NULL
+                )""")
+   
+    cursor.execute("""CREATE TABLE IF NOT EXISTS mensagens (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                mensagem TEXT NOT NULL,
+                data_criacao TEXT NOT NULL,
+                FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE CASCADE
+                )""")
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS fila_emprestimos (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                livro_id INTEGER NOT NULL,
+                user_id INTEGER NOT NULL,
+                data_solicitacao TEXT NOT NULL,
+                UNIQUE(livro_id, user_id),
+                FOREIGN KEY (livro_id) REFERENCES livros(id) ON DELETE CASCADE,
+                FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE CASCADE
                 )""")
     
     conexao.commit()

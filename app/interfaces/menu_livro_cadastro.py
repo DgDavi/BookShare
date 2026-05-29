@@ -10,26 +10,36 @@ class CadastroLivro:
         self.validador = Validador()
 
     def exibir(self, usuario):
+        """Executa o fluxo de cadastro de livro."""
         limpar_tela()
-        print(Fore.YELLOW + "📋 CADASTRO DE LIVROS\n" + Fore.CYAN + "-\n"*30)
+        print(Fore.YELLOW + "📋 CADASTRO DE LIVROS\n" + Fore.CYAN + "-"*30 + "\n")
 
         titulo = self.validador.validar_input(
             Fore.YELLOW + "👉 Digite o nome do livro: ",
             lambda n: 3 <= len(n) <= 40,
             Fore.YELLOW + "👉 O nome deve conter entre 3 e 40 caracteres."
         )
+        if titulo is None:
+            print(Fore.YELLOW + "Operação cancelada pelo usuário.")
+            return None
 
         descricao = self.validador.validar_input(
             Fore.YELLOW + "👉 Digite a descrição do livro: ",
             lambda n:3 <= len(n) <= 200,
             Fore.YELLOW + "👉 A descrição deve conter entre 3 e 200 caracteres."
         )
+        if descricao is None:
+            print(Fore.YELLOW + "Operação cancelada pelo usuário.")
+            return None
 
         autor = self.validador.validar_input(
             Fore.YELLOW + "👉 Digite o autor do livro: ",
             lambda n: 3 <= len(n) <= 40,
             Fore.YELLOW + "👉 O nome do autor deve conter entre 3 e 40 caracteres."
         )
+        if autor is None:
+            print(Fore.YELLOW + "Operação cancelada pelo usuário.")
+            return None
 
         livro = self.livro_service.cadastrar_livro(titulo, descricao, autor, usuario)
 

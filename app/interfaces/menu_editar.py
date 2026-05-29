@@ -11,15 +11,7 @@ class MenuEditar:
         self.validador = Validador()
 
     def exibir(self, usuario):
-        """
-        Exibe o menu de edição de dados cadastrais do usuário.
-
-        Args:
-            usuario (Usuario): Usuário autenticado que terá dados alterados.
-
-        Returns:
-            None: Executa o fluxo de edição e retorna ao menu anterior.
-        """
+        """Exibe o menu para editar dados do usuário."""
         limpar_tela()
         print(Fore.CYAN + "=" * 60)
         print(Fore.CYAN + "📋 EDITAR DADOS".center(60))
@@ -47,6 +39,9 @@ class MenuEditar:
                 lambda n: 3 <= len(n) <= 50,
                 Fore.RED + "❌ O nome deve conter entre 3 e 50 caracteres.\n" + Fore.YELLOW + "👉 Tente novamente."
             )
+            if novo_nome is None:
+                print(Fore.YELLOW + "Operação cancelada pelo usuário.")
+                return
 
             resultado = self.user_service.editar_nome_usuario(usuario, novo_nome)
             if resultado:
@@ -68,6 +63,9 @@ class MenuEditar:
                 self.user_service.validar_novo_email_unico,
                 "",
             )
+            if novo_email is None:
+                print(Fore.YELLOW + "Operação cancelada pelo usuário.")
+                return
 
             resultado = self.user_service.editar_email_usuario(usuario, novo_email)
             if resultado:
@@ -91,6 +89,9 @@ class MenuEditar:
 
             print()
             nova_senha = self.validador.validar_nova_senha()
+            if nova_senha is None:
+                print(Fore.YELLOW + "Operação cancelada pelo usuário.")
+                return
             nova_senha_hashed = hash_senha(nova_senha)
             
             resultado = self.user_service.editar_senha_usuario(usuario, nova_senha_hashed)

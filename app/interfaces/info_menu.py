@@ -8,14 +8,8 @@ class InfoMenu:
     def __init__(self):
         self.validador = Validador()
 
-    # Menu de informações sobre o projeto
     def exibir(self):
-        """
-        Exibe informações institucionais e objetivo do projeto BookShare.
-
-        Returns:
-            None: Mostra conteúdo informativo e retorna ao menu inicial.
-        """
+        """Exibe informações institucionais do projeto."""
         limpar_tela()
 
         print(Fore.CYAN + "="*60)

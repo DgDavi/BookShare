@@ -10,6 +10,7 @@ class Login:
         self.validador = Validador()
 
     def exibir(self):
+        """Executa o fluxo de login do usuário."""
 
         limpar_tela()
         print(Fore.YELLOW + "📋 LOGIN DE USUÁRIO\n" + Fore.CYAN + "-"*30)
@@ -19,11 +20,16 @@ class Login:
         email = self.validador.validar_input(
             Fore.YELLOW + "👉 Digite seu email: ",
             self.validador.validar_email,
-            ""
+            Fore.RED + "❌ Formatação do email incorreta.\n" + Fore.YELLOW + "👉 Tente novamente."
         )
+
+        if email is None:
+            return None
 
 
         senha = self.validador.input_com_prompt_colorido(Fore.YELLOW + "👉 Digite sua senha: ")
+        if isinstance(senha, str) and senha.strip() == '0':
+            return None
 
         usuario = self.user_service.login_usuario(email, senha)
 

@@ -11,15 +11,7 @@ class DevolverLivro:
         self.livro_service = LivroService()
 
     def devolver_livros(self, usuario):
-        """
-        Exibe empréstimos ativos e processa devolução por ID.
-
-        Args:
-            usuario (Usuario): Usuário autenticado que deseja devolver livros.
-
-        Returns:
-            None: Fluxo de interface com interação via terminal.
-        """
+        """Exibe empréstimos ativos e processa devolução por ID."""
         limpar_tela()
 
         print(Fore.CYAN + "=" * 60)
