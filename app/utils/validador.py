@@ -42,6 +42,10 @@ class Validador:
     def validar_input(self, mensagem, validacao_funcao, mensagem_erro, *args):
         while True:
             valor = self.input_com_prompt_colorido(mensagem)
+            # permitir voltar para o menu com '0'
+            if isinstance(valor, str) and valor.strip() == '0':
+                return None
+
             if validacao_funcao(valor, *args):
                 return valor
 
@@ -51,12 +55,16 @@ class Validador:
 
     def validar_nova_senha(self):
         while True:
-            senha = self.input_com_prompt_colorido(Fore.YELLOW + "👉 Digite sua nova senha: ")
+            senha = self.input_com_prompt_colorido(Fore.YELLOW + "👉 Digite sua nova senha (0 para voltar): ")
+            if isinstance(senha, str) and senha.strip() == '0':
+                return None
             if not self.validar_senha(senha):
                 print(Fore.RED + "❌ A senha deve conter pelo menos 8 caracteres, incluindo uma letra maiúscula, um número e um caractere especial")
                 continue
 
             confirmacao = self.input_com_prompt_colorido(Fore.YELLOW + "👉 Digite sua senha novamente: ")
+            if isinstance(confirmacao, str) and confirmacao.strip() == '0':
+                return None
 
             if senha != confirmacao:
                 print(Fore.RED + "❌ As senhas não coincidem.")

@@ -1,4 +1,5 @@
 from data.db import get_db_connection
+from datetime import datetime, timedelta
 
 class UserRepository:
 
@@ -144,4 +145,39 @@ class UserRepository:
 
     def buscar_por_email(self, email):
         return self.logar_usuario(email)
+
+    def obter_status_por_id(self, usuario_id):
+        conexao = get_db_connection()
+        cursor = conexao.cursor()
+
+        try:
+            cursor.execute(
+                "SELECT data_emprestimo FROM livros WHERE usuario_emprestimo = ? AND disponivel = 0",
+                (usuario_id,)
+            )
+            rows = cursor.fetchall()
+
+            bloqueado = 0
+            suspenso_ate = None
+            now = datetime.now()
+
+            for (data_emprestimo,) in rows:
+                if not data_emprestimo:
+                    continue
+                try:
+                    d = datetime.strptime(data_emprestimo, "%Y-%m-%d %H:%M:%S")
+                except Exception:
+                    continue
+                overdue_days = (now - d).days
+                if overdue_days > 7:
+                    # Suspensão avaliada como 7 dias a partir de agora
+                    suspenso_ate = (now + timedelta(days=7)).strftime("%Y-%m-%d %H:%M:%S")
+                    break
+                if 4 <= overdue_days <= 7:
+                    bloqueado = 1
+
+            return {"bloqueado_atraso": bloqueado, "suspenso_ate": suspenso_ate}
+        finally:
+            cursor.close()
+            conexao.close()
     

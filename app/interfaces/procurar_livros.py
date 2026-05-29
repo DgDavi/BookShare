@@ -4,12 +4,14 @@ from .exibir_livros import ExibirLivros
 from services.livro_services import LivroService
 from utils.validador import Validador
 from utils.limpar_tela import limpar_tela
+from repository.usuario_repository import UserRepository
 
 class ProcurarLivro:
     def __init__(self):
         self.validador = Validador()
         self.livro_service = LivroService()
         self.exibir_livros = ExibirLivros()
+        self.user_repo = UserRepository()
 
     def procurar_livros(self, usuario):
         """
@@ -21,6 +23,21 @@ class ProcurarLivro:
         Returns:
             None: Fluxo de interface com entrada e saída pelo terminal.
         """
+        # Verifica se a conta está suspensa antes de permitir buscar
+        status = self.user_repo.obter_status_por_id(usuario.id)
+        suspenso_ate = status.get("suspenso_ate") if status else None
+        if suspenso_ate:
+            try:
+                from datetime import datetime
+                suspenso_dt = datetime.strptime(suspenso_ate, "%Y-%m-%d %H:%M:%S")
+                if datetime.now() < suspenso_dt:
+                    limpar_tela()
+                    print(Fore.RED + f"❌ Sua conta está suspensa até {suspenso_dt.strftime('%d/%m/%Y')}. Não é possível buscar livros.")
+                    input(Fore.YELLOW + "👉 Pressione Enter para continuar...")
+                    return
+            except Exception:
+                pass
+
         limpar_tela()
         print(Fore.CYAN + "=" * 60)
         print(Fore.CYAN + "🔎 PROCURAR LIVRO".center(60))

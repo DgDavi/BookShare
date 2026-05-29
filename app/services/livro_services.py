@@ -4,11 +4,14 @@ from utils.validador import Validador
 from model.livro import Livro
 from repository.livro_repository import LivroRepository
 import math
+from repository.usuario_repository import UserRepository
+from datetime import datetime
 
 class LivroService:
     def __init__(self):
         self.livro_repo = LivroRepository()
         self.validador = Validador()
+        self.user_repo = UserRepository()
 
     def cadastrar_livro(self,nome, descricao, autor, usuario):
         """
@@ -149,6 +152,20 @@ class LivroService:
             tuple[bool, str]: Resultado da operação com status e mensagem.
         """
         self.atualizar_status_livros()
+
+        # Verificar status do usuário (bloqueio/suspensão)
+        status = self.user_repo.obter_status_por_id(usuario_id)
+        if status and status.get("bloqueado_atraso"):
+            return False, "❌ Você está bloqueado de novos empréstimos até devolver os livros atrasados."
+
+        suspenso_ate = status.get("suspenso_ate") if status else None
+        if suspenso_ate:
+            try:
+                suspenso_dt = datetime.strptime(suspenso_ate, "%Y-%m-%d %H:%M:%S")
+                if datetime.now() < suspenso_dt:
+                    return False, f"❌ Sua conta está suspensa até {suspenso_dt.strftime('%d/%m/%Y')}."
+            except Exception:
+                pass
 
         livro = self.livro_repo.buscar_livro_por_id(livro_id)
         if not livro:
