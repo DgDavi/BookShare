@@ -65,6 +65,7 @@ class LivroService:
         self.livro_repo.devolver_livro_repo(livro_id)
 
 
+    @staticmethod
     def livro_atrasado(data_emprestimo):
         """Verifica se o empréstimo já passou do prazo de 7 dias."""
         if not data_emprestimo:

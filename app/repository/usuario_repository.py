@@ -20,7 +20,7 @@ class UserRepository:
         
 
     def buscar_dados_usuario(self, usuario):
-                """Busca os dados básicos de um usuário pelo email."""
+        """Busca os dados básicos de um usuário pelo email."""
         conexao = get_db_connection()
         cursor = conexao.cursor()
 
