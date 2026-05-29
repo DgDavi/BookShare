@@ -12,6 +12,7 @@ def create_tables():
                 senha TEXT NOT NULL
                 )""")
 
+
     cursor.execute("""CREATE TABLE IF NOT EXISTS livros (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER NOT NULL,

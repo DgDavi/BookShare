@@ -385,11 +385,31 @@ class LivroRepository:
             for livro_id, data_emprestimo, user_id, usuario_emprestimo, titulo in livros:
                 if not data_emprestimo:
                     continue
-
                 data = datetime.strptime(data_emprestimo, "%Y-%m-%d %H:%M:%S")
-                
-                # Se o prazo de 7 dias estourou
-                if datetime.now() > data + timedelta(days=7):
+                now = datetime.now()
+                overdue_days = (now - data).days
+
+                # Sem atraso
+                if overdue_days <= 0:
+                    continue
+
+                # 1-3 dias: apenas aviso na caixa de entrada
+                if 1 <= overdue_days <= 3:
+                    aviso = f"⚠️ Seu empréstimo do livro '{titulo}' está com {overdue_days} dia(s) de atraso. Por favor devolva-o para evitar punições." 
+                    msg_repo.criar_mensagem(usuario_emprestimo, aviso, conexao)
+                    continue
+
+                # 4-7 dias: bloqueio de novos empréstimos até devolver
+                if 4 <= overdue_days <= 7:
+                    aviso = (
+                        f"🚫 Você está bloqueado de novos empréstimos até devolver o livro '{titulo}'."
+                        f" Atraso atual: {overdue_days} dia(s)."
+                    )
+                    msg_repo.criar_mensagem(usuario_emprestimo, aviso, conexao)
+                    continue
+
+                # Mais de 7 dias: devolve automaticamente e suspende a conta temporariamente
+                if overdue_days > 7:
                     # Devolve o livro no banco
                     cursor.execute(
                         """
@@ -402,15 +422,19 @@ class LivroRepository:
                         (livro_id,)
                     )
                     self._promover_proximo_da_fila(livro_id, cursor, conexao)
-                    
-                    
-                    #Mensagens de aviso para o Dono(user_id) e para o Locatário(usuario_emprestimo)
-                    
+
+                    # Mensagens de aviso para o Dono(user_id) e para o Locatário(usuario_emprestimo)
                     msg_dono = f"📢 O prazo de empréstimo do livro '{titulo}' acabou. Ele já está disponível para empréstimos novamente!"
                     msg_locatario = f"⚠️ O prazo de 7 dias para o livro '{titulo}' expirou. Ele foi devolvido automaticamente ao dono."
-                    
                     msg_repo.criar_mensagem(user_id, msg_dono, conexao)
                     msg_repo.criar_mensagem(usuario_emprestimo, msg_locatario, conexao)
+
+                    # Notifica sobre a suspensão (registro não persistido no DB sem colunas)
+                    aviso_suspensao = (
+                        f"⛔ Sua conta está sendo suspensa temporariamente devido ao atraso na devolução do livro '{titulo}'."
+                        " Você não poderá buscar nem pegar livros até regularizar a situação."
+                    )
+                    msg_repo.criar_mensagem(usuario_emprestimo, aviso_suspensao, conexao)
 
                     livros_atualizados += 1
 
