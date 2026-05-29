@@ -18,18 +18,27 @@ class CadastroLivro:
             lambda n: 3 <= len(n) <= 40,
             Fore.YELLOW + "👉 O nome deve conter entre 3 e 40 caracteres."
         )
+        if titulo is None:
+            print(Fore.YELLOW + "Operação cancelada pelo usuário.")
+            return None
 
         descricao = self.validador.validar_input(
             Fore.YELLOW + "👉 Digite a descrição do livro: ",
             lambda n:3 <= len(n) <= 200,
             Fore.YELLOW + "👉 A descrição deve conter entre 3 e 200 caracteres."
         )
+        if descricao is None:
+            print(Fore.YELLOW + "Operação cancelada pelo usuário.")
+            return None
 
         autor = self.validador.validar_input(
             Fore.YELLOW + "👉 Digite o autor do livro: ",
             lambda n: 3 <= len(n) <= 40,
             Fore.YELLOW + "👉 O nome do autor deve conter entre 3 e 40 caracteres."
         )
+        if autor is None:
+            print(Fore.YELLOW + "Operação cancelada pelo usuário.")
+            return None
 
         livro = self.livro_service.cadastrar_livro(titulo, descricao, autor, usuario)
 

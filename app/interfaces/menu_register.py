@@ -29,18 +29,25 @@ class Register:
             lambda n: 3 <= len(n) <= 50,
             Fore.RED + "❌ O nome deve conter entre 3 e 50 caracteres.\n" + Fore.YELLOW + "👉 Tente novamente."
         )
+        if nome is None:
+            return None
             
         email = self.validador.validar_input(
             Fore.YELLOW + "👉 Digite seu email: ",
             self.user_service.validar_novo_email_unico,
             ""
         )
+        if email is None:
+            return None
         
         codigo = gerar_codigo()
         self.validador.enviar_codigo(email, codigo)
         codigo_recebido = self.validador.input_com_prompt_colorido(
             Fore.YELLOW + "👉 Foi enviado um código para o seu email. Digite o código recebido: "
         )
+        if isinstance(codigo_recebido, str) and codigo_recebido.strip() == '0':
+            print(Fore.YELLOW + "Operação cancelada pelo usuário.")
+            return None
         if self.user_service.verificar_codigo_email(codigo, codigo_recebido):
             print(Fore.GREEN + "✅ Código correto.")
         else:
@@ -49,6 +56,9 @@ class Register:
         
 
         senha = self.validador.validar_nova_senha()
+        if senha is None:
+            print(Fore.YELLOW + "Operação cancelada pelo usuário.")
+            return None
         
         usuario_criado = self.user_service.cadastrar_usuario(nome, email, senha)
 

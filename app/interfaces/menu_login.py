@@ -22,8 +22,14 @@ class Login:
             Fore.RED + "❌ Formatação do email incorreta.\n" + Fore.YELLOW + "👉 Tente novamente."
         )
 
+        if email is None:
+            # usuário escolheu voltar
+            return None
+
 
         senha = self.validador.input_com_prompt_colorido(Fore.YELLOW + "👉 Digite sua senha: ")
+        if isinstance(senha, str) and senha.strip() == '0':
+            return None
 
         usuario = self.user_service.login_usuario(email, senha)
 
