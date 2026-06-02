@@ -280,8 +280,9 @@ class LivroRepository:
         return True
 
 
+
     def emprestar_livro_repo(self, id, usuario_emprestimo, data_emprestimo):
-        """Atualiza o livro para marcar o empréstimo."""
+        """Atualiza o livro para marcar o empréstimo e inicia o histórico."""
         conexao = get_db_connection()
         cursor = conexao.cursor()
 
@@ -298,8 +299,17 @@ class LivroRepository:
                 WHERE id = ?
                 """,
                 (usuario_emprestimo, data_emprestimo, id)
-            )
+            )   
             
+            # REGISTRO DE HISTÓRICO: Insere um novo registro na tabela de histórico, salvando qual livro foi pego, por quem e o momento exato do empréstimo
+            cursor.execute(
+                """
+                INSERT INTO historico_emprestimos (livro_id, usuario_id, data_emprestimo)
+                VALUES (?, ?, ?)
+                """,
+                (id, usuario_emprestimo, data_emprestimo)
+            )
+            # ---------------------------------------------------------------------------
             
             if livro_dados:
                 titulo = livro_dados[0]   
