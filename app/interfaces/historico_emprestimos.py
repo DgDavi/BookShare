@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from colorama import Fore
 from utils.limpar_tela import limpar_tela
 from utils.validador import Validador
-from services.livro_services import LivroService # Importa o Service como você faz nas outras views
+from services.livro_services import LivroService 
 
 class HistoricoEmprestimos:
     def __init__(self):
