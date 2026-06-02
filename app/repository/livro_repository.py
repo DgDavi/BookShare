@@ -468,24 +468,7 @@ class LivroRepository:
             cursor.close()
             conexao.close()
 
-    def buscar_historico_emprestimos(self, user_id):
-        """Busca o histórico de empréstimos de um usuário."""
-        conexao = get_db_connection()
-        cursor = conexao.cursor()
-
-        try:
-            cursor.execute(
-                """
-                SELECT titulo, data_emprestimo 
-                FROM livros 
-                WHERE usuario_emprestimo = ?
-                """,
-                (user_id,)
-            )
-            return cursor.fetchall()
-        finally:
-            cursor.close()
-            conexao.close()
+    
 
     def buscar_historico_completo_usuario(self, usuario_id):
         """Busca o histórico completo (ativos e devolvidos) usando a nova tabela."""
