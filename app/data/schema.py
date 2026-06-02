@@ -43,6 +43,16 @@ def create_tables():
                 FOREIGN KEY (livro_id) REFERENCES livros(id) ON DELETE CASCADE,
                 FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE CASCADE
                 )""")
+   
+    cursor.execute("""CREATE TABLE IF NOT EXISTS historico_emprestimos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    livro_id INTEGER,
+    usuario_id INTEGER,
+    data_emprestimo TEXT,
+    data_devolucao TEXT, -- Fica NULL enquanto o livro não for devolvido
+    FOREIGN KEY(livro_id) REFERENCES livros(id),
+    FOREIGN KEY(usuario_id) REFERENCES usuarios(id)
+)""");
     
     conexao.commit()
 
