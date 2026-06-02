@@ -309,7 +309,7 @@ class LivroRepository:
                 """,
                 (id, usuario_emprestimo, data_emprestimo)
             )
-            # ---------------------------------------------------------------------------
+           
             
             if livro_dados:
                 titulo = livro_dados[0]   
