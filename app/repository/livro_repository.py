@@ -327,7 +327,7 @@ class LivroRepository:
 
 
     def devolver_livro_repo(self, livro_id):
-        """Atualiza o livro para marcar a devolução."""
+        """Atualiza o livro para marcar a devolução e registra no histórico."""
         conexao = get_db_connection()
         cursor = conexao.cursor()
 
@@ -338,6 +338,7 @@ class LivroRepository:
             )
             livro_info = cursor.fetchone()
 
+            #Atualiza a tabela de livros 
             cursor.execute(
                 """
                 UPDATE livros
@@ -348,6 +349,18 @@ class LivroRepository:
                 """,
                 (livro_id,)
             )
+
+           
+            data_atual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            cursor.execute(
+                """
+                UPDATE historico_emprestimos 
+                SET data_devolucao = ? 
+                WHERE livro_id = ? AND data_devolucao IS NULL
+                """,
+                (data_atual, livro_id)
+            )
+           
 
             if livro_info:
                 titulo = livro_info[0]
@@ -364,7 +377,7 @@ class LivroRepository:
                 remetente_texto = f" pelo usuário {nome_devolvedor} (id {usuario_devolveu})" if nome_devolvedor else (f" pelo usuário id {usuario_devolveu}" if usuario_devolveu else "")
                 mensagem = f"✅ O livro '{titulo}' foi devolvido{remetente_texto}."
                 msg_repo = MensagemRepository()
-                msg_repo.criar_mensagem(dono_id, mensagem, conexao)
+                msg_repo.criar_mensagem(dono_id, message=mensagem, conexao=conexao) # Ajustado para passar conexao se necessário
 
             self._promover_proximo_da_fila(livro_id, cursor, conexao)
             conexao.commit()
