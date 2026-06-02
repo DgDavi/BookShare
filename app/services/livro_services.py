@@ -139,3 +139,7 @@ class LivroService:
         self.livro_repo.devolver_livro_repo(livro_id)
 
         return True, "✅ Livro devolvido com sucesso."
+
+    def buscar_historico_usuario(self, usuario_id):
+        """Busca o histórico completo de empréstimos (antigos e atuais) de um usuário."""
+        return self.livro_repo.buscar_historico_completo_usuario(usuario_id)
