@@ -35,31 +35,30 @@ class Register:
             return None
         
         codigo = gerar_codigo()
-        self.validador.enviar_codigo(email, codigo)
+        
+       
+        
+        
+       #checar se o código foi realmente enviado
+        if not self.validador.enviar_codigo(email, codigo):
+            print(Fore.RED + "\n❌ Não foi possível enviar o código de verificação.")
+            print(Fore.RED + "   Verifique as configurações de e-mail no arquivo .env.")
+            self.validador.input_com_prompt_colorido(Fore.YELLOW + "\n👉 Pressione Enter para voltar ao menu...")
+            return None
+
+       #ao passar da etapa anterior, ai sim o código é pedido
         codigo_recebido = self.validador.input_com_prompt_colorido(
-            Fore.YELLOW + "👉 Foi enviado um código para o seu email. Digite o código recebido: "
+            Fore.YELLOW + "👉 Um código foi enviado para o seu email. Digite o código recebido: "
         )
+        
         if isinstance(codigo_recebido, str) and codigo_recebido.strip() == '0':
             print(Fore.YELLOW + "Operação cancelada pelo usuário.")
             return None
+            
         if self.user_service.verificar_codigo_email(codigo, codigo_recebido):
             print(Fore.GREEN + "✅ Código correto.")
         else:
-            print(Fore.RED + "❌ Código errado. Operação cancelada.")
+           #trava de tela, para dar tempo de o usuário ler a mensagem de erro
+            print(Fore.RED + "\n❌ Código incorreto ou expirado! Operação cancelada.")
+            self.validador.input_com_prompt_colorido(Fore.YELLOW + "👉 Pressione Enter para voltar ao menu...")
             return False
-        
-
-        senha = self.validador.validar_nova_senha()
-        if senha is None:
-            print(Fore.YELLOW + "Operação cancelada pelo usuário.")
-            return None
-        
-        usuario_criado = self.user_service.cadastrar_usuario(nome, email, senha)
-
-        if usuario_criado:
-            print(Fore.GREEN + "\nUsuário cadastrado com sucesso!")
-            self.validador.input_com_prompt_colorido(Fore.GREEN + "Pressione a tecla Enter para seguir... ")
-
-            return usuario_criado
-        
-        return None
