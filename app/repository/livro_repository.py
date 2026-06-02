@@ -486,3 +486,28 @@ class LivroRepository:
         finally:
             cursor.close()
             conexao.close()
+
+    def buscar_historico_completo_usuario(self, usuario_id):
+        """Busca o histórico completo (ativos e devolvidos) usando a nova tabela."""
+        conexao = get_db_connection()
+        cursor = conexao.cursor()
+
+        try:
+           
+            # CONSULTA DE HISTÓRICO COMPLETO: Faz um JOIN entre a tabela de histórico e a tabela de livros para buscar título e autor
+            # Filtra pelo ID do usuário logado e ordena do mais recente para o mais antigo.
+           
+            cursor.execute(
+                """
+                SELECT l.titulo, l.autor, h.data_emprestimo, h.data_devolucao
+                FROM historico_emprestimos h
+                JOIN livros l ON h.livro_id = l.id
+                WHERE h.usuario_id = ?
+                ORDER BY h.data_emprestimo DESC
+                """,
+                (usuario_id,)
+            )
+            return cursor.fetchall()
+        finally:
+            cursor.close()
+            conexao.close()
