@@ -34,10 +34,7 @@ class Register:
         if email is None:
             return None
         
-        codigo = gerar_codigo()
-        
-       
-        
+        codigo = gerar_codigo()   
         
        #checar se o código foi realmente enviado
         if not self.validador.enviar_codigo(email, codigo):
@@ -62,3 +59,18 @@ class Register:
             print(Fore.RED + "\n❌ Código incorreto ou expirado! Operação cancelada.")
             self.validador.input_com_prompt_colorido(Fore.YELLOW + "👉 Pressione Enter para voltar ao menu...")
             return False
+
+        senha = self.validador.validar_nova_senha()
+        if senha is None:
+            print(Fore.YELLOW + "Operação cancelada pelo usuário.")
+            return None
+        
+        usuario_criado = self.user_service.cadastrar_usuario(nome, email, senha)
+
+        if usuario_criado:
+            print(Fore.GREEN + "\nUsuário cadastrado com sucesso!")
+            self.validador.input_com_prompt_colorido(Fore.GREEN + "Pressione a tecla Enter para seguir... ")
+
+            return usuario_criado
+        
+        return None
