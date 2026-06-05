@@ -44,6 +44,7 @@ class CadastroLivro:
         livro = self.livro_service.cadastrar_livro(titulo, descricao, autor, usuario)
 
         if livro:
+            print(Fore.GREEN + "✅ Livro cadastrado com sucesso!")
             self.validador.input_com_prompt_colorido(Fore.YELLOW + "👉 Pressione Enter para continuar...")
             return livro
         

@@ -280,8 +280,9 @@ class LivroRepository:
         return True
 
 
+
     def emprestar_livro_repo(self, id, usuario_emprestimo, data_emprestimo):
-        """Atualiza o livro para marcar o empréstimo."""
+        """Atualiza o livro para marcar o empréstimo e inicia o histórico."""
         conexao = get_db_connection()
         cursor = conexao.cursor()
 
@@ -298,8 +299,17 @@ class LivroRepository:
                 WHERE id = ?
                 """,
                 (usuario_emprestimo, data_emprestimo, id)
-            )
+            )   
             
+            # REGISTRO DE HISTÓRICO: Insere um novo registro na tabela de histórico, salvando qual livro foi pego, por quem e o momento exato do empréstimo
+            cursor.execute(
+                """
+                INSERT INTO historico_emprestimos (livro_id, usuario_id, data_emprestimo)
+                VALUES (?, ?, ?)
+                """,
+                (id, usuario_emprestimo, data_emprestimo)
+            )
+           
             
             if livro_dados:
                 titulo = livro_dados[0]   
@@ -327,7 +337,7 @@ class LivroRepository:
 
 
     def devolver_livro_repo(self, livro_id):
-        """Atualiza o livro para marcar a devolução."""
+        """Atualiza o livro para marcar a devolução e registra no histórico."""
         conexao = get_db_connection()
         cursor = conexao.cursor()
 
@@ -338,6 +348,7 @@ class LivroRepository:
             )
             livro_info = cursor.fetchone()
 
+            #Atualiza a tabela de livros 
             cursor.execute(
                 """
                 UPDATE livros
@@ -348,6 +359,18 @@ class LivroRepository:
                 """,
                 (livro_id,)
             )
+
+           
+            data_atual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            cursor.execute(
+                """
+                UPDATE historico_emprestimos 
+                SET data_devolucao = ? 
+                WHERE livro_id = ? AND data_devolucao IS NULL
+                """,
+                (data_atual, livro_id)
+            )
+           
 
             if livro_info:
                 titulo = livro_info[0]
@@ -364,7 +387,7 @@ class LivroRepository:
                 remetente_texto = f" pelo usuário {nome_devolvedor} (id {usuario_devolveu})" if nome_devolvedor else (f" pelo usuário id {usuario_devolveu}" if usuario_devolveu else "")
                 mensagem = f"✅ O livro '{titulo}' foi devolvido{remetente_texto}."
                 msg_repo = MensagemRepository()
-                msg_repo.criar_mensagem(dono_id, mensagem, conexao)
+                msg_repo.criar_mensagem(dono_id, message=mensagem, conexao=conexao) # Ajustado para passar conexao se necessário
 
             self._promover_proximo_da_fila(livro_id, cursor, conexao)
             conexao.commit()
@@ -445,19 +468,27 @@ class LivroRepository:
             cursor.close()
             conexao.close()
 
-    def buscar_historico_emprestimos(self, user_id):
-        """Busca o histórico de empréstimos de um usuário."""
+    
+
+    def buscar_historico_completo_usuario(self, usuario_id):
+        """Busca o histórico completo (ativos e devolvidos) usando a nova tabela."""
         conexao = get_db_connection()
         cursor = conexao.cursor()
 
         try:
+           
+            # CONSULTA DE HISTÓRICO COMPLETO: Faz um JOIN entre a tabela de histórico e a tabela de livros para buscar título e autor
+            # Filtra pelo ID do usuário logado e ordena do mais recente para o mais antigo.
+           
             cursor.execute(
                 """
-                SELECT titulo, data_emprestimo 
-                FROM livros 
-                WHERE usuario_emprestimo = ?
+                SELECT l.titulo, l.autor, h.data_emprestimo, h.data_devolucao
+                FROM historico_emprestimos h
+                JOIN livros l ON h.livro_id = l.id
+                WHERE h.usuario_id = ?
+                ORDER BY h.data_emprestimo DESC
                 """,
-                (user_id,)
+                (usuario_id,)
             )
             return cursor.fetchall()
         finally:
