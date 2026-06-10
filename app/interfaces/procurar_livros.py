@@ -51,7 +51,7 @@ class ProcurarLivro:
                 self.validador.input_com_prompt_colorido(Fore.YELLOW + "👉 Pressione Enter para continuar...")
                 return
 
-            print(Fore.LIGHTMAGENTA_EX + "\n[ID]" + Fore.WHITE + " Digitar o ID do livro para emprestar")
+            print(Fore.LIGHTMAGENTA_EX + "\n[ID]" + Fore.WHITE + " Digitar o ID do livro para pegar emprestado")
             if resultado["total_paginas"] > 1:
                 print(Fore.LIGHTMAGENTA_EX + "[N]" + Fore.WHITE + " Próxima página")
                 print(Fore.LIGHTMAGENTA_EX + "[P]" + Fore.WHITE + " Página anterior")
